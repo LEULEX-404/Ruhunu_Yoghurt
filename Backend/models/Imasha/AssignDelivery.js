@@ -3,19 +3,19 @@ import mongoose from 'mongoose';
 const assignDeliverySchema = new mongoose.Schema({
 
     driver:{
-        type:mongoose.Schema.type.objectId,
+        type:mongoose.Schema.Type.ObjectId,
         ref:"Driver",
         required:true,
     },
     deliveries:[{
-        type:mongoose.Schema.type.objectId,
+        type:mongoose.Schema.Type.ObjectId,
         ref:"Delivery",
     }],
     totalWeight:{
         type:Number,
         required:true,
     },
-    assignData:{
+    assignDate:{
         type:Date,
         default:Date.now,
     },

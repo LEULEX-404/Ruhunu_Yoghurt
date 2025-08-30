@@ -20,6 +20,7 @@ export async function getCoordinates (address){
 export async function getDrivingDistance(from, to)
 {
     const url = `http://router.project-osrm.org/route/v1/driving/${from.lng},${from.lat};${to.lng},${to.lat}?overview=false`;
+    //overview = false = without extra map details
 
     const res = await axios.get(url);
     const distanceKm = res.data.routes[0].distance/1000;

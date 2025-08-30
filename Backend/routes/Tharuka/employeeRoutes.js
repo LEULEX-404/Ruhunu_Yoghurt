@@ -1,5 +1,5 @@
 import express from "express";
-import { createEmployee, getEmployees, updateEmployee, deleteEmployee } from "../controllers/Tharuka/employeeController.js";
+import { createEmployee, getEmployees, updateEmployee, deleteEmployee } from "../../controllers/Tharuka/employeeController.js";
 
 const router= express.Router();
 

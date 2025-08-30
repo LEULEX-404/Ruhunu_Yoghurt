@@ -1,9 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
-import authRoutes from './routes/authRoutes.js';
-import deliveryRoutes from './routes/Imasha/deliveryRoutes.js';
-import employeeRoutes from './routes/employeeRoutes.js';
+import employeeRoutes from './routes/Tharuka/employeeRoutes.js';
 import cors from 'cors';
 
 dotenv.config();
@@ -13,9 +11,8 @@ const app = express();
 app.use(cors({ origin: 'http://localhost:3000', credentials: true })); // Adjust the origin as needed
 app.use(express.json());
 
-app.use('/api/deliveries', deliveryRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/employee', employeeRoutes);
+
+app.use('/api/employees', employeeRoutes);
 
 const PORT = process.env.PORT || 8070;
 

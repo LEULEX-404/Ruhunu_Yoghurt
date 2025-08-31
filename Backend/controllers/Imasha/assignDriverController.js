@@ -1,7 +1,6 @@
 import Driver from "../../models/Tharuka/Driver.js";
 import Delivery from "../../models/Imasha/Delivery.js";
 import AssignedDelivery from "../../models/Imasha/AssignDelivery.js";
-import AssignDelivery from "../../models/Imasha/AssignDelivery.js";
 
 export const assignDelivery = async (req, res)=>{
     try{
@@ -17,7 +16,7 @@ export const assignDelivery = async (req, res)=>{
         }
 
         let newDeliveriesWeight = 0;
-        deliveriesies.forEach(d=>{
+        deliveries.forEach(d=>{
             newDeliveriesWeight = newDeliveriesWeight + d.productWeight;
         });
 
@@ -27,7 +26,7 @@ export const assignDelivery = async (req, res)=>{
                 return res.status(400).json({message: "Cannot assigned: Exceeds vehicle capacity"});
             }
 
-            assigned = new AssignDelivery({
+            assigned = new AssignedDelivery({
                 driver: driverId,
                 deliveries: deliveryIds,
                 totalWeight: newDeliveriesWeight,
@@ -45,6 +44,7 @@ export const assignDelivery = async (req, res)=>{
             assigned.deliveries.push(...deliveryIds);
             assigned.totalWeight = updateWeight;
             await assigned.save();
+        }
 
             await Delivery.updateMany(
                 {_id:{$in:deliveryIds}},
@@ -66,7 +66,7 @@ export const assignDelivery = async (req, res)=>{
                 currentLocation: driver.currentLocation,
             });
         }
-    }
+    
     catch(err){
             res.status(500).json({error: err.message})
     }

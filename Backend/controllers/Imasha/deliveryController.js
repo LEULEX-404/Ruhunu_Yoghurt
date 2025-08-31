@@ -1,7 +1,7 @@
 import Delivery from '../../models/Imasha/Delivery.js';
 import { getCoordinates, getDrivingDistance } from '../../utils/distance.js';
 import Order from '../../models/Lasiru/order.js';
-import AssignedDelivery from '../../models/Imasha/AssignedDelivery.js';
+import AssignedDelivery from '../../models/Imasha/AssignDelivery.js';
 
 const WAREHOUSE_LOCATION = { lat:7.0412, lng:80.1289};
 

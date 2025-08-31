@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, Link, useLocation, Navigate } f
 
 import HrDashboard from './Pages/HrDashboard';
 import DeliveryDashboard from './Pages/DeliveryDashboard';
+import LoginPage from './Pages/Login';
 
 axios.defaults.baseURL = 'http://localhost:8070'; 
 axios.defaults.withCredentials = true;
@@ -13,6 +14,7 @@ function Appwrapper() {
   return(
     <div>
     <Routes>
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/hrDashboard" element={<HrDashboard />} />
       <Route path="/deliveryDashboard" element ={<DeliveryDashboard/>} />
     </Routes>

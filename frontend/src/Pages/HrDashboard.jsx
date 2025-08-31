@@ -10,6 +10,9 @@ export default function HrDashboard() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
+    
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [editEmployee, setEditEmployee] = useState(null);
 
     const fetchEmployees = async () => {
         try{
@@ -28,6 +31,16 @@ export default function HrDashboard() {
     const closeAssignModal = () =>{
         setSelectedEmployee(null);
         setIsModalOpen(false);
+    };
+
+    const openEditModal = (employee) =>{
+        setEditEmployee(employee);
+        setEditModalOpen(true);
+    };
+
+    const closeEditModal = () =>{
+        setEditEmployee(null);
+        setEditModalOpen(false);
     };
 
     const toggleDarkMode = () =>{
@@ -69,6 +82,24 @@ export default function HrDashboard() {
             alert('Failed to add employee');
         }
     };
+
+    const handleUpdateEmployee = async (e) =>{
+        e.preventDefault();
+
+        try{
+            const response = await axios.put(`http://localhost:8070/api/employees/update/${editEmployee._id}`, 
+                { name: editEmployee.name, email: editEmployee.email, position: editEmployee.position, phone: editEmployee.phone });
+
+            console.log('Employee updated:', response.data);
+            alert('Employee updated successfully',response.data.message);
+            fetchEmployees();
+            closeEditModal();
+
+        }catch(error){
+            console.error('Error updating employee:', error);
+            alert('Failed to update employee');
+        }
+    }
 
     const handleDeleteEmployee = async (id) => {
         if(window.confirm('Are you sure you want to delete this employee?')){
@@ -182,7 +213,7 @@ export default function HrDashboard() {
                     )}
 
 
-                    {(view === 'unassigned' || view === 'assigned') && (
+                    {(view === 'unassigned' ) && (
                         <div className = 'content-card'>
                             <h2>{view === 'unassigned' ? 'Unassigned Employees' : 'Assigned Employees'}</h2>
                             <table className>
@@ -207,6 +238,40 @@ export default function HrDashboard() {
                                             <td>{emp.phone}</td>
                                             <td>
                                                 <button onClick = {() => openAssignModal(emp)} className='assign-btn'>Assign Role</button>
+                                                <button onClick = {() => handleDeleteEmployee(emp._id)} className='delete-btn'>Delete</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
+                    {(view === 'assigned' ) && (
+                        <div className = 'content-card'>
+                            <h2>{view === 'unassigned' ? 'Unassigned Employees' : 'Assigned Employees'}</h2>
+                            <table className>
+                                <thead>
+                                    <tr>
+                                        <th>Employee ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Position</th>
+                                        <th>Phone</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {employees.filter(emp => view === 'unassigned' ? emp.position === 'Unassigned' : emp.position !== 'Unassigned').map((emp) => (
+                                        <tr key = {emp._id}>
+                                            <td>{emp.employeeID}</td>
+                                            <td>{emp.name}</td>
+                                            <td>{emp.email}</td>
+                                            <td>{emp.position}</td>
+                                            <td>{emp.phone}</td>
+                                            <td>
+                                                <button onClick = {() => openEditModal(emp)} className='assign-btn'>Update</button>
                                                 <button onClick = {() => handleDeleteEmployee(emp._id)} className='delete-btn'>Delete</button>
                                             </td>
                                         </tr>
@@ -255,6 +320,57 @@ export default function HrDashboard() {
                                             <button type = 'button' className='cancel-btn' onClick={closeAssignModal}>Cancel</button>
                                         </div>
                                     </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {editModalOpen && (
+                        <div className="modal-overlay">
+                            <div className="modal-content">
+                                <h2>Edit Profile: {editEmployee?.name}</h2>
+                                <form onSubmit={handleUpdateEmployee}>
+                                    <div className="form-group">
+                                        <input 
+                                            type="text" 
+                                            placeholder="Name" 
+                                            value={editEmployee?.name || ''} 
+                                            onChange={(e) => setEditEmployee({...editEmployee, name: e.target.value})} 
+                                            required
+                                        />
+                                        <input 
+                                            type="email" 
+                                            placeholder="Email" 
+                                            value={editEmployee?.email || ''} 
+                                            onChange={(e) => setEditEmployee({...editEmployee, email: e.target.value})} 
+                                            required
+                                        />
+                                        <input 
+                                            type="text" 
+                                            placeholder="Phone" 
+                                            value={editEmployee?.phone || ''} 
+                                            onChange={(e) => setEditEmployee({...editEmployee, phone: e.target.value})} 
+                                            required
+                                        />
+                                        <select 
+                                            value={editEmployee?.position || 'Unassigned'}
+                                            onChange={(e) => setEditEmployee({...editEmployee, position: e.target.value})}
+                                            required
+                                        >
+                                            <option value="Unassigned">Unassigned</option>
+                                            <option value="Product Manager">Product Manager</option>
+                                            <option value="Stock Manager">Stock Manager</option>
+                                            <option value="Delivery Manager">Delivery Manager</option>
+                                            <option value="Order Manager">Order Manager</option>
+                                            <option value="HR Manager">HR Manager</option>
+                                            <option value="Driver">Driver</option>
+                                            <option value="Staff">Staff</option>
+                                        </select>
+                                    </div>
+                                    <div className="modal-buttons">
+                                        <button type="submit" className="submit-btn">Update</button>
+                                        <button type="button" className="cancel-btn" onClick={closeEditModal}>Cancel</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     )}

@@ -16,7 +16,10 @@ export default function LoginPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
     try {
-        const { data } = await login(form);
+        const response = await login(form);
+        console.log("Login response:", response);
+
+        const { data } = response;
         localStorage.setItem("token", data.token);
 
         if (data.user.role === "HR Manager") {

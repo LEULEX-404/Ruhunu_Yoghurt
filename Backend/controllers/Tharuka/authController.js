@@ -36,14 +36,22 @@ export const loginUser = async (req, res) => {
         }
         if(!user)
             return res.status(400).json({ message: 'Invalid credentials'});
-
-        const isMatch = await bcrypt.compare(password, user.password);
+        let isMatch = false;
+        if(user.role)
+        {
+         isMatch = await bcrypt.compare(password, user.password);
+        }
+        else{
+            isMatch = password === user.password
+        }
         if(!isMatch)
             return res.status(400).json({ message: 'Invalid credentials'});
 
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1d' });
+        const userRole = user.role || user.position;
 
-        res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+        const token = jwt.sign({ id: user._id, role: userRole }, process.env.SECRET_KEY, { expiresIn: '1d' });
+
+        res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: userRole } });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }

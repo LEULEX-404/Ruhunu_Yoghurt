@@ -2,7 +2,7 @@ import  {useState, useEffect} from "react";
 import axios from 'axios';
 import '../Css/DeliveryDashboard.css';
 
-export default function DelieryDashboard()
+export default function DeliveryDashboard()
 {
     const [activeSection, setActiveSection] = useState("createDelivery");
 
@@ -17,34 +17,50 @@ export default function DelieryDashboard()
 
     const [darkMode, setDarkMode] = useState(false);
 
-    useEffect(() =>{
-        axios.get(`http://localhost:8070/api/deliveries/pending`).then((res) =>{
+    const pendingOrders = async () =>{
+          try{
+            const res = await axios.get(`http://localhost:8070/api/deliveries/pending`)
             setOrders(res.data)
-        }).catch((err) =>{
+        }catch(err) {
             alert("Failed to fetch orders");
-        })
+        }
+    };
 
-        axios.get(`http://localhost:8070/api/deliveries/assign`).then((res) =>{
+      const driversDeliveries = async () =>{
+          try{
+            const res = await axios.get(`http://localhost:8070/api/deliveries/assign`)
             setDeliveries(res.data.Deliveries || []);
             setDrivers(res.data.Drivers || []);
-        })
-        .catch((err) =>{
+        }catch(err){
             console.error(err);
             alert("Failed to fetch drivers or deliveries.");
-        })
-        
-        axios.get('http://localhost:8070/api/deliveries/deliveries').then((res) =>{
+        }
+    };
+
+      const deliveriesAssigned = async () =>{
+          try{
+            const res = await axios.get('http://localhost:8070/api/deliveries/deliveries')
             setAssignedDeliveries(res.data || []);
-        })
-        .catch((err) =>{
+        }catch(err){
             console.error(err);
             alert("Failed to fetch assigned deliveries.");
-        });
+        };
+    };
+    useEffect(() =>{
+
+        pendingOrders();
+      
+        driversDeliveries();
+        
+        deliveriesAssigned();
+        
     },[])
 
     const handleCreateDelivery = (orderNumber) =>{
         axios.post(`http://localhost:8070/api/deliveries/create`,{orderNumber}).then(() =>{
             alert("Delivery created Successfully.")
+            driversDeliveries();
+            pendingOrders();
         })
         .catch((error) =>{
             alert("Delivery creation failed.")
@@ -67,7 +83,8 @@ export default function DelieryDashboard()
     const handleAssignDelivery = () =>{
         if(!selectDriver || selectDeliveries.length === 0)return;
         const deliveryIds = selectDeliveries.map(d => d._id);
-        axios.post(`http://loclhost:8070/api/deliveries/assign`,{
+
+        axios.post(`http://localhost:8070/api/deliveries/assign`,{
             driverId: selectDriver._id,
             deliveryIds
         })
@@ -75,8 +92,16 @@ export default function DelieryDashboard()
             alert(res.data.message);
             setSelectDeliveries([]);
             setSelectDriver(null);
+            deliveriesAssigned();
+            driversDeliveries();
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+        console.error(err);
+        if(err.response.data.message){
+            alert(err.response.data.message);
+        } else {
+            alert("Failed to assign delivery.");
+        }});
     }
 
     const toggleDarkMode = () =>{
@@ -187,7 +212,7 @@ export default function DelieryDashboard()
         </div>
 
         {selectDeliveries.length > 0 && selectDriver && (
-        <button className="assign-btn" onClick={handleAssignDelivery}>Assign Delivery</button>
+        <button className="assign-btn" onClick={handleAssignDelivery} disabled={!selectDriver || selectDeliveries.length === 0}>Assign Delivery</button>
         )}
         </div>
       )}

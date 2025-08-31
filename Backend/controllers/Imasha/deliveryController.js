@@ -34,7 +34,8 @@ export const createDelivery = async (req,res) =>{
             distanceKm,
             cost
         });
-
+        order.status = "Ready to Assign";
+        await order.save();
         await delivery.save();
 
         res.status(201).json(delivery);

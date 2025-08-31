@@ -9,3 +9,5 @@ router.get("/pending",getPendingOrders);
 router.post("/assign",assignDelivery);
 router.get("/assign",getDeliveriesandDrivers);
 router.get("/deliveries",getAssignDeliveries);
+
+export default router;

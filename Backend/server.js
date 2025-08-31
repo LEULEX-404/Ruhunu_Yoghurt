@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import employeeRoutes from './routes/Tharuka/employeeRoutes.js';
+import deliveryRoutes from './routes/Imasha/deliveryRoutes.js';
 import cors from 'cors';
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(express.json());
 
 
 app.use('/api/employees', employeeRoutes);
+app.use('/api/deliveries',deliveryRoutes);
 
 const PORT = process.env.PORT || 8070;
 

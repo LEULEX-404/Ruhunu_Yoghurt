@@ -15,6 +15,10 @@ password: {
     type: String,
     required: true
 },
+address:{
+    type: String,
+    default: ''
+},
 role: {
     type: String,
     default: 'customer',

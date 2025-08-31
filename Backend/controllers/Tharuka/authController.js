@@ -1,4 +1,5 @@
 import User from '../../models/Tharuka/User.js';
+import Employee from '../../models/Tharuka/Employee.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
@@ -29,7 +30,10 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     const { email, password } = req.body;
     try{
-        const user = await User.findOne({ email });
+        let user = await User.findOne({ email });
+        if (!user) {
+            user = await Employee.findOne({ email });
+        }
         if(!user)
             return res.status(400).json({ message: 'Invalid credentials'});
 

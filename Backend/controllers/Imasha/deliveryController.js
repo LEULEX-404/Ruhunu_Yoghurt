@@ -45,39 +45,6 @@ export const createDelivery = async (req,res) =>{
     }
 };
 
-
-
-
-export const getDeliveries = async (req, res) => {
-    try{
-        const deliveries = await Delivery.find().populate("assignedDriver","name email");
-        res.json(deliveries);
-    }
-    catch(error){
-        res.status(500).json({message: error.message});
-    }
-};
-
-
-
-export const completeDelivery = async (req, res) => {
-    try{
-        const delivery = await Delivery.findById(req.params.id);
-        if(!delivery) 
-            return res.status(404).json({message: "Delivery not found"})
-            
-        delivery.status = "delivered";
-        await delivery.save();
-
-        res.json({message: "Delivery completed successfully",delivery})
-    }
-    catch(error){
-        res.status(400).json({message: error.message});
-    }
-};
-
-
-
 export const getPendingOrders = async (req, res) =>{
     try{
         const pendingOrders = await Order.find({ status: "pending"}).select ("orderNumber customerName items total address productWeight");

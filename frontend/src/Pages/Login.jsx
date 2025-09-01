@@ -26,6 +26,8 @@ export default function LoginPage() {
             window.location.href = "/hrDashboard";
         } else if (data.user.role === "Delivery Manager") {
             window.location.href = "/deliveryDashboard";
+        } else if (data.user.role === "customer") {
+          alert("Customer log in here.");
         }else {
             alert("Unauthorized role");
         }

@@ -323,6 +323,40 @@ tr:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+.delete-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7c0909, #cf5971);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.update {
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0a1bd0, #2cb4c3);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.update:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
 /* Dark Mode */
 .dashboard-container .main-content .dark {
   background: #000;

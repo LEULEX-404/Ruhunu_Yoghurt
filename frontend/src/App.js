@@ -14,6 +14,8 @@ function Appwrapper() {
   return(
     <div>
     <Routes>
+
+      <Route path="/" element={<Navigate to="/login" replace/>} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/hrDashboard" element={<HrDashboard />} />
       <Route path="/deliveryDashboard" element ={<DeliveryDashboard/>} />

@@ -31,12 +31,15 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
     try{
         let user = await User.findOne({ email });
+
         if (!user) {
             user = await Employee.findOne({ email });
         }
         if(!user)
-            return res.status(400).json({ message: 'Invalid credentials'});
+            return res.status(400).json({ message: 'Cannot find user with this email'});
+
         let isMatch = false;
+        
         if(user.role)
         {
          isMatch = await bcrypt.compare(password, user.password);

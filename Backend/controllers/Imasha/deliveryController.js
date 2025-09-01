@@ -29,7 +29,6 @@ export const createDelivery = async (req,res) =>{
             orderID: order.orderNumber,
             customerName: order.customerName,
             address:order.address,
-            location:order.location,
             productWeight: order.productWeight,
             distanceKm,
             cost

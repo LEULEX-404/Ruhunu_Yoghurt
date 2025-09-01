@@ -192,6 +192,8 @@ export default function DeliveryDashboard()
             <p>{del.customerName}</p>
             <p>Weight: {del.productWeight} kg</p>
             <p>Address: {del.address}</p>
+            <p>Distance: {del.distanceKm} Km</p>
+            <p>Cost: Rs. {del.cost}</p>
           </div>
         ))}
         </div>

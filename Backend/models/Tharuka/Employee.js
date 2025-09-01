@@ -38,4 +38,4 @@ const employeeSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-export default mongoose.model("Employee", employeeSchema);
+export default mongoose.models.Employee ||mongoose.model("Employee", employeeSchema);

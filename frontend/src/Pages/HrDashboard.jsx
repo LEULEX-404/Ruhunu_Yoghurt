@@ -271,7 +271,7 @@ export default function HrDashboard() {
                                             <td>{emp.position}</td>
                                             <td>{emp.phone}</td>
                                             <td>
-                                                <button onClick = {() => openEditModal(emp)} className='assign-btn'>Update</button>
+                                                <button onClick = {() => openEditModal(emp)} className='update'>Update</button>
                                                 <button onClick = {() => handleDeleteEmployee(emp._id)} className='delete-btn'>Delete</button>
                                             </td>
                                         </tr>

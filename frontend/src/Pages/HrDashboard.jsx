@@ -195,7 +195,7 @@ export default function HrDashboard() {
                     {view === 'add' && (
                         <div className = 'contend-card'>
                             <div className = 'add-employee-form'>
-                                <h2>Add New Employee</h2>
+                                <h2>ADD NEW EMPLOYEE</h2>
 
                                 <form onSubmit = { handleAddEmployee } className = 'add-form'>
                                     <div className = 'form-group'>
@@ -215,7 +215,7 @@ export default function HrDashboard() {
 
                     {(view === 'unassigned' ) && (
                         <div className = 'content-card'>
-                            <h2>{view === 'unassigned' ? 'Unassigned Employees' : 'Assigned Employees'}</h2>
+                            <h2>{view === 'unassigned' ? 'UNASSIGNED EMPLOYEE' : 'Assigned Employees'}</h2>
                             <table className>
                                 <thead>
                                     <tr>
@@ -237,7 +237,7 @@ export default function HrDashboard() {
                                             <td>{emp.position}</td>
                                             <td>{emp.phone}</td>
                                             <td>
-                                                <button onClick = {() => openAssignModal(emp)} className='assign-btn'>Assign Role</button>
+                                                <button onClick = {() => openAssignModal(emp)} className='submit-btn'>Assign Role</button>
                                                 <button onClick = {() => handleDeleteEmployee(emp._id)} className='delete-btn'>Delete</button>
                                             </td>
                                         </tr>
@@ -249,7 +249,7 @@ export default function HrDashboard() {
 
                     {(view === 'assigned' ) && (
                         <div className = 'content-card'>
-                            <h2>{view === 'unassigned' ? 'Unassigned Employees' : 'Assigned Employees'}</h2>
+                            <h2>{view === 'unassigned' ? 'Unassigned Employees' : 'ASSIGNED EMPLOYEE'}</h2>
                             <table className>
                                 <thead>
                                     <tr>

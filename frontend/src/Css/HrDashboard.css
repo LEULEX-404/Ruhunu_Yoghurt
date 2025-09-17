@@ -323,8 +323,46 @@ tr:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+.delete-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7c0909, #cf5971);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.update {
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0a1bd0, #2cb4c3);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.update:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
 /* Dark Mode */
 .dashboard-container .main-content .dark {
+  background: #000;
+  color: #eee;
+}
+.dashboard-container .dashboard-view h2 .dark {
   background: #000;
   color: #eee;
 }
@@ -367,6 +405,12 @@ tr:hover {
   box-shadow: 0 6px 16px rgba(0,0,0,0.4);
 }
 
+.dashboard-container.dark .content-card h2 {
+  color: #eee;
+} 
+.add-employee-card .dark h2 {
+  color: #eee;
+} 
 
 /* Modal Overlay */
 .modal-overlay {
@@ -423,4 +467,37 @@ tr:hover {
   background: rgba(30,30,47,0.95);
   color: #eee;
   border: 1px solid rgba(255,255,255,0.1);
+}
+
+
+/* Force text visibility in dark mode */
+.dashboard-container.dark,
+.dashboard-container.dark h1,
+.dashboard-container.dark h2,
+.dashboard-container.dark h3,
+.dashboard-container.dark h4,
+.dashboard-container.dark h5,
+.dashboard-container.dark h6,
+.dashboard-container.dark p,
+.dashboard-container.dark span,
+.dashboard-container.dark label,
+.dashboard-container.dark td,
+.dashboard-container.dark th {
+  color: #eee !important;
+}
+
+/* Sidebar menu fix */
+.dashboard-container.dark .sidebar-menu li {
+  color: #eee;
+}
+
+/* Profile section text */
+.dashboard-container.dark .profile-section span {
+  color: #eee;
+}
+
+/* Table header and cell fix */
+.dashboard-container.dark table th,
+.dashboard-container.dark table td {
+  color: #eee;
 }

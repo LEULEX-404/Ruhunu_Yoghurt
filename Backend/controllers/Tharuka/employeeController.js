@@ -1,4 +1,4 @@
-import Employee from '../../models/Tharuka/employee.js';
+import Employee from '../../models/Tharuka/Employee.js';
 
 export const createEmployee = async (req, res) => {
     try{

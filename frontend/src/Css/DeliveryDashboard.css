@@ -314,33 +314,49 @@ input:checked + .slider:before {
   transform: translateX(20px);
 }
 
+
 /* Dark Mode CSS */
 body.dark-mode {
   background: #1f2937;
-  color: #f3f4f6;
+  color: #f3f4f6; /* Default text color */
 }
-body.dark-mode .dashboard-wrapper{
-  background: #1f2937;
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6,
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode li,
+body.dark-mode .subtitle {
+  color: #f3f4f6 !important;
 }
 
 body.dark-mode .sidebar {
   background: rgba(31, 41, 55, 0.9);
   color: #f3f4f6;
 }
-body.dark-mode .main-content{
-    background: rgba(31, 41, 55, 0.9);
-  color: #f3f4f6;
-}
-body.dark-mode .subtitle h2 h3{
-  color: #f3f4f6;
-}
 
+body.dark-mode .main-content {
+  background: rgba(31, 41, 55, 0.9);
+  color: #f3f4f6;
+}
 
 body.dark-mode .stat-card,
 body.dark-mode .order-card,
-body.dark-mode .card {
+body.dark-mode .card,
+body.dark-mode .driver-card {
   background: rgba(255,255,255,0.1);
   color: #f3f4f6;
+  border-color: rgba(255,255,255,0.2);
+}
+
+body.dark-mode .sidebar li.active,
+body.dark-mode .sidebar li:hover {
+  background: var(--primary-color);
+  color: #ffffff !important;
 }
 
 body.dark-mode .assign-btn {
@@ -349,6 +365,24 @@ body.dark-mode .assign-btn {
 
 body.dark-mode .assign-btn:hover {
   background: #7c3aed;
+}
+
+body.dark-mode .schedule-btn {
+  background: #22c55e;
+  color: #fff;
+}
+
+body.dark-mode .schedule-btn:hover {
+  background: #16a34a;
+}
+
+body.dark-mode .card:hover {
+  border-color: var(--primary-color);
+}
+
+body.dark-mode .card.selected {
+  border-color: var(--primary-color);
+  background: rgba(113, 15, 205, 0.1);
 }
 
 .schedule-wrapper {

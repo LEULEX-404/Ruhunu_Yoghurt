@@ -77,3 +77,15 @@ export const deleteEmployee = async (req, res) => {
         res.status(500).json({ message: 'Error deleting employee', error: error.message });
     }
 };
+
+export function isAdmin(req){
+    if(req.employee == null){
+        return false;
+    }
+    
+    if(req.employee.position == "Product Manager" || req.employee.position == "Stock Manager") {
+        return true;
+    }
+    
+    return false;
+};

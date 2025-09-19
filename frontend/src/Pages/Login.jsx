@@ -114,7 +114,7 @@ export default function LoginPage() {
               </button>
               <button
                 className="button"
-                onClick={() => (window.location.href = "/attendance")}
+                onClick={() => (window.location.href = "/attendence")}
               >
                 Go to Attendance
               </button>

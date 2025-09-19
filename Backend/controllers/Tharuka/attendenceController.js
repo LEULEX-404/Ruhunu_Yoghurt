@@ -29,13 +29,13 @@ export const checkIn = async (req, res) => {
 
         if(existing) return res.status(400).json({ message: 'Already checked in today' });
 
-        const newAttendence = new attendence({
+        const newAttendence = new Attendence({
             employeeID: req.user.employeeID,
             checkInTime: new Date()
         });
 
         await newAttendence.save();
-        res.json({ message: 'Checked in successfully', attendence: newAttendence });
+        res.json({ message: 'Checked in successfully', Attendence: newAttendence });
     }
     catch (error) {
         res.status(500).json({ message: 'Error during check-in', error: error.message });

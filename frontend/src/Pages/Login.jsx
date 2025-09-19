@@ -11,6 +11,8 @@ export default function LoginPage() {
     });
 
     const [showRegister, setShowRegister] = useState(false);
+    const [showChoice, setShowChoice] = useState(false);
+    const [user, setUser] = useState(null);
 
 
     const handleSubmit = async (e) => {
@@ -22,11 +24,15 @@ export default function LoginPage() {
         const { data } = response;
         localStorage.setItem("token", data.token);
 
-        if (data.user.role === "HR Manager") {
-            window.location.href = "/hrDashboard";
-        } else if (data.user.role === "Delivery Manager") {
-            window.location.href = "/deliveryDashboard";
-        } else if (data.user.role === "customer") {
+        if (data.user.role === "HR Manager" || data.user.role === "Delivery Manager") {
+            setShowChoice(true);
+            setUser(data.user);
+            alert(`Logged in as ${data.user.role}. Please choose your dashboard.`);
+        }
+        else if (data.user.role === "staff" || data.user.role === "driver") {
+          window.location.href = "/attendence";
+        } 
+        else if (data.user.role === "customer") {
           alert("Customer log in here.");
         }else {
             alert("Unauthorized role");
@@ -89,6 +95,34 @@ export default function LoginPage() {
          </div>
        </div>
      )}
+
+      {/* ✅ Manager Choice Modal */}
+      {showChoice && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Hello {user?.name}, Where do you want to go?</h2>
+            <div className="choice-buttons">
+              <button
+                className="button"
+                onClick={() =>
+                  user.role === "HR Manager"
+                    ? (window.location.href = "/hrDashboard")
+                    : (window.location.href = "/deliveryDashboard")
+                }
+              >
+                Go to Dashboard
+              </button>
+              <button
+                className="button"
+                onClick={() => (window.location.href = "/attendance")}
+              >
+                Go to Attendance
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
     );
 }

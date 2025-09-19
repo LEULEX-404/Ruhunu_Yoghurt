@@ -328,7 +328,6 @@ body.dark-mode h4,
 body.dark-mode h5,
 body.dark-mode h6,
 body.dark-mode p,
-body.dark-mode span,
 body.dark-mode li,
 body.dark-mode .subtitle {
   color: #f3f4f6 !important;
@@ -344,7 +343,7 @@ body.dark-mode .main-content {
   color: #f3f4f6;
 }
 
-body.dark-mode .stat-card,
+
 body.dark-mode .order-card,
 body.dark-mode .card,
 body.dark-mode .driver-card {

@@ -77,3 +77,40 @@ export const deleteEmployee = async (req, res) => {
         res.status(500).json({ message: 'Error deleting employee', error: error.message });
     }
 };
+
+export function isAdmin(req){
+    if(req.employee == null){
+        return false;
+    }
+    
+    if(req.employee.position == "Product Manager" || req.employee.position == "Stock Manager") {
+        return true;
+    }
+    
+    return false;
+};
+
+export const getSearchEmployee =async (req, res) =>{
+    try{
+        const search = req.query.search || "";
+
+        let query = { };
+
+        if(search){
+            query.$or = [
+                {employeeID: {$regex: search, $options: "i"}},
+                {name: {$regex: search, $options: "i"}},
+                {position: {$regex: search, $options: "i"}}
+            ]
+        };
+
+        const employees = await Employee.find(query).select(
+            "employeeID name email position phone"
+        );
+
+        res.json(employees);
+    }
+    catch(err){
+        res.status(500).json({error: err.message});
+    }
+};

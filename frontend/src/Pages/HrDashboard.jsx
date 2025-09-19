@@ -242,6 +242,12 @@ export default function HrDashboard() {
                     {(view === 'unassigned' ) && (
                         <div className = 'content-card'>
                             <h2>UNASSIGNED EMPLOYEE</h2>
+                            <input className = 'search-bar'
+                              type="text"
+                              placeholder="Search Employee..."
+                              value={employeeSearch}
+                              onChange={(e) => setEmployeeSearch(e.target.value)}
+                            />
                             <table className>
                                 <thead>
                                     <tr>

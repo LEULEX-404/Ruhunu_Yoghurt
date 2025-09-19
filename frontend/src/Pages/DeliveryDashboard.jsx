@@ -7,6 +7,7 @@ export default function DeliveryDashboard()
     const [activeSection, setActiveSection] = useState("createDelivery");
 
     const [orders, setOrders] = useState([]);
+    const [orderSearch, setOrderSearch] = useState("");
 
     const [deliveries, setDeliveries] = useState([]);
     const [drivers, setDrivers] = useState([]);
@@ -25,6 +26,23 @@ export default function DeliveryDashboard()
             alert("Failed to fetch orders");
         }
     };
+
+    const searchOrders = async (searchText) =>{
+      try{
+        if(!searchText){
+          return pendingOrders();
+        }
+        const res = await axios.get(
+          `http://localhost:8070/api/deliveries/search/orders?search=${searchText}`
+        );
+        setOrders(res.data);
+      }
+      catch(err){
+        console.error(err);
+        alert("Failed to search orders.")
+      }
+    };
+
 
       const driversDeliveries = async () =>{
           try{
@@ -55,6 +73,14 @@ export default function DeliveryDashboard()
         deliveriesAssigned();
         
     },[])
+
+    useEffect(() =>{
+      const delayDebounce = setTimeout(() =>{
+        searchOrders(orderSearch);
+      },400);
+
+      return() => clearTimeout(delayDebounce);
+    }, [orderSearch]);
 
     const handleCreateDelivery = (orderNumber) =>{
         axios.post(`http://localhost:8070/api/deliveries/create`,{orderNumber}).then(() =>{
@@ -154,6 +180,14 @@ export default function DeliveryDashboard()
         {activeSection === "createDelivery" && (
             <div>
                 <h2>Pending Orders</h2>
+                <input
+                  type="text"
+                  placeholder="Search pending orders..."
+                  value={orderSearch}
+                  onChange={(e) => setOrderSearch(e.target.value)}
+                  className="search-input"
+                />
+
                 <div className = "order-list">
                     {orders.map(order => (
                         <div key ={order._id} className ="order-card">

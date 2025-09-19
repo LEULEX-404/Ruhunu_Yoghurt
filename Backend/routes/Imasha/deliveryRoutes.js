@@ -1,5 +1,5 @@
 import express from 'express';
-import {createDelivery, getPendingOrders,getAssignDeliveries} from "../../controllers/Imasha/deliveryController.js";
+import {createDelivery, getPendingOrders,getAssignDeliveries, getSearchOrder} from "../../controllers/Imasha/deliveryController.js";
 import {assignDelivery, getDeliveriesandDrivers} from "../../controllers/Imasha/assignDriverController.js";
 
 const router = express.Router();
@@ -9,5 +9,6 @@ router.get("/pending",getPendingOrders);
 router.post("/assign",assignDelivery);
 router.get("/assign",getDeliveriesandDrivers);
 router.get("/deliveries",getAssignDeliveries);
+router.get("/search/orders", getSearchOrder);
 
 export default router;

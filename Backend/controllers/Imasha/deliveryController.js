@@ -73,4 +73,28 @@ export const getAssignDeliveries = async (req,res) =>{
     }
 };
 
+export const getSearchOrder = async (req, res) =>{
+    try{
+        const search = req.query.search || "";
+
+        let query = { status: "pending"};
+
+        if(search){
+            query.$or = [
+                {customerName: {$regex: search, $options: "i"}},
+                {orderNumber: {$regex: search, $options: "i"}},
+                {address: {$regex: search, $options: "i"}}
+            ]
+        };
+
+            const pendingOrders = await Order.find(query).select(
+            "orderNumber customerName items total address productWeight"
+            );
+ 
+        res.json(pendingOrders);
+    }catch(err){
+        res.status(500).json({error: err.message});
+    }
+};
+
 

@@ -328,7 +328,6 @@ body.dark-mode h4,
 body.dark-mode h5,
 body.dark-mode h6,
 body.dark-mode p,
-body.dark-mode span,
 body.dark-mode li,
 body.dark-mode .subtitle {
   color: #f3f4f6 !important;
@@ -344,7 +343,7 @@ body.dark-mode .main-content {
   color: #f3f4f6;
 }
 
-body.dark-mode .stat-card,
+
 body.dark-mode .order-card,
 body.dark-mode .card,
 body.dark-mode .driver-card {
@@ -448,6 +447,45 @@ body.dark-mode .card.selected {
 
 .schedule-btn:hover {
   background: #43a047;
+}
+
+/* ===== Search Bar ===== */
+.search-input {
+  width: 60%;
+  max-width: 500px;
+  padding: 12px 16px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 12px;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(6px);
+  outline: none;
+  color: #111827;
+  transition: all 0.3s ease;
+  margin: 20px 0;
+  display: block;
+}
+
+.search-input::placeholder {
+  color: #9ca3af; /* Subtle placeholder */
+  font-style: italic;
+}
+
+.search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 6px rgba(99, 102, 241, 0.4);
+  background: #ffffff;
+  transform: translateY(-2px);
+}
+
+body.dark-mode .search-input {
+  background: rgba(255,255,255,0.1);
+  color: #f3f4f6;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+body.dark-mode .search-input::placeholder {
+  color: #d1d5db;
 }
 
 

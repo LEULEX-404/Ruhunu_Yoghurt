@@ -89,3 +89,28 @@ export function isAdmin(req){
     
     return false;
 };
+
+export const getSearchEmployee =async (req, res) =>{
+    try{
+        const search = req.query.search || "";
+
+        let query = { };
+
+        if(search){
+            query.$or = [
+                {employeeID: {$regex: search, $options: "i"}},
+                {name: {$regex: search, $options: "i"}},
+                {position: {$regex: search, $options: "i"}}
+            ]
+        };
+
+        const employees = await Employee.find(query).select(
+            "employeeID name email position phone"
+        );
+
+        res.json(employees);
+    }
+    catch(err){
+        res.status(500).json({error: err.message});
+    }
+};

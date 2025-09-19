@@ -5,6 +5,8 @@ import '../Css/HrDashboard.css';
 
 export default function HrDashboard() {
     const [employees, setEmployees] = useState([]);
+    const [employeeSearch,setEmployeeSearch] = useState("");
+
     const [view, setView] = useState('dashboard');
     const [darkMode, setDarkMode] = useState(false);
 
@@ -20,6 +22,22 @@ export default function HrDashboard() {
             setEmployees(response.data);
         }catch(error){
             console.error('Error fetching employees:', error);
+        }
+    };
+
+    const searchEmployees = async (searchText) =>{
+        try{
+            if(!searchText){
+                return fetchEmployees();
+            }
+
+            const res = await axios.get(
+                `http://localhost:8070/api/employees/search?search=${searchText}`
+            );
+            setEmployees(res.data);
+        }catch(err){
+            console.error(err);
+            alert("Failed to search Employees.");
         }
     };
 
@@ -50,6 +68,14 @@ export default function HrDashboard() {
     useEffect(() => {
         fetchEmployees();
     }, []);
+
+    useEffect(() =>{
+        const delay = setTimeout(() =>{
+            searchEmployees(employeeSearch);
+        },400);
+
+        return() => clearTimeout(delay);
+    }, [employeeSearch])
 
     const [newEmployee, setNewEmployee] = useState({
         employeeID: '',
@@ -177,7 +203,7 @@ export default function HrDashboard() {
 
                 <main className="main-content">
                     <div className = 'topbar'>
-                        <input className = 'search-bar' type = 'text' placeholder='Search...'/>
+                        
 
                         <div className = 'profile-section'>
                             <img src = 'https://via.placeholder.com/40' alt = 'Profile' className='profile-pic'/>
@@ -215,7 +241,7 @@ export default function HrDashboard() {
 
                     {(view === 'unassigned' ) && (
                         <div className = 'content-card'>
-                            <h2>{view === 'unassigned' ? 'UNASSIGNED EMPLOYEE' : 'Assigned Employees'}</h2>
+                            <h2>UNASSIGNED EMPLOYEE</h2>
                             <table className>
                                 <thead>
                                     <tr>
@@ -249,7 +275,14 @@ export default function HrDashboard() {
 
                     {(view === 'assigned' ) && (
                         <div className = 'content-card'>
-                            <h2>{view === 'unassigned' ? 'Unassigned Employees' : 'ASSIGNED EMPLOYEE'}</h2>
+                            <h2>ASSIGNED EMPLOYEE</h2>
+                            <input className = 'search-bar'
+                              type="text"
+                              placeholder="Search Employee..."
+                              value={employeeSearch}
+                              onChange={(e) => setEmployeeSearch(e.target.value)}
+                            />
+                            
                             <table className>
                                 <thead>
                                     <tr>

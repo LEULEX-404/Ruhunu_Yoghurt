@@ -67,4 +67,5 @@ export const earlyLeave = async (req, res) => {
     catch (error) {
         res.status(500).json({ message: 'Error during early leave', error: error.message });
     }
+    
 };

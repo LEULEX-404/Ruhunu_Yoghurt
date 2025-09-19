@@ -7,9 +7,11 @@ export default function DeliveryDashboard()
     const [activeSection, setActiveSection] = useState("createDelivery");
 
     const [orders, setOrders] = useState([]);
-    const [orderSearch, setOrderSearch] = useState("");
+    const [orderSearch, setOrderSearch] = useState([]);
 
     const [deliveries, setDeliveries] = useState([]);
+    const [delieverySearch, setDeliverySearch] = useState([]);
+
     const [drivers, setDrivers] = useState([]);
     const [selectDeliveries, setSelectDeliveries] = useState([]);
     const [selectDriver, setSelectDriver] = useState(null);
@@ -42,8 +44,6 @@ export default function DeliveryDashboard()
         alert("Failed to search orders.")
       }
     };
-
-
       const driversDeliveries = async () =>{
           try{
             const res = await axios.get(`http://localhost:8070/api/deliveries/assign`)
@@ -55,10 +55,12 @@ export default function DeliveryDashboard()
         }
     };
 
+
       const deliveriesAssigned = async () =>{
           try{
             const res = await axios.get('http://localhost:8070/api/deliveries/deliveries')
-            setAssignedDeliveries(res.data || []);
+            const deliveriesArray = Array.isArray(res.data) ? res.data : [];
+            setAssignedDeliveries(deliveriesArray);
         }catch(err){
             console.error(err);
             alert("Failed to fetch assigned deliveries.");
@@ -168,6 +170,16 @@ export default function DeliveryDashboard()
 
         <main className="main-content">
         <h1>Dairy Product Delivery Management</h1>
+        {activeSection === "createDelivery" && (
+          <input
+                  type="text"
+                  placeholder="Search pending orders..."
+                  value={orderSearch}
+                  onChange={(e) => setOrderSearch(e.target.value)}
+                  className="search-input"
+                />
+        )}
+        
         <p className="subtitle">Monitor and manage all delivery operations</p>
         
         <div className="stats-row">
@@ -179,14 +191,7 @@ export default function DeliveryDashboard()
 
         {activeSection === "createDelivery" && (
             <div>
-                <h2>Pending Orders</h2>
-                <input
-                  type="text"
-                  placeholder="Search pending orders..."
-                  value={orderSearch}
-                  onChange={(e) => setOrderSearch(e.target.value)}
-                  className="search-input"
-                />
+                
 
                 <div className = "order-list">
                     {orders.map(order => (

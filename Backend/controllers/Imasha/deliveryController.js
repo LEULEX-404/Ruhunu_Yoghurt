@@ -97,4 +97,27 @@ export const getSearchOrder = async (req, res) =>{
     }
 };
 
+export const getSearchDeliveries = async (req,res) => {
+    try{
+        const search = req.query.search || "";
+        let query =  { }
+
+        if(search){
+            query.$or =[
+                {orderNumber: {$regex: search, $options: "i"}},
+                {customerName: {$regex: search, $options: "i"}},
+                {address: {$regex: search, $options: "i"}},
+                {productWeight: {$regex: search, $options: "i"}},
+            ]
+        };
+        const deliveries = await Order.find(query).select(
+            "orderNumber customerName items total address productWeight distanceKm cost"
+        );
+        res.json(deliveries || []);
+    }
+    catch(err){
+        res.json(500).json({error: err.message});
+    }
+};
+
 

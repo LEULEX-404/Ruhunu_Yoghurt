@@ -307,7 +307,7 @@ body {
 }
 
 input:checked + .slider {
-  background-color: #6366f1;
+  background-color: #626263;
 }
 
 input:checked + .slider:before {
@@ -334,7 +334,7 @@ body.dark-mode .subtitle {
 }
 
 body.dark-mode .sidebar {
-  background: rgba(31, 41, 55, 0.9);
+  background: rgba(69, 92, 124, 0.9);
   color: #f3f4f6;
 }
 

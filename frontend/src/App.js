@@ -6,6 +6,7 @@ import HrDashboard from './Pages/HrDashboard';
 import DeliveryDashboard from './Pages/DeliveryDashboard';
 import LoginPage from './Pages/Login';
 import AttendencePage from './Pages/AttendencePage';
+import DriverPortal from './Pages/DriverPortal';
 
 axios.defaults.baseURL = 'http://localhost:8070'; 
 axios.defaults.withCredentials = true;
@@ -21,6 +22,7 @@ function Appwrapper() {
       <Route path="/hrDashboard" element={<HrDashboard />} />
       <Route path="/deliveryDashboard" element ={<DeliveryDashboard/>} />
       <Route path="/attendence" element ={<AttendencePage/>} />
+       <Route path="/driverPortal" element ={<DriverPortal/>} />
     </Routes>
     </div>
   )

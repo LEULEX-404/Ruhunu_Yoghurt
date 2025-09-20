@@ -6,6 +6,7 @@ import employeeRoutes from './routes/Tharuka/employeeRoutes.js';
 import deliveryRoutes from './routes/Imasha/deliveryRoutes.js';
 import attendenceRoutes from './routes/Tharuka/attendence.js';
 import cors from 'cors';
+import productRouter from './routes/Pathum/productRoute.js';
 
 dotenv.config();
 connectDB();
@@ -18,6 +19,7 @@ app.use('/api',authRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/deliveries',deliveryRoutes);
 app.use('/api/attendance', attendenceRoutes);
+app.use('/api/products', productRouter)
 
 const PORT = process.env.PORT || 8070;
 

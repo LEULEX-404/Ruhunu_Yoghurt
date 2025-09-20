@@ -21,7 +21,7 @@ const employeeSchema = new mongoose.Schema({
 
     position: {
     type: String,
-    enum: ["Unassigned", "Manager", "Driver", "Staff"],
+    enum: ["Unassigned", "HR Manager", "Delivery Manager", "Product Manager", "Stock Manager", "Order Manager", "Driver", "Staff"],
     default: "Unassigned"
     },
 

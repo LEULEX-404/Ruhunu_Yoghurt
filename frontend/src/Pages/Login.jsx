@@ -24,12 +24,12 @@ export default function LoginPage() {
         const { data } = response;
         localStorage.setItem("token", data.token);
 
-        if (data.user.role === "HR Manager" || data.user.role === "Delivery Manager") {
+        if (data.user.role === "HR Manager" || data.user.role === "Delivery Manager"|| data.user.role === "Order Manager" || data.user.role === "Product Manager" || data.user.role === "Stock Manager") {
             setShowChoice(true);
             setUser(data.user);
             alert(`Logged in as ${data.user.role}. Please choose your dashboard.`);
         }
-        else if (data.user.role === "staff" || data.user.role === "driver") {
+        else if (data.user.role === "Staff" || data.user.role === "Driver") {
           window.location.href = "/attendence";
         } 
         else if (data.user.role === "customer") {
@@ -107,7 +107,17 @@ export default function LoginPage() {
                 onClick={() =>
                   user.role === "HR Manager"
                     ? (window.location.href = "/hrDashboard")
-                    : (window.location.href = "/deliveryDashboard")
+                    : user.role === "Delivery Manager"
+                    ? (window.location.href = "/deliveryDashboard")
+                    : user.role === "Product Manager"
+                    ? (window.location.href = "/productDashboard")
+                    : user.role === "Order Manager"
+                    ? (window.location.href = "/orderDashboard")
+                    : user.role === "Stock Manager"
+                    ? (window.location.href = "/stockDashboard")
+                    : user.role === "Driver"
+                    ? (window.location.href = "/driverPortal")
+                    : alert("Login Error")
                 }
               >
                 Go to Dashboard

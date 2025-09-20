@@ -1,4 +1,5 @@
 import Delivery from '../../models/Imasha/Delivery.js';
+import Driver from '../../models/Tharuka/Driver.js';
 import { getCoordinates, getDrivingDistance } from '../../utils/distance.js';
 import Order from '../../models/Lasiru/order.js';
 import AssignedDelivery from '../../models/Imasha/AssignDelivery.js';
@@ -97,26 +98,50 @@ export const getSearchOrder = async (req, res) =>{
     }
 };
 
-export const getSearchDeliveries = async (req,res) => {
+
+export const searchDeliveriesAndDrivers = async (req,res) =>{
     try{
-        const search = req.query.search || "";
-        let query =  { }
+        const { search } = req.query;
+
+        let deliveries = [];
+        let drivers = [];
 
         if(search){
-            query.$or =[
-                {orderNumber: {$regex: search, $options: "i"}},
-                {customerName: {$regex: search, $options: "i"}},
-                {address: {$regex: search, $options: "i"}},
-                {productWeight: {$regex: search, $options: "i"}},
+        const query  = search ? { $regex: search, $options: "i"} : {};
+        const isNumeric = !isNaN(search);
+
+        let deliveryconditon = [
+                {customerName: query},
+                {orderID: query},
+                {address: query},
+            ];
+
+        if(isNumeric){
+            deliveryconditon.push({
+                productWeight: Number(search)
+            });
+        }
+
+        deliveries = await Delivery.find({
+            status: "pending",
+            $or: deliveryconditon
+        });
+
+        drivers = await Driver.find({
+            availability: true,
+            $or: [
+                {name: query},
+                {currentLocation: query}
             ]
-        };
-        const deliveries = await Order.find(query).select(
-            "orderNumber customerName items total address productWeight distanceKm cost"
-        );
-        res.json(deliveries || []);
+        });
+    }else{
+        deliveries = await Delivery.find({ status: "pending" });
+      drivers = await Driver.find({ availability: true });
+    }
+        res.json({Deliveries: deliveries, Drivers: drivers});
     }
     catch(err){
-        res.json(500).json({error: err.message});
+        res.status(500).json({error: err.message});
     }
 };
 

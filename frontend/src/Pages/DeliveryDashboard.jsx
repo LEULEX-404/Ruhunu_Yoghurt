@@ -10,7 +10,7 @@ export default function DeliveryDashboard()
     const [orderSearch, setOrderSearch] = useState([]);
 
     const [deliveries, setDeliveries] = useState([]);
-    const [delieverySearch, setDeliverySearch] = useState([]);
+    const [deliverySearch, setDeliverySearch] = useState([]);
 
     const [drivers, setDrivers] = useState([]);
     const [selectDeliveries, setSelectDeliveries] = useState([]);
@@ -56,6 +56,25 @@ export default function DeliveryDashboard()
     };
 
 
+    const searchDeliveriesAndDrivers = async (searchText) => {
+      try{
+        if(!searchText){
+          return driversDeliveries();
+        }
+
+        const res = await axios.get(
+          `http://localhost:8070/api/deliveries/search/deliveries?search=${searchText}`
+        );
+        setDeliveries(res.data.Deliveries || []);
+        setDrivers(res.data.Drivers || []);
+      }
+      catch(err){
+        console.error(err);
+        alert("Failed to search deliveries or Drivers.")
+      }
+    };
+
+
       const deliveriesAssigned = async () =>{
           try{
             const res = await axios.get('http://localhost:8070/api/deliveries/deliveries')
@@ -83,6 +102,14 @@ export default function DeliveryDashboard()
 
       return() => clearTimeout(delayDebounce);
     }, [orderSearch]);
+
+    useEffect(() =>{
+      const delayDebounce = setTimeout(() =>{
+        searchDeliveriesAndDrivers(deliverySearch);
+      },400);
+
+      return() => clearTimeout(delayDebounce);
+    }, [deliverySearch]);
 
     const handleCreateDelivery = (orderNumber) =>{
         axios.post(`http://localhost:8070/api/deliveries/create`,{orderNumber}).then(() =>{
@@ -176,6 +203,19 @@ export default function DeliveryDashboard()
                   placeholder="Search pending orders..."
                   value={orderSearch}
                   onChange={(e) => setOrderSearch(e.target.value)}
+                  className="search-input"
+                />
+        )}
+
+        {activeSection === "assignDriver" && (
+          <input
+                  type="text"
+                  placeholder="Search delivery or driver..."
+                  value={deliverySearch}
+                  onChange={(e) => {
+                      setDeliverySearch(e.target.value);
+                      searchDeliveriesAndDrivers(e.target.value);
+                    }}
                   className="search-input"
                 />
         )}

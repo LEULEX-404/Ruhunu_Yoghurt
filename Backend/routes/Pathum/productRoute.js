@@ -1,10 +1,11 @@
 import express from 'express';
-import { getProduct, saveProduct, updateProduct } from '../../controllers/Pathum/productController.js';
+import { deleteProduct, getProduct, saveProduct, updateProduct } from '../../controllers/Pathum/productController.js';
 
 const productRouter = express.Router();
 
 productRouter.post("/", saveProduct);
 productRouter.get("/", getProduct);
-productRouter.get("/:productId", updateProduct)
+productRouter.put("/:productId", updateProduct)
+productRouter.delete("/:productId", deleteProduct)
 
 export default productRouter;

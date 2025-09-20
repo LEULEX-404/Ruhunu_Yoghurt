@@ -112,9 +112,14 @@ export default function HrDashboard() {
     const handleUpdateEmployee = async (e) =>{
         e.preventDefault();
 
+        if (!editEmployee) {
+            alert("No employee selected to update!");
+            return;
+        }
+
         try{
             const response = await axios.put(`http://localhost:8070/api/employees/update/${editEmployee._id}`, 
-                { name: editEmployee.name, email: editEmployee.email, position: editEmployee.position, phone: editEmployee.phone });
+                { name: editEmployee.name, email: editEmployee.email, position: editEmployee.position, phone: editEmployee.phone, vehicleCapacity: editEmployee.vehicleCapacity || 0 });
 
             console.log('Employee updated:', response.data);
             alert('Employee updated successfully',response.data.message);
@@ -146,7 +151,7 @@ export default function HrDashboard() {
         e.preventDefault();
 
         try{
-            const response = await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, { position: selectedEmployee.position});
+            const response = await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, { position: selectedEmployee.position, vehicleCapacity: selectedEmployee.vehicleCapacity || 0 });
             console.log('Role assigned:', response.data);
             alert('Role assigned successfully',response.data.message);
             fetchEmployees();
@@ -352,6 +357,15 @@ export default function HrDashboard() {
                                                 <option value = 'Driver'>Driver</option>
                                                 <option value = 'Staff'>Staff</option>
                                             </select>
+                                            {selectedEmployee?.position === "Driver" && (
+                                            <input
+                                                type="number"
+                                                placeholder="Vehicle Capacity"
+                                                value={selectedEmployee?.vehicleCapacity || ''}
+                                                onChange={(e) => setSelectedEmployee({...selectedEmployee, vehicleCapacity: e.target.value})}
+                                                required
+                                            />
+                                        )}
                                         </div>
 
                                         <div className = 'modal-buttons'>
@@ -404,6 +418,16 @@ export default function HrDashboard() {
                                             <option value="Driver">Driver</option>
                                             <option value="Staff">Staff</option>
                                         </select>
+
+                                        {editEmployee?.position === "Driver" && (
+                                            <input
+                                                type="number"
+                                                placeholder="Vehicle Capacity"
+                                                value={editEmployee?.vehicleCapacity || ''}
+                                                onChange={(e) => setEditEmployee({...editEmployee, vehicleCapacity: e.target.value})}
+                                                required
+                                            />
+                                        )}
                                     </div>
                                     <div className="modal-buttons">
                                         <button type="submit" className="submit-btn">Update</button>

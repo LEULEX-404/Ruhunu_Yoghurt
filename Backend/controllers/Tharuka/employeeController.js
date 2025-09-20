@@ -1,4 +1,5 @@
 import Employee from '../../models/Tharuka/Employee.js';
+import Driver from '../../models/Tharuka/Driver.js';
 
 export const createEmployee = async (req, res) => {
     try{
@@ -47,7 +48,7 @@ export const getEmployeeById = async (req, res) => {
 export const updateEmployee = async (req, res) => {
     try{
         const { id } = req.params;
-        const { name, email, position, phone } = req.body;
+        const { name, email, position, phone, vehicleCapacity } = req.body;
 
         const updatEmployee = await Employee.findByIdAndUpdate(
             id,
@@ -57,6 +58,28 @@ export const updateEmployee = async (req, res) => {
 
         if(!updatEmployee){
             return res.status(404).json({ message: 'Employee not found' });
+        }
+
+        if (position === "Driver") {
+          const existingDriver = await Driver.findOne({ employeeID: updatEmployee.employeeID });
+          if (!existingDriver) {
+            const newDriver = new Driver({
+              employeeID: updatEmployee.employeeID,
+              name: updatEmployee.name,
+              email: updatEmployee.email,
+              phone: updatEmployee.phone,
+              vehicleCapacity: Number(vehicleCapacity)
+            });
+            await newDriver.save();
+          }else {
+            existingDriver.name = updatEmployee.name;
+            existingDriver.email = updatEmployee.email;
+            existingDriver.phone = updatEmployee.phone;
+            existingDriver.vehicleCapacity = Number(vehicleCapacity);
+            await existingDriver.save();
+          }
+        } else {
+          await Driver.findOneAndDelete({ employeeID: updatEmployee.employeeID });
         }
         res.status(200).json({ message: 'Employee updated successfully', employee: updatEmployee });
     }catch(error){

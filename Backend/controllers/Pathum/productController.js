@@ -23,3 +23,20 @@ export async function saveProduct(req, res){
         })
     })
 }
+
+export async function getProduct(req, res){
+    try {
+        if (isAdmin(req)) {
+            const products = await Product.find()
+            res.json(products)
+        }else{
+            const products = await Product.find({isAvailable : true})
+            res.json(products)
+        }
+    } catch (err) {
+        res.json({
+            message : "Failed to get products",
+            error : err
+        })
+    }
+}

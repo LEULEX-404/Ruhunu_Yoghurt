@@ -7,7 +7,7 @@ export default function DriverPortal() {
   return (
     <div className="portal-container">
       {/* Sidebar */}
-      <div className="sidebar">
+      <div className="driversidebar">
         <h2 className="logo">Driver Portal</h2>
         <nav>
           <button

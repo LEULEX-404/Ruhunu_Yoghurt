@@ -60,7 +60,7 @@
     margin: 20px 0;
   }
   
-  .card {
+  .s-card {
     background-color: #1e293b;
     padding: 15px;
     border-radius: 10px;
@@ -70,11 +70,11 @@
     transition: transform 0.2s;
   }
   
-  .card:hover {
+  .s-card:hover {
     transform: translateY(-5px);
   }
   
-  .card h3 {
+  .s-card h3 {
     font-size: 24px;
     color: #38bdf8;
   }
@@ -109,3 +109,6 @@
     border-radius: 8px;
   }
   
+  .modal-content h2{
+    color:black;
+  }

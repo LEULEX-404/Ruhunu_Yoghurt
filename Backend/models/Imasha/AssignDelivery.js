@@ -2,8 +2,13 @@ import mongoose from 'mongoose';
 
 const assignDeliverySchema = new mongoose.Schema({
 
-    driver:{
-        type:mongoose.Schema.Types.ObjectId,
+    driver: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Driver",
+        required: true,
+    },
+    employeeID:{
+        type:String,
         ref:"Driver",
         required:true,
     },
@@ -19,6 +24,19 @@ const assignDeliverySchema = new mongoose.Schema({
         type:Date,
         default:Date.now,
     },
+    status:{
+        type: String,
+        enum: ["assigned", "sceduled", "completed"],
+        default: "assigned"
+    },
+    startTime: {
+        type:Date,
+        default: null
+    },
+    endTime: {
+        type: Date,
+        default: null
+    }
 });
 
 export default mongoose.model("AssignDelivery", assignDeliverySchema)

@@ -18,6 +18,11 @@ export default function DeliveryDashboard()
 
     const [assignedDeliveries, setAssignedDeliveries] = useState([]);
 
+    const [showModal, setShowModal] = useState(false);
+    const [sceduleDeliveryId, setSceduleDeliveryId] = useState(null);
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
+
     const [darkMode, setDarkMode] = useState(false);
 
     const pendingOrders = async () =>{
@@ -74,7 +79,6 @@ export default function DeliveryDashboard()
       }
     };
 
-
       const deliveriesAssigned = async () =>{
           try{
             const res = await axios.get('http://localhost:8070/api/deliveries/deliveries')
@@ -85,6 +89,7 @@ export default function DeliveryDashboard()
             alert("Failed to fetch assigned deliveries.");
         };
     };
+
     useEffect(() =>{
 
         pendingOrders();
@@ -157,7 +162,12 @@ export default function DeliveryDashboard()
         } else {
             alert("Failed to assign delivery.");
         }});
-    }
+    };
+
+    const handleSchedule = (assignedId) => {
+      setSceduleDeliveryId(assignedId);
+      setShowModal(true);
+    };
 
     const toggleDarkMode = () =>{
         setDarkMode(!darkMode);
@@ -167,10 +177,6 @@ export default function DeliveryDashboard()
         else{
             document.body.classList.remove("dark-mode");
         }
-    };
-
-    const handleSchedule = (driverId) =>{
-        alert(`Schedule deliveries for driver ${driverId}`);
     };
 
     return(

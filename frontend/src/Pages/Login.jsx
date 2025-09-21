@@ -23,6 +23,7 @@ export default function LoginPage() {
 
         const { data } = response;
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user))
 
         if (data.user.role === "HR Manager" || data.user.role === "Delivery Manager"|| data.user.role === "Order Manager" || data.user.role === "Product Manager" || data.user.role === "Stock Manager") {
             setShowChoice(true);
@@ -33,7 +34,7 @@ export default function LoginPage() {
           window.location.href = "/attendence";
         } 
         else if (data.user.role === "customer") {
-          alert("Customer log in here.");
+          window.location.href = "/userProfile";
         }else {
             alert("Unauthorized role");
         }

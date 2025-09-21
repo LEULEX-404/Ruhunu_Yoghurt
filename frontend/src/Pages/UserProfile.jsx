@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import "../Css/Profile.css";
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState("profile");
   const [user, setUser] = useState(null);
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editUser, setEditUser] = useState(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -23,9 +27,51 @@ export default function Profile() {
       default:
         return null;
     }
-  };
 
-  // ✅ Render fallback if user is not loaded yet
+  };
+  
+    const openEditModal = (user) =>{
+        setEditUser(user);
+        setEditModalOpen(true);
+    };
+
+    const closeEditModal = () =>{
+        setEditUser(null);
+        setEditModalOpen(false);
+    };
+
+const handleUpdateUser = async (e) =>{
+    e.preventDefault();
+
+    if(!editUser){
+        alert("No User selected to Updated!");
+        return;
+    }
+    const userId = editUser?._id || editUser?.id || user?._id || user?.id;
+
+    if (!userId) {
+        console.error("User ID is missing");
+        return;
+      }
+
+    try{
+        const res = await axios.put(`http://localhost:8070/api/user/update/${editUser.id}`,
+            { name:editUser.name, email:editUser.email, address:editUser.address})
+
+            console.log('User updated:', res.data);
+
+            setUser(res.data.updatedUser || editUser);
+        localStorage.setItem("user", JSON.stringify(res.data.updatedUser || editUser));
+        
+            alert('User updated Successfully', res.data.message);
+            closeEditModal();
+    }
+    catch(error){
+        console.error('error updating user:', error);
+        alert('Failed to update user');
+    }
+}
+
   if (!user) return <p>Loading profile...</p>;
 
   return (
@@ -47,7 +93,7 @@ export default function Profile() {
           </p>
         </div>
         <div className="profile-actions">
-          <button className="edit-btn">Edit Profile</button>
+          <button onClick = {() => openEditModal(user)} className="edit-btn">Edit Profile</button>
           <button className="settings-btn">Settings</button>
         </div>
       </div>
@@ -93,8 +139,43 @@ export default function Profile() {
           Settings
         </button>
       </div>
+      {editModalOpen && (
+        <div className = 'modal-overlay'>
+            <div className = 'modal-content'>
+                <h2>Edit Profile: {editUser?.name}</h2>
+                <form onSubmit = {handleUpdateUser}>
+                    <div className = 'form-group'>
+                        <input
+                            type = "text"
+                            placeholder="Name"
+                            value={editUser?.name || ''}
+                            onChange={(e) => setEditUser({...editUser, name: e.target.value})}
+                            required
+                        />
+                        <input
+                            type = "email"
+                            placeholder="Email"
+                            value={editUser?.email || ''}
+                            onChange={(e) => setEditUser({...editUser, email: e.target.value})}
+                            required
+                        />
+                        <input
+                            type = "text"
+                            placeholder="Address"
+                            value={editUser?.address || ''}
+                            onChange={(e) => setEditUser({...editUser, address: e.target.value})}
+                            required
+                        />
+                    </div>
+                    <div className = 'modal-buttons'>
+                        <button type='submit' className="submit-btn">Update</button>
+                        <button type='button' className="cancel-btn" onClick={closeEditModal}>Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+      )} 
 
-      {/* Tab Content */}
       {renderContent()}
     </div>
   );

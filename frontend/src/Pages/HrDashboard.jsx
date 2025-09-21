@@ -75,7 +75,7 @@ export default function HrDashboard() {
         },400);
 
         return() => clearTimeout(delay);
-    }, [employeeSearch])
+    }, [employeeSearch,])
 
     const [newEmployee, setNewEmployee] = useState({
         employeeID: '',

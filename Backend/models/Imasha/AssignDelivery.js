@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 const assignDeliverySchema = new mongoose.Schema({
 
     driver: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Driver",
-    required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Driver",
+        required: true,
     },
     employeeID:{
         type:String,

@@ -1,12 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios';
 import "../Css/DriverPortal.css";
 
 export default function DriverPortal() {
+
+  const [driver, setDriver] = useState(null);
+
   const [activeSection, setActiveSection] = useState("profile");
+
+
+  const fetchDriver = async ()=>{
+        
+    const storedDriver = localStorage.getItem("user");
+    console.log('driver:',storedDriver)
+    
+    if(storedDriver)
+    {
+       const parsedDriver = JSON.parse(storedDriver);
+      
+      const res = await axios.get(`http://localhost:8070/api/driver/${parsedDriver.id}`);
+      setDriver(res.data);
+      
+  }
+}
+
+  useEffect(() => {
+
+    fetchDriver();
+  },[])
 
   return (
     <div className="portal-container">
-      {/* Sidebar */}
       <div className="driversidebar">
         <h2 className="logo">Driver Portal</h2>
         <nav>
@@ -31,15 +55,14 @@ export default function DriverPortal() {
         </nav>
       </div>
 
-      {/* Content */}
       <div className="main-content">
         {activeSection === "profile" && (
           <div className="section">
             <h2>Driver Profile</h2>
             <div className="card">
-              <p><strong>Name:</strong> John Doe</p>
-              <p><strong>License No:</strong> ABC12345</p>
-              <p><strong>Phone:</strong> +94 71 123 4567</p>
+              <p><strong>Name:</strong>{driver?.name}</p>
+              <p><strong>Email:</strong>{driver?.email}</p>
+              <p><strong>Phone:</strong>{driver?.phone}</p>
             </div>
           </div>
         )}

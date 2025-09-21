@@ -15,7 +15,7 @@
 }
 
 /* Sidebar fixed */
-.sidebar {
+.HR-sidebar {
   width: 250px;
   height: 100vh;
   background: rgba(255, 255, 255, 0.9);
@@ -32,20 +32,20 @@
   transition: all 0.3s ease-in-out;
 }
 
-.sidebar-header h2 {
+.HR-sidebar-header h2 {
   margin: 0;
   font-size: 22px;
   font-weight: 600;
   color: #222;
 }
 
-.sidebar-menu {
+.HR-sidebar-menu {
   list-style: none;
   padding: 0;
   margin-top: 30px;
 }
 
-.sidebar-menu li {
+.HR-sidebar-menu li {
   padding: 12px 14px;
   margin: 6px 0;
   display: flex;
@@ -58,14 +58,14 @@
   transition: all 0.25s ease;
 }
 
-.sidebar-menu li:hover {
+.HR-sidebar-menu li:hover {
   background: linear-gradient(135deg, #4e73df, #1cc88a);
   color: white;
   transform: translateX(4px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-.sidebar-footer {
+.HR-sidebar-footer {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -160,17 +160,17 @@ tr:hover {
   color: #e0e0e0;
 }
 
-.dashboard-container.dark .sidebar {
+.dashboard-container.dark .HR-sidebar {
   background: rgba(30, 30, 47, 0.95);
   border-right: 1px solid rgba(255,255,255,0.05);
   color: #eee;
 }
 
-.dashboard-container.dark .sidebar-menu li {
+.dashboard-container.dark .HR-sidebar-menu li {
   color: #bbb;
 }
 
-.dashboard-container.dark .sidebar-menu li:hover {
+.dashboard-container.dark .HR-sidebar-menu li:hover {
   background: linear-gradient(135deg, #4e73df, #1cc88a);
   color: white;
 }

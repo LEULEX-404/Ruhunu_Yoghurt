@@ -169,6 +169,30 @@ export default function DeliveryDashboard()
       setShowModal(true);
     };
 
+    const submitSchedule = () => {
+      if(!startTime || !endTime){
+        alert("Please select start and end time.");
+        return;
+      }
+
+      axios.post('http://localhost:8070/api/deliveries/schedule', {
+        assignedDeliveryId: sceduleDeliveryId,
+        startTime,
+        endTime
+      })
+      .then(res =>{
+        alert(res.data.message);
+        setShowModal(false);
+        setStartTime("");
+        setEndTime("");
+        deliveriesAssigned();
+      })
+      .catch(err =>{
+        console.error(err);
+        alert("Failed to scedule delivery");
+      });
+    };
+
     const toggleDarkMode = () =>{
         setDarkMode(!darkMode);
         if(!darkMode){
@@ -337,16 +361,44 @@ export default function DeliveryDashboard()
 
             <button
               className="schedule-btn"
-              onClick={() => handleSchedule(ad.driver?._id)}
+              onClick={() => handleSchedule(ad._id)}
             >
               Schedule
             </button>
           </div>
+          
         ))}
+
       </div>
     </div>
     )}
     </main>
+        {showModal && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h2>Set Schedule Time</h2>
+
+              <label>Start Time:</label>
+              <input 
+                type="datetime-local" 
+                value={startTime} 
+                onChange={(e) => setStartTime(e.target.value)} 
+              />
+
+              <label>End Time:</label>
+              <input 
+                type="datetime-local" 
+                value={endTime} 
+                onChange={(e) => setEndTime(e.target.value)} 
+              />
+
+              <div className="modal-actions">
+                <button onClick={submitSchedule}>Confirm</button>
+                <button onClick={() => setShowModal(false)}>Cancel</button>
+              </div>
+            </div>
+          </div>
+      )}
     </div>
-    )
-}
+    );
+};

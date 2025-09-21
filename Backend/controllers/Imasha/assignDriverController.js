@@ -88,7 +88,7 @@ export const getDeliveriesandDrivers = async (req,res)=>{
     }
 }
 
-export const sceduleAssignedDelivery = async (req, res) =>{
+export const scheduleAssignedDelivery = async (req, res) =>{
     try{
         const{assignedDeliveryId, startTime, endTime } = req.body;
 

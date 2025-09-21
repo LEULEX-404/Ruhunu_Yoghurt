@@ -5,6 +5,7 @@ import authRoutes from './routes/Tharuka/authRoutes.js';
 import employeeRoutes from './routes/Tharuka/employeeRoutes.js';
 import deliveryRoutes from './routes/Imasha/deliveryRoutes.js';
 import attendenceRoutes from './routes/Tharuka/attendence.js';
+import userRoutes from './routes/Tharuka/userRoutes.js';
 import cors from 'cors';
 
 dotenv.config();
@@ -18,6 +19,7 @@ app.use('/api',authRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/deliveries',deliveryRoutes);
 app.use('/api/attendance', attendenceRoutes);
+app.use('/api/user',userRoutes);
 
 const PORT = process.env.PORT || 8070;
 

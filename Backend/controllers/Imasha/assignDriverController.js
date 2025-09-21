@@ -28,6 +28,7 @@ export const assignDelivery = async (req, res)=>{
 
             assigned = new AssignedDelivery({
                 driver: driverId,
+                employeeID: driver.employeeID,
                 deliveries: deliveryIds,
                 totalWeight: newDeliveriesWeight,
             })

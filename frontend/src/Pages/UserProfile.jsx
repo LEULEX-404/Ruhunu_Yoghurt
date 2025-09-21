@@ -62,7 +62,7 @@ const handleUpdateUser = async (e) =>{
 
             setUser(res.data.updatedUser || editUser);
         localStorage.setItem("user", JSON.stringify(res.data.updatedUser || editUser));
-        
+
             alert('User updated Successfully', res.data.message);
             closeEditModal();
     }
@@ -100,19 +100,19 @@ const handleUpdateUser = async (e) =>{
 
       {/* Stats Cards */}
       <div className="stats-cards">
-        <div className="card">
+        <div className="s-card">
           <h3>25</h3>
           <p>Orders Placed</p>
         </div>
-        <div className="card">
+        <div className="s-card">
           <h3>20</h3>
           <p>Total Deliveries</p>
         </div>
-        <div className="card">
+        <div className="s-card">
           <h3>8</h3>
           <p>Wishlist Items</p>
         </div>
-        <div className="card">
+        <div className="s-card">
           <h3>5</h3>
           <p>Reviews Given</p>
         </div>

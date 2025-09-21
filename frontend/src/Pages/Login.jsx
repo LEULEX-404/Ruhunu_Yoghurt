@@ -25,17 +25,18 @@ export default function LoginPage() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user))
 
-        if (data.user.role === "HR Manager" || data.user.role === "Delivery Manager"|| data.user.role === "Order Manager" || data.user.role === "Product Manager" || data.user.role === "Stock Manager") {
+        if (data.user.role === "HR Manager" || data.user.role === "Delivery Manager"|| data.user.role === "Order Manager" || data.user.role === "Product Manager" || data.user.role === "Stock Manager" || data.user.role === "Driver") {
             setShowChoice(true);
             setUser(data.user);
             alert(`Logged in as ${data.user.role}. Please choose your dashboard.`);
         }
-        else if (data.user.role === "Staff" || data.user.role === "Driver") {
+        else if (data.user.role === "Staff") {
           window.location.href = "/attendence";
         } 
         else if (data.user.role === "customer") {
           window.location.href = "/userProfile";
-        }else {
+        }
+        else {
             alert("Unauthorized role");
         }
         

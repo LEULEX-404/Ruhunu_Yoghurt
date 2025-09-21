@@ -171,11 +171,11 @@ export default function HrDashboard() {
 
         <div className = {`dashboard-container ${darkMode ? 'dark':''}`}>
             <div className="wrapper">
-                <aside className="sidebar">
-                    <div className="sidebar-header">
+                <aside className="HR-sidebar">
+                    <div className="HR-sidebar-header">
                         <h2>HR Dashboard</h2>
                     </div>
-                        <ul className="sidebar-menu">
+                        <ul className="HR-sidebar-menu">
                             <li onClick ={() => setView('dashboard')}>
                                 <FiHome /> Dashboard
                             </li>
@@ -196,7 +196,7 @@ export default function HrDashboard() {
                             </li>
                         </ul>
 
-                        <div className="sidebar-footer">
+                        <div className="HR-sidebar-footer">
                             <button className = 'dark-mode-btn' onClick={toggleDarkMode}>
                                 {darkMode ? <FiSun/> : <FiMoon/>} {darkMode ? 'Light' : 'Dark'} Mode
                             </button>

@@ -18,6 +18,11 @@ export default function DeliveryDashboard()
 
     const [assignedDeliveries, setAssignedDeliveries] = useState([]);
 
+    const [showModal, setShowModal] = useState(false);
+    const [sceduleDeliveryId, setSceduleDeliveryId] = useState(null);
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
+
     const [darkMode, setDarkMode] = useState(false);
 
     const pendingOrders = async () =>{
@@ -74,7 +79,6 @@ export default function DeliveryDashboard()
       }
     };
 
-
       const deliveriesAssigned = async () =>{
           try{
             const res = await axios.get('http://localhost:8070/api/deliveries/deliveries')
@@ -85,6 +89,7 @@ export default function DeliveryDashboard()
             alert("Failed to fetch assigned deliveries.");
         };
     };
+
     useEffect(() =>{
 
         pendingOrders();
@@ -157,7 +162,36 @@ export default function DeliveryDashboard()
         } else {
             alert("Failed to assign delivery.");
         }});
-    }
+    };
+
+    const handleSchedule = (assignedId) => {
+      setSceduleDeliveryId(assignedId);
+      setShowModal(true);
+    };
+
+    const submitSchedule = () => {
+      if(!startTime || !endTime){
+        alert("Please select start and end time.");
+        return;
+      }
+
+      axios.post('http://localhost:8070/api/deliveries/schedule', {
+        assignedDeliveryId: sceduleDeliveryId,
+        startTime,
+        endTime
+      })
+      .then(res =>{
+        alert(res.data.message);
+        setShowModal(false);
+        setStartTime("");
+        setEndTime("");
+        deliveriesAssigned();
+      })
+      .catch(err =>{
+        console.error(err);
+        alert("Failed to scedule delivery");
+      });
+    };
 
     const toggleDarkMode = () =>{
         setDarkMode(!darkMode);
@@ -167,10 +201,6 @@ export default function DeliveryDashboard()
         else{
             document.body.classList.remove("dark-mode");
         }
-    };
-
-    const handleSchedule = (driverId) =>{
-        alert(`Schedule deliveries for driver ${driverId}`);
     };
 
     return(
@@ -331,16 +361,44 @@ export default function DeliveryDashboard()
 
             <button
               className="schedule-btn"
-              onClick={() => handleSchedule(ad.driver?._id)}
+              onClick={() => handleSchedule(ad._id)}
             >
               Schedule
             </button>
           </div>
+          
         ))}
+
       </div>
     </div>
     )}
     </main>
+        {showModal && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h2>Set Schedule Time</h2>
+
+              <label>Start Time:</label>
+              <input 
+                type="datetime-local" 
+                value={startTime} 
+                onChange={(e) => setStartTime(e.target.value)} 
+              />
+
+              <label>End Time:</label>
+              <input 
+                type="datetime-local" 
+                value={endTime} 
+                onChange={(e) => setEndTime(e.target.value)} 
+              />
+
+              <div className="modal-actions">
+                <button onClick={submitSchedule}>Confirm</button>
+                <button onClick={() => setShowModal(false)}>Cancel</button>
+              </div>
+            </div>
+          </div>
+      )}
     </div>
-    )
-}
+    );
+};

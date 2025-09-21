@@ -24,6 +24,19 @@ const assignDeliverySchema = new mongoose.Schema({
         type:Date,
         default:Date.now,
     },
+    status:{
+        type: String,
+        enum: ["assigned", "sceduled", "completed"],
+        default: "assigned"
+    },
+    startTime: {
+        type:Date,
+        default: null
+    },
+    endTime: {
+        type: Date,
+        default: null
+    }
 });
 
 export default mongoose.model("AssignDelivery", assignDeliverySchema)

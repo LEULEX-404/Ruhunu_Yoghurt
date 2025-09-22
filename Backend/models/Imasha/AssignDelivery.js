@@ -9,7 +9,6 @@ const assignDeliverySchema = new mongoose.Schema({
     },
     employeeID:{
         type:String,
-        ref:"Driver",
         required:true,
     },
     deliveries:[{

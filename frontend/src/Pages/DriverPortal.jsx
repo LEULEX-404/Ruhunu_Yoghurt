@@ -5,6 +5,7 @@ import "../Css/DriverPortal.css";
 export default function DriverPortal() {
 
   const [driver, setDriver] = useState(null);
+  const [delivery, setDelivery] = useState([]);
 
   const [activeSection, setActiveSection] = useState("profile");
 
@@ -24,9 +25,24 @@ export default function DriverPortal() {
   }
 }
 
+const fetchDeliveries = async () =>{
+
+  const storedDriver = localStorage.getItem("user");
+  console.log('driver:',storedDriver)
+
+  if(storedDriver){
+      const parsedDriver = JSON.parse(storedDriver);
+
+      const res = await axios.get(`http://localhost:8070/api/driver/delivery/${parsedDriver.id}`);
+      setDelivery(res.data);
+      console.log(res.data);
+  }
+}
+
   useEffect(() => {
 
     fetchDriver();
+    fetchDeliveries();
   },[])
 
   return (
@@ -82,10 +98,24 @@ export default function DriverPortal() {
           <div className="section">
             <h2>Delivery History</h2>
             <div className="card">
-              <p><strong>Order #1001</strong> - Completed</p>
-              <p><strong>Order #1002</strong> - Completed</p>
-              <p><strong>Order #1003</strong> - Assigned</p>
+              {delivery.map(del =>(
+                <div key = {del._id} className="delivery-card">
+                <p><strong>Total Weight: </strong>{del.totalWeight} Kg</p>
+                <p><strong>Assign Date: </strong>{new Date(del.assignDate).toLocaleDateString()}</p>
+                <p><strong>Start Time: </strong>{new Date(del.startTime).toLocaleTimeString()}</p>
+                <p><strong>End Time: </strong>{new Date(del.endTime).toLocaleTimeString()}</p>
+
+                <h4>Orders:</h4>
+                <ul>
+                  {del.deliveries.map((d, index)=>(
+                    <li key = {index}>
+                      {d.customerName}
+                    </li>
+                  ))}
+                </ul>
             </div>
+              ))}
+          </div>
           </div>
         )}
       </div>

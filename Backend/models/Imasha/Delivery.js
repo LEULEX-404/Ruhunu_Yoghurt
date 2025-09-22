@@ -33,7 +33,7 @@ const deliverySchema = new mongoose.Schema({
     },
 
     assignedDriver:{
-        type: mongoose.Schema.Types.ObjectId, ref: "User"
+        type: mongoose.Schema.Types.ObjectId, ref: "Driver"
     },
     
     },{timestamps: true});

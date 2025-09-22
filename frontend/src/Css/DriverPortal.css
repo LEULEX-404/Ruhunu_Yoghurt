@@ -80,3 +80,90 @@
   margin-bottom: 10px;
   font-size: 16px;
 }
+
+
+/* Delivery History Section */
+.driver-delivery-section {
+  padding: 20px;
+}
+
+.driver-delivery-section h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Card container */
+.driver-delivery-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-bottom: 20px;
+  transition: transform 0.2s ease;
+}
+
+.driver-delivery-card:hover {
+  transform: translateY(-3px);
+}
+
+.driver-delivery-card p {
+  margin: 6px 0;
+  font-size: 15px;
+  color: #444;
+}
+
+.driver-delivery-card h4 {
+  margin-top: 12px;
+  font-size: 16px;
+  color: #222;
+}
+
+/* Orders List */
+.driver-delivery-card ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 8px;
+}
+
+.driver-delivery-card li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #f9f9f9;
+}
+
+/* Buttons */
+.driver-delivery-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.driver-delivery-button:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+/* Active button */
+.driver-delivery-button:enabled {
+  background-color: #007bff;
+  color: white;
+}
+
+.driver-delivery-button:enabled:hover {
+  background-color: #0056b3;
+}
+
+/* Disabled (completed) button */
+.driver-delivery-button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}

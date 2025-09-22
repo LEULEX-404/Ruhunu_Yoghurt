@@ -145,7 +145,7 @@ export default function DeliveryDashboard()
         const deliveryIds = selectDeliveries.map(d => d._id);
 
         axios.post(`http://localhost:8070/api/deliveries/assign`,{
-            driverId: selectDriver._id,
+            driverId: selectDriver.driverID,
             deliveryIds
         })
         .then(res =>{

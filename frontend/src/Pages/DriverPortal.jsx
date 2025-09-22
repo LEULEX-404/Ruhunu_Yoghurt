@@ -39,6 +39,16 @@ const fetchDeliveries = async () =>{
   }
 }
 
+const handleCompleteDelivery = async (deliveryId) => {
+  try{
+    await axios.put(`http://localhost:8070/api/driver/complete/${deliveryId}`);
+}
+catch(err){
+  console.error("Error completing delivery:",err);
+  alert("Failed to complete delivery");
+}
+};
+
   useEffect(() => {
 
     fetchDriver();
@@ -95,11 +105,11 @@ const fetchDeliveries = async () =>{
         )}
 
         {activeSection === "history" && (
-          <div className="section">
-            <h2>Delivery History</h2>
+          <div className="driver-delivery-section">
+            <h2>Pending Delivery</h2>
             <div className="card">
               {delivery.map(del =>(
-                <div key = {del._id} className="delivery-card">
+                <div key = {del._id} className="driver-delivery-card">
                 <p><strong>Total Weight: </strong>{del.totalWeight} Kg</p>
                 <p><strong>Assign Date: </strong>{new Date(del.assignDate).toLocaleDateString()}</p>
                 <p><strong>Start Time: </strong>{new Date(del.startTime).toLocaleTimeString()}</p>
@@ -109,7 +119,13 @@ const fetchDeliveries = async () =>{
                 <ul>
                   {del.deliveries.map((d, index)=>(
                     <li key = {index}>
-                      {d.customerName}
+                      {d.orderID} - {d.customerName}
+                      <button className ="driver-delivery-button"
+                        onClick= {() => handleCompleteDelivery(d._id)}
+                        disabled= {d.status === "completed"}
+                        >
+                          {d.status === "completed" ? "Completed" : "Complete"}
+                      </button>
                     </li>
                   ))}
                 </ul>

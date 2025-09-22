@@ -1,0 +1,119 @@
+/* General page container */
+.admin-product-container {
+  padding: 24px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* "Add Product" button styling */
+.add-product-link {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+}
+
+.add-product-link:hover {
+  background-color: #0056b3;
+}
+
+/* Product table container */
+.product-table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+/* Table styling */
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Ensures even column distribution */
+}
+
+/* Table header */
+.product-table th {
+  background-color: #e9ecef;
+  color: #495057;
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+/* Table body rows */
+.product-table td {
+  padding: 16px;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: middle;
+  word-wrap: break-word; /* Prevents long text from overflowing */
+  font-size: 0.9rem;
+  color: #343a40;
+}
+
+.product-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Image column styling */
+.product-table-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Actions column buttons */
+.product-table-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+.product-table-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.product-table-actions button:hover {
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #f8d7da;
+}
+
+.edit-btn {
+  color: #ffc107;
+}
+
+.edit-btn:hover {
+  background-color: #fff3cd;
+}
+
+/* Empty state or loading state */
+.loading, .no-products {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #6c757d;
+}

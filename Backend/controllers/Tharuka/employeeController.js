@@ -61,9 +61,10 @@ export const updateEmployee = async (req, res) => {
         }
 
         if (position === "Driver") {
-          const existingDriver = await Driver.findOne({ employeeID: updatEmployee.employeeID });
+          const existingDriver = await Driver.findOne({ driverID: updatEmployee._id });
           if (!existingDriver) {
             const newDriver = new Driver({
+              driverID: updatEmployee._id,
               employeeID: updatEmployee.employeeID,
               name: updatEmployee.name,
               email: updatEmployee.email,

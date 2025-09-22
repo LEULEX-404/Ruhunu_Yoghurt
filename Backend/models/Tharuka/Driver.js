@@ -2,9 +2,14 @@ import mongoose from "mongoose";
 
 const driverSchema = new mongoose.Schema({
 
+    driverID:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Employee",
+        required: true,
+    },
+
     employeeID:{
         type:String,
-        ref:'Employee',
         required:true,
     },
     name: {

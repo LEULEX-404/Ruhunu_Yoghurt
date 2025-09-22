@@ -28,6 +28,7 @@ export const assignDelivery = async (req, res)=>{
 
             assigned = new AssignedDelivery({
                 driver: driverId,
+                employeeID: driver.employeeID,
                 deliveries: deliveryIds,
                 totalWeight: newDeliveriesWeight,
             })
@@ -86,3 +87,28 @@ export const getDeliveriesandDrivers = async (req,res)=>{
         res.status(500).json({erroe: err.message});
     }
 }
+
+export const scheduleAssignedDelivery = async (req, res) =>{
+    try{
+        const{assignedDeliveryId, startTime, endTime } = req.body;
+
+        const assigned = await AssignedDelivery.findById(assignedDeliveryId);
+
+        if(!assigned){
+            return res.status(404).json({message: "Assigned delivery not found"});
+        }
+
+        assigned.status = "sceduled";
+        assigned.startTime = new Date(startTime);
+        assigned.endTime = new Date(endTime);
+
+        await assigned.save();
+
+        res.status(200).json({message: "Delivery sceduled successfully", assigned});
+    }
+    catch(error)
+    {
+        console.error(error);
+        res.status(500).json({message: error.message});
+    }
+};

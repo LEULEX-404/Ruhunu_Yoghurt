@@ -3,7 +3,7 @@ import Driver from '../../models/Tharuka/Driver.js';
 export const getDriverById = async (req, res) =>{
     try{
         const { id } = req.params;
-        const driver = await Driver.findById(id);
+        const driver = await Driver.findOne({driverID : id}).populate ("employeeID","name email phone position");
 
         if(!driver){
             return res.status(404).json({message : "Driver not found "});

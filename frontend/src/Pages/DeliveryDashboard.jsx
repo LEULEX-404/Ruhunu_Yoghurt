@@ -1,10 +1,14 @@
 import  {useState, useEffect} from "react";
 import axios from 'axios';
+import {FiLogOut} from 'react-icons/fi';
+import {Toaster, toast} from 'sonner';
 import '../Css/DeliveryDashboard.css';
 
 export default function DeliveryDashboard()
 {
     const [activeSection, setActiveSection] = useState("createDelivery");
+
+    const [manager, setManager] = useState(null);
 
     const [orders, setOrders] = useState([]);
     const [orderSearch, setOrderSearch] = useState([]);
@@ -25,12 +29,29 @@ export default function DeliveryDashboard()
 
     const [darkMode, setDarkMode] = useState(false);
 
+    const fetchManager = async () => {
+      try{
+        const storedManager = localStorage.getItem("user");
+        console.log('deliveryManager', storedManager);
+
+        if(storedManager){
+          const pareseManager = JSON.parse(storedManager);
+
+          const res = await axios.get(`http://localhost:8070/api/deliveries/manager/${pareseManager.id}`);
+          setManager(res.data);
+        };
+      }
+      catch(err){
+        console.error(err);
+      }
+    }
+
     const pendingOrders = async () =>{
           try{
             const res = await axios.get(`http://localhost:8070/api/deliveries/pending`)
             setOrders(res.data)
         }catch(err) {
-            alert("Failed to fetch orders");
+            toast.error("Failed to fetch orders");
         }
     };
 
@@ -46,7 +67,7 @@ export default function DeliveryDashboard()
       }
       catch(err){
         console.error(err);
-        alert("Failed to search orders.")
+        toast.error("Failed to search orders.")
       }
     };
       const driversDeliveries = async () =>{
@@ -56,7 +77,7 @@ export default function DeliveryDashboard()
             setDrivers(res.data.Drivers || []);
         }catch(err){
             console.error(err);
-            alert("Failed to fetch drivers or deliveries.");
+            toast.error("Failed to fetch drivers or deliveries.");
         }
     };
 
@@ -75,7 +96,7 @@ export default function DeliveryDashboard()
       }
       catch(err){
         console.error(err);
-        alert("Failed to search deliveries or Drivers.")
+        toast.error("Failed to search deliveries or Drivers.")
       }
     };
 
@@ -86,11 +107,13 @@ export default function DeliveryDashboard()
             setAssignedDeliveries(deliveriesArray);
         }catch(err){
             console.error(err);
-            alert("Failed to fetch assigned deliveries.");
+            toast.error("Failed to fetch assigned deliveries.");
         };
     };
 
     useEffect(() =>{
+
+        fetchManager();
 
         pendingOrders();
       
@@ -118,12 +141,12 @@ export default function DeliveryDashboard()
 
     const handleCreateDelivery = (orderNumber) =>{
         axios.post(`http://localhost:8070/api/deliveries/create`,{orderNumber}).then(() =>{
-            alert("Delivery created Successfully.")
+            toast.success("Delivery created Successfully.")
             driversDeliveries();
             pendingOrders();
         })
         .catch((error) =>{
-            alert("Delivery creation failed.")
+            toast.error("Delivery creation failed.")
             console.error("Delivery creation error : ",error);
         })
     }
@@ -149,7 +172,7 @@ export default function DeliveryDashboard()
             deliveryIds
         })
         .then(res =>{
-            alert(res.data.message);
+            toast.success(res.data.message);
             setSelectDeliveries([]);
             setSelectDriver(null);
             deliveriesAssigned();
@@ -158,9 +181,9 @@ export default function DeliveryDashboard()
         .catch(err => {
         console.error(err);
         if(err.response.data.message){
-            alert(err.response.data.message);
+            toast.error(err.response.data.message);
         } else {
-            alert("Failed to assign delivery.");
+            toast.error("Failed to assign delivery.");
         }});
     };
 
@@ -171,7 +194,7 @@ export default function DeliveryDashboard()
 
     const submitSchedule = () => {
       if(!startTime || !endTime){
-        alert("Please select start and end time.");
+        toast.warning("Please select start and end time.");
         return;
       }
 
@@ -181,7 +204,7 @@ export default function DeliveryDashboard()
         endTime
       })
       .then(res =>{
-        alert(res.data.message);
+        toast.success(res.data.message);
         setShowModal(false);
         setStartTime("");
         setEndTime("");
@@ -189,7 +212,7 @@ export default function DeliveryDashboard()
       })
       .catch(err =>{
         console.error(err);
-        alert("Failed to scedule delivery");
+        toast.error("Failed to scedule delivery");
       });
     };
 
@@ -203,10 +226,34 @@ export default function DeliveryDashboard()
         }
     };
 
+    const handleSignout = () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      toast.warning("SignOut Successfully!");
+      setTimeout(()=>{
+        window.location.href = "/login";
+      },1500);
+    };
+
     return(
         <div className="dashboard-wrapper">
+          <Toaster position="bottom-center"richColors/>
             <aside className = "sidebar">
                 <h2>Delivery Management</h2>
+                <div className="manager-card">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/3237/3237472.png" 
+                      alt="Manager"
+                      className="manager-avatar"
+                    />
+                    <div>
+                      <h4 className="manager-name"><p>{manager?.position}</p></h4>
+                      <p className="manager-role">{manager?.name}</p>
+                      <p className="manager-role">{manager?.employeeID}</p>
+                      <p className="manager-role">{manager?.email}</p>
+                      
+                    </div>
+                  </div>
                 <ul>
                     <li className = {activeSection === "createDelivery" ? "active" : ""}onClick = {() => setActiveSection ("createDelivery")}>📬 Create Delivery</li>
                     <li className = {activeSection === "assignDriver"? "active" : ""}onClick = {() => setActiveSection ("assignDriver")}>✅ Assign Driver</li>
@@ -222,6 +269,9 @@ export default function DeliveryDashboard()
                   <span className="slider"></span>
                 </label>
                 </li>
+                <button className="deliver-signout-btn" onClick={handleSignout}>
+                  <FiLogOut/>Sign Out
+                </button>
               </div>
             </aside>
 

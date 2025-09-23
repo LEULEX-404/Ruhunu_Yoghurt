@@ -2,6 +2,7 @@ import  {useState, useEffect} from "react";
 import axios from 'axios';
 import {FiLogOut} from 'react-icons/fi';
 import {Toaster, toast} from 'sonner';
+import { Truck, UserCheck, Package, CheckCheck, BarChart3, MapPinned, PackageCheck} from "lucide-react";
 import '../Css/DeliveryDashboard.css';
 
 export default function DeliveryDashboard()
@@ -26,6 +27,8 @@ export default function DeliveryDashboard()
     const [sceduleDeliveryId, setSceduleDeliveryId] = useState(null);
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
+
+    const [stats, setStats] = useState([]);
 
     const [darkMode, setDarkMode] = useState(false);
 
@@ -111,6 +114,17 @@ export default function DeliveryDashboard()
         };
     };
 
+    const fetchStats = async () =>{
+      try{
+        const res = await axios.get('http://localhost:8070/api/deliveries/stats')
+        setStats(res.data);
+      }
+      catch(err)
+      {
+        toast.error("Failed to fetch Stats.")
+      }
+    }
+
     useEffect(() =>{
 
         fetchManager();
@@ -120,6 +134,8 @@ export default function DeliveryDashboard()
         driversDeliveries();
         
         deliveriesAssigned();
+
+        fetchStats();
         
     },[])
 
@@ -255,11 +271,11 @@ export default function DeliveryDashboard()
                     </div>
                   </div>
                 <ul>
-                    <li className = {activeSection === "createDelivery" ? "active" : ""}onClick = {() => setActiveSection ("createDelivery")}>📬 Create Delivery</li>
-                    <li className = {activeSection === "assignDriver"? "active" : ""}onClick = {() => setActiveSection ("assignDriver")}>✅ Assign Driver</li>
-                    <li className = {activeSection === "deliveries"? "active" : ""}onClick = {() => setActiveSection ("deliveries")}>📦 Deliveries</li>
-                    <li className = {activeSection === "feedback"? "active" : ""}onClick = {() => setActiveSection ("feedback")}>💬 Feedback</li>
-                    <li className = {activeSection === "reports"? "active" : ""}onClick = {() => setActiveSection ("reports")}>📊 Reports</li>
+                    <li className = {activeSection === "createDelivery" ? "active" : ""}onClick = {() => setActiveSection ("createDelivery")}><Package size={18} /> Create Delivery</li>
+                    <li className = {activeSection === "assignDriver"? "active" : ""}onClick = {() => setActiveSection ("assignDriver")}><UserCheck size={18} /> Assign Driver</li>
+                    <li className = {activeSection === "deliveries"? "active" : ""}onClick = {() => setActiveSection ("deliveries")}><Truck size={18} /> Deliveries</li>
+                    <li className = {activeSection === "feedback"? "active" : ""}onClick = {() => setActiveSection ("feedback")}><CheckCheck size={18} /> Completed</li>
+                    <li className = {activeSection === "reports"? "active" : ""}onClick = {() => setActiveSection ("reports")}><BarChart3 size={18} /> Reports</li>
                 </ul>
                 <div className="bottom-content">
               <li className="mode">
@@ -277,6 +293,7 @@ export default function DeliveryDashboard()
 
         <main className="main-content">
         <h1>Dairy Product Delivery Management</h1>
+        <p className="subtitle">Monitor and manage all delivery operations</p>
         {activeSection === "createDelivery" && (
           <input
                   type="text"
@@ -300,13 +317,20 @@ export default function DeliveryDashboard()
                 />
         )}
         
-        <p className="subtitle">Monitor and manage all delivery operations</p>
+        
         
         <div className="stats-row">
-          <div className="stat-card blue">Total Deliveries <span>totalDeliveries</span></div>
-          <div className="stat-card orange">Pending <span>pending</span></div>
-          <div className="stat-card green">Completed Today <span>completedToday</span></div>
-          <div className="stat-card purple">Active Drivers <span>activeDrivers</span></div>
+          <div className="stat-card blue">Total Deliveries <br></br>
+            <span><strong>{stats?.totalDeliveries}</strong></span></div>
+
+          <div className="stat-card orange">Pending <br></br>
+            <span><strong>{stats?.pending}</strong></span></div>
+
+          <div className="stat-card green">Completed <br></br>
+            <span><strong>{stats?.completed}</strong></span></div>
+
+          <div className="stat-card purple">Active Drivers <br></br>
+            <span><strong>{stats?.drivers}</strong></span></div>
         </div>
 
         {activeSection === "createDelivery" && (
@@ -316,12 +340,15 @@ export default function DeliveryDashboard()
                 <div className = "order-list">
                     {orders.map(order => (
                         <div key ={order._id} className ="order-card">
+                          <div className="order-info">
                             <p><b>{order.orderNumber}</b></p>
                             <p>{order.customerName}</p>
                             <p>Total Rs.{order.total}</p>
                             <p>Address: {order.address}</p>
                             <p>Weight: {order.productWeight} kg</p>
+                          </div>
 
+                          <div className="order-items">
                             <h4>Items:</h4>
                             <ul>
                                  {order.items.map((item, index) => (
@@ -330,6 +357,7 @@ export default function DeliveryDashboard()
                                 </li>
                                 ))}
                             </ul>
+                          </div>
                         <button onClick={() => handleCreateDelivery(order.orderNumber)}>Convert to Delivery</button>
                     </div>
                     ))}
@@ -359,7 +387,10 @@ export default function DeliveryDashboard()
 
         <div className="side drivers-side">
           <h3>Available Drivers</h3>
-          {drivers.map(driver => (
+          {drivers
+          .slice()
+          .sort((a,b) => a.remainingCapacity - b.remainingCapacity)
+          .map(driver => (
         <div
           key={driver._id}
           className={`card ${selectDriver?._id === driver._id ? "selected" : ""}`}
@@ -383,7 +414,7 @@ export default function DeliveryDashboard()
 
       {activeSection === "deliveries" && (
     <div className="schedule-wrapper">
-      <h2>🚚 Scheduled Deliveries</h2>
+      <h2><Truck color= '#1e3a8a' size={36} /> Scheduled Deliveries</h2>
 
       {assignedDeliveries.length === 0 && <p>No assigned deliveries yet.</p>}
 
@@ -393,7 +424,7 @@ export default function DeliveryDashboard()
             <div className="driver-header">
               <h3>{ad.driver?.name || "Unknown Driver"}</h3>
               <p className="capacity">Capacity: {ad.driver?.vehicleCapacity} kg</p>
-              <p className="location">📍 {ad.driver?.currentLocation || "N/A"}</p>
+              <p className="location"><MapPinned color='red' size={22}/> {ad.driver?.currentLocation || "N/A"}</p>
             </div>
 
             <div className="driver-info">
@@ -402,7 +433,7 @@ export default function DeliveryDashboard()
             </div>
 
             <div className="delivery-list">
-              <h4>📦 Deliveries:</h4>
+              <h4><PackageCheck color='blue' size={32}/> Deliveries:</h4>
               <ul>
                 {ad.deliveries.map((d, i) => (
                   <li key={i}>

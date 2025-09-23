@@ -46,18 +46,17 @@ export default function HrDashboard() {
     };
 
     const searchEmployees = async (searchText) =>{
-        try{
-            if(!searchText){
-                return fetchEmployees();
-            }
+        if (!searchText) return fetchEmployees();
 
+        try{
+           
             const res = await axios.get(
                 `http://localhost:8070/api/employees/search?search=${searchText}`
             );
             setEmployees(res.data);
         }catch(err){
             console.error(err);
-            alert("Failed to search Employees.");
+            toast.error("Failed to search Employees.");
         }
     };
 
@@ -113,7 +112,7 @@ export default function HrDashboard() {
         try{
             const response = await axios.post(`http://localhost:8070/api/employees/add`, newEmployee);
             console.log('Employee added:', response.data);
-            toast.success("✅ Employee Added Successfully");
+            toast.success("Employee Added Successfully");
             setNewEmployee({
                 employeeID: '',
                 name: '',
@@ -126,7 +125,7 @@ export default function HrDashboard() {
         
         }catch(error){
             console.error('Error adding employee:', error);
-            toast.error("❌ Failed to add employee");
+            toast.error("Failed to add employee");
         }
     };
 
@@ -143,13 +142,13 @@ export default function HrDashboard() {
                 { name: editEmployee.name, email: editEmployee.email, position: editEmployee.position, phone: editEmployee.phone, vehicleCapacity: editEmployee.vehicleCapacity || 0 });
 
             console.log('Employee updated:', response.data);
-            toast.success("✅ Employee Updated Successfully");
+            toast.success("Employee Updated Successfully");
             fetchEmployees();
             closeEditModal();
 
         }catch(error){
             console.error('Error updating employee:', error);
-            toast.error("❌ Failed to update employee");
+            toast.error("Failed to update employee");
         }
     }
 
@@ -163,10 +162,10 @@ export default function HrDashboard() {
               onClick: async () => {
                 try {
                     await axios.delete(`http://localhost:8070/api/employees/delete/${id}`);
-                  toast.success("✅ Employee Deleted Successfully");
+                  toast.success("Employee Deleted Successfully");
                   fetchEmployees();
                 } catch (err) {
-                  toast.error("❌ Failed to delete employee");
+                  toast.error("Failed to delete employee");
                 }
               }
             },
@@ -184,9 +183,9 @@ export default function HrDashboard() {
         e.preventDefault();
 
         try{
-            const response = await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, { position: selectedEmployee.position, vehicleCapacity: selectedEmployee.vehicleCapacity || 0 });
+            const response = await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, { position: selectedEmployee.position, EmployeeID: selectedEmployee.employeeID, vehicleCapacity: selectedEmployee.vehicleCapacity || 0 });
             console.log('Role assigned:', response.data);
-            toast.success("✅ Role Assigned Successfully");
+            toast.success("Role Assigned Successfully");
             fetchEmployees();
             closeAssignModal();
 
@@ -208,7 +207,7 @@ export default function HrDashboard() {
     return(
 
         <div className = {`dashboard-container ${darkMode ? 'dark':''}`}>
-            <Toaster position="top-right" richColors />
+            <Toaster position="bottom-center" richColors />
             <div className="wrapper">
                 <aside className="HR-sidebar">
                     <div className="HR-sidebar-header">
@@ -340,7 +339,7 @@ export default function HrDashboard() {
                               value={employeeSearch}
                               onChange={(e) => setEmployeeSearch(e.target.value)}
                             />
-                            
+                            <h3>EMPLOYEES</h3>
                             <table className>
                                 <thead>
                                     <tr>
@@ -354,7 +353,57 @@ export default function HrDashboard() {
                                 </thead>
 
                                 <tbody>
-                                    {employees.filter(emp => view === 'unassigned' ? emp.position === 'Unassigned' : emp.position !== 'Unassigned').map((emp) => (
+                                    {employees.filter(emp => 
+                                    view === 'unassigned' 
+                                        ? emp.position === 'Unassigned' 
+                                        : emp.position !== 'Unassigned' && emp.position !=='Driver')
+                                    .sort((a,b) =>{
+
+                                        const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
+                                        const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
+
+                                        return numA -numB;
+                                    }).map((emp) => (
+                                        <tr key = {emp._id}>
+                                            <td>{emp.employeeID}</td>
+                                            <td>{emp.name}</td>
+                                            <td>{emp.email}</td>
+                                            <td>{emp.position}</td>
+                                            <td>{emp.phone}</td>
+                                            <td>
+                                                <button onClick = {() => openEditModal(emp)} className='update'>Update</button>
+                                                <button onClick = {() => handleDeleteEmployee(emp._id)} className='delete-btn'>Delete</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                            <h3>DRIVER</h3>
+                            <table className>
+                                <thead>
+                                    <tr>
+                                        <th>Driver ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Position</th>
+                                        <th>Phone</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {employees.filter(emp => 
+                                    view === 'unassigned' 
+                                        ? emp.position === 'Unassigned' 
+                                        : emp.position !== 'Unassigned' && emp.position ==='Driver')
+                                    .sort((a,b) =>{
+
+                                        const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
+                                        const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
+
+                                        return numA -numB;
+                                    }).map((emp) => (
                                         <tr key = {emp._id}>
                                             <td>{emp.employeeID}</td>
                                             <td>{emp.name}</td>
@@ -370,6 +419,8 @@ export default function HrDashboard() {
                                 </tbody>
                             </table>
                         </div>
+
+                        
                     )}
 
 
@@ -405,6 +456,14 @@ export default function HrDashboard() {
                                                 <option value = 'Staff'>Staff</option>
                                             </select>
                                             {selectedEmployee?.position === "Driver" && (
+                                                <div>
+                                            <input
+                                                type="text"
+                                                placeholder="Driver ID"
+                                                value={selectedEmployee?.employeeID || ''}
+                                                onChange={(e) => setSelectedEmployee({...selectedEmployee, employeeID: e.target.value})}
+                                                required
+                                             />
                                             <input
                                                 type="number"
                                                 placeholder="Vehicle Capacity"
@@ -412,6 +471,7 @@ export default function HrDashboard() {
                                                 onChange={(e) => setSelectedEmployee({...selectedEmployee, vehicleCapacity: e.target.value})}
                                                 required
                                             />
+                                            </div>
                                         )}
                                         </div>
 

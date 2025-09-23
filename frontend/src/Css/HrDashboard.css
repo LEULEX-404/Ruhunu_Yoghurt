@@ -1,4 +1,3 @@
-/* General wrapper */
 .dashboard-container {
   display: flex;
   min-height: 100vh;
@@ -6,15 +5,15 @@
   transition: background 0.3s, color 0.3s;
 }
 
-/* Parent wrapper full screen */
+
 .wrapper {
   display: flex;
-  height: 100vh;    /* full height */
-  width: 100vw;     /* full width */
+  height: 100vh;
+  width: 100vw; 
   overflow: hidden;
 }
 
-/* Sidebar fixed */
+
 .HR-sidebar {
   width: 250px;
   height: 100vh;
@@ -71,7 +70,7 @@
   gap: 12px;
 }
 
-/* Buttons */
+
 .dark-mode-btn,
 .signout-btn {
   padding: 12px;
@@ -107,15 +106,14 @@
   box-shadow: 0 0 12px rgba(230,57,70,0.6);
 }
 
-/* Main content now respects sidebar */
 .HR-main-content {
-  margin-left: 250px;   /* push to right of sidebar */
+  margin-left: 250px;
   padding: 30px;
   flex: 1;
   height: 100vh;
-  width: calc(100% - 250px);  /* full width minus sidebar */
+  width: calc(100% - 250px);
   overflow-y: auto;
-  box-sizing: border-box; /* prevent overflow from padding */
+  box-sizing: border-box;
 }
 
 .HR-main-content h1, .main-content h2 {
@@ -124,7 +122,7 @@
   color: #222;
 }
 
-/* Table */
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -154,7 +152,7 @@ tr:hover {
   transition: background 0.3s;
 }
 
-/* Dark Mode */
+
 .dashboard-container.dark {
   background: #121212;
   color: #e0e0e0;
@@ -202,7 +200,7 @@ tr:hover {
   background: rgba(78,115,223,0.2);
 }
 
-/* Topbar */
+
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -242,7 +240,7 @@ tr:hover {
   border: 2px solid #4e73df;
 }
 
-/* Dark Mode for Topbar */
+
 .dashboard-container.dark .topbar {
   background: rgba(30,30,47,0.95);
   border: 1px solid rgba(255,255,255,0.05);
@@ -263,7 +261,7 @@ tr:hover {
   color: #eee;
 }
 
-/* Add Employee Card */
+
 .add-employee-card {
   background: rgba(255,255,255,0.95);
   padding: 30px;
@@ -283,7 +281,7 @@ tr:hover {
   color: #333;
 }
 
-/* Form */
+
 .add-form {
   display: flex;
   flex-direction: column;
@@ -305,7 +303,6 @@ tr:hover {
   outline: none;
 }
 
-/* Button */
 .submit-btn {
   padding: 12px;
   border: none;
@@ -357,7 +354,7 @@ tr:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* Dark Mode */
+
 .dashboard-container .main-content .dark {
   background: #000;
   color: #eee;
@@ -387,7 +384,6 @@ tr:hover {
   background: linear-gradient(135deg, #1cc88a, #4e73df);
 }
 
-/* Content Card Wrapper */
 .content-card {
   background: rgba(255,255,255,0.95);
   padding: 25px;
@@ -397,7 +393,6 @@ tr:hover {
   transition: all 0.3s ease;
 }
 
-/* Dark Mode Content Card */
 .dashboard-container.dark .content-card {
   background: rgba(30,30,47,0.95);
   border: 1px solid rgba(255,255,255,0.05);
@@ -412,7 +407,7 @@ tr:hover {
   color: #eee;
 } 
 
-/* Modal Overlay */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -427,7 +422,7 @@ tr:hover {
   z-index: 1000;
 }
 
-/* Modal Content */
+
 .modal-content {
   background: white;
   padding: 30px;
@@ -462,7 +457,7 @@ tr:hover {
   background: #d62839;
 }
 
-/* Dark Mode Modal */
+
 .dashboard-container.dark .modal-content {
   background: rgba(30,30,47,0.95);
   color: #eee;
@@ -470,7 +465,6 @@ tr:hover {
 }
 
 
-/* Force text visibility in dark mode */
 .dashboard-container.dark,
 .dashboard-container.dark h1,
 .dashboard-container.dark h2,
@@ -486,17 +480,16 @@ tr:hover {
   color: #eee !important;
 }
 
-/* Sidebar menu fix */
+
 .dashboard-container.dark .sidebar-menu li {
   color: #eee;
 }
 
-/* Profile section text */
+
 .dashboard-container.dark .profile-section span {
   color: #eee;
 }
 
-/* Table header and cell fix */
 .dashboard-container.dark table th,
 .dashboard-container.dark table td {
   color: #eee;
@@ -571,7 +564,7 @@ tr:hover {
 }
 
 .react-confirm-alert-button-group button {
-  background-color: #4caf50; /* default green */
+  background-color: #4caf50;
   color: white;
   border: none;
   padding: 8px 14px;
@@ -582,11 +575,11 @@ tr:hover {
 }
 
 .react-confirm-alert-button-group button:hover {
-  background-color: #45a049; /* hover effect */
+  background-color: #45a049;
 }
 
 .react-confirm-alert-button-group button:nth-child(2) {
-  background-color: #f44336; /* red for cancel */
+  background-color: #f44336;
 }
 
 .react-confirm-alert-button-group button:nth-child(2):hover {

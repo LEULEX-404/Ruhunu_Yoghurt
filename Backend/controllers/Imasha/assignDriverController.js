@@ -78,13 +78,36 @@ export const getDeliveriesandDrivers = async (req,res)=>{
         const Deliveries = await Delivery.find ({status: "pending"});
         const Drivers = await Driver.find({availability: true});
 
+        const DriversWithLoad = await Promise.all(
+            Drivers.map(async (driver) =>{
+                const assigned = await AssignedDelivery.find({
+                    driver: driver.driverID,
+                    status: { $in: ["assigned", "sceduled"] }
+                });
+
+                console.log("Assigned Deliveries:", assigned);
+                console.log("driverID:", driver.driverID);
+
+                const totalWeight = assigned.reduce(
+                    (sum,ad) => sum + (ad.totalWeight || 0),
+                    0
+                );
+
+                return{
+                    ...driver.toObject(),
+                    assignedWeight: totalWeight,
+                    remainingCapacity: driver.vehicleCapacity - totalWeight
+                };
+            })
+        );
+
         res.json({
             Deliveries,
-            Drivers
+            Drivers:DriversWithLoad
         });
     }
     catch(err){
-        res.status(500).json({erroe: err.message});
+        res.status(500).json({error: err.message});
     }
 }
 

@@ -240,7 +240,7 @@ export default function DeliveryDashboard()
           <Toaster position="bottom-center"richColors/>
             <aside className = "sidebar">
                 <h2>Delivery Management</h2>
-                <div className="manager-card">
+                <div className="manager-card">  
                     <img
                       src="https://cdn-icons-png.flaticon.com/512/3237/3237472.png" 
                       alt="Manager"
@@ -368,6 +368,9 @@ export default function DeliveryDashboard()
           <p><b>{driver.name}</b></p>
           <p>Capacity: {driver.vehicleCapacity} kg</p>
           <p>Location: {driver.currentLocation || "N/A"}</p>
+          <p>Remaining: {driver.remainingCapacity}</p>
+          <p>Total: {driver.assignedWeight}</p>
+      
         </div>
         ))}
         </div>

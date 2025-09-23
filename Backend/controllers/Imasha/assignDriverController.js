@@ -6,7 +6,7 @@ export const assignDelivery = async (req, res)=>{
     try{
         const { driverId, deliveryIds} = req.body;
 
-        const driver = await Driver.findById(driverId);
+        const driver = await Driver.findOne({driverID: driverId});
         const deliveries = await Delivery.find({_id:{$in:deliveryIds}});
         //_id = onject Id   $in =get one by one 
 

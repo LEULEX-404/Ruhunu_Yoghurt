@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ToastContainer } from "react-toastify";
+import { Toaster, toast } from "sonner";
+import { confirmAlert } from 'react-confirm-alert';
+import "react-toastify/dist/ReactToastify.css";
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import { FiUsers, FiHome, FiLogOut, FiMoon,FiSun } from 'react-icons/fi';
 import '../Css/HrDashboard.css';
 
 export default function HrDashboard() {
+    const [employee, setEmployee] = useState("");
+
     const [employees, setEmployees] = useState([]);
     const [employeeSearch,setEmployeeSearch] = useState("");
 
@@ -15,6 +22,19 @@ export default function HrDashboard() {
     
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editEmployee, setEditEmployee] = useState(null);
+
+    const fetchEmployee = async () =>{
+
+        const storedEmployee = localStorage.getItem("user");
+        console.log('HR Manager:', storedEmployee);
+
+        if(storedEmployee){
+            const parsedEmployee = JSON.parse(storedEmployee);
+
+            const res = await axios.get(`http://localhost:8070/api/employees/${parsedEmployee.id}`)
+            setEmployee(res.data);
+        };
+    };
 
     const fetchEmployees = async () => {
         try{
@@ -67,6 +87,7 @@ export default function HrDashboard() {
 
     useEffect(() => {
         fetchEmployees();
+        fetchEmployee();
     }, []);
 
     useEffect(() =>{
@@ -92,7 +113,7 @@ export default function HrDashboard() {
         try{
             const response = await axios.post(`http://localhost:8070/api/employees/add`, newEmployee);
             console.log('Employee added:', response.data);
-            alert('Employee added successfully',response.data.message);
+            toast.success("✅ Employee Added Successfully");
             setNewEmployee({
                 employeeID: '',
                 name: '',
@@ -105,7 +126,7 @@ export default function HrDashboard() {
         
         }catch(error){
             console.error('Error adding employee:', error);
-            alert('Failed to add employee');
+            toast.error("❌ Failed to add employee");
         }
     };
 
@@ -122,54 +143,72 @@ export default function HrDashboard() {
                 { name: editEmployee.name, email: editEmployee.email, position: editEmployee.position, phone: editEmployee.phone, vehicleCapacity: editEmployee.vehicleCapacity || 0 });
 
             console.log('Employee updated:', response.data);
-            alert('Employee updated successfully',response.data.message);
+            toast.success("✅ Employee Updated Successfully");
             fetchEmployees();
             closeEditModal();
 
         }catch(error){
             console.error('Error updating employee:', error);
-            alert('Failed to update employee');
+            toast.error("❌ Failed to update employee");
         }
     }
 
-    const handleDeleteEmployee = async (id) => {
-        if(window.confirm('Are you sure you want to delete this employee?')){
-
-            try{
-                await axios.delete(`http://localhost:8070/api/employees/delete/${id}`);
-                alert('Employee deleted successfully');
-                fetchEmployees();
-
-            }catch(error){
-                console.error('Error deleting employee:', error);
-                alert('Failed to delete employee');
+    const handleDeleteEmployee = (id) => {
+        confirmAlert({
+          title: 'Confirm Deletion',
+          message: `Are you sure you want to delete ?`,
+          buttons: [
+            {
+              label: 'Yes',
+              onClick: async () => {
+                try {
+                    await axios.delete(`http://localhost:8070/api/employees/delete/${id}`);
+                  toast.success("✅ Employee Deleted Successfully");
+                  fetchEmployees();
+                } catch (err) {
+                  toast.error("❌ Failed to delete employee");
+                }
+              }
+            },
+            {
+              label: 'No',
+              onClick: () => {}
             }
-        }
-    };
+          ]
+        });
+      };
     
+      
+
     const handleAssignRole = async (e) =>{
         e.preventDefault();
 
         try{
             const response = await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, { position: selectedEmployee.position, vehicleCapacity: selectedEmployee.vehicleCapacity || 0 });
             console.log('Role assigned:', response.data);
-            alert('Role assigned successfully',response.data.message);
+            toast.success("✅ Role Assigned Successfully");
             fetchEmployees();
             closeAssignModal();
 
         }catch(error){
             console.error('Error assigning role:', error);
-            alert('Failed to assign role');
+            toast.error("Failed to Assign Role");
         }
     };
 
     const handleSignOut = () =>{
-        alert('Signed out successfully');
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        toast.warning("Signed out successfully!");
+        setTimeout(() => {
+        window.location.href = "/login";
+  }, 1500);
     };
 
     return(
 
         <div className = {`dashboard-container ${darkMode ? 'dark':''}`}>
+            <Toaster position="top-right" richColors />
             <div className="wrapper">
                 <aside className="HR-sidebar">
                     <div className="HR-sidebar-header">
@@ -203,18 +242,26 @@ export default function HrDashboard() {
                             <button className="signout-btn" onClick = {handleSignOut}>
                                 <FiLogOut /> Sign Out
                             </button>
+                            
                         </div>
                 </aside>
 
-                <main className="main-content">
+                <main className="HR-main-content">
                     <div className = 'topbar'>
                         
 
-                        <div className = 'profile-section'>
-                            <img src = 'https://via.placeholder.com/40' alt = 'Profile' className='profile-pic'/>
-                            <span className = 'profile-name'>HR Manager</span>
+                    <div className='profile-summary'>
+                        <img src='https://cdn-icons-png.flaticon.com/512/3237/3237472.png' alt='Profile' className='profile-avatar'/>
+                        <div className='profile-info'>
+                            <h3>HR Manager</h3>
+                            <p><strong>EMID: </strong>{employee?.employeeID}</p>
+                            <p><strong>Name: </strong>{employee?.name}</p>
+                            <p><strong>Email: </strong>{employee?.email}</p>
                         </div>
                     </div>
+                    
+                    </div>
+                    
 
                     {view === 'dashboard' && (
                         <div className = 'dashboard-view'>

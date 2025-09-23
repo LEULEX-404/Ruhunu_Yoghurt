@@ -62,8 +62,15 @@ export const getPendingOrders = async (req, res) =>{
 export const getAssignDeliveries = async (req,res) =>{
     try{
         const assignDeliveries = await AssignedDelivery.find({})
-        .populate("driver")
-        .populate("deliveries")
+        .populate({
+            path: "driver",
+            model: "Driver",
+            match: {},
+            select: "name vehicleCapacity currentLocation",
+            localField: "driver",
+            foreignField: "driverID"
+        })
+        .populate("deliveries", "orderID customerName address cost");
 
         res.status(200).json(assignDeliveries)
     }

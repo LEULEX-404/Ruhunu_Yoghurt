@@ -200,3 +200,42 @@ body {
 .modal-close:hover {
   color: #444;
 }
+
+
+.choice-buttons {
+  display: flex;
+  gap: 1rem; /* space between buttons */
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.choice-buttons .button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.choice-buttons .button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #0056b3, #003d80);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.choice-buttons .button:active {
+  transform: scale(0.97);
+}
+
+.choice-buttons .button:nth-child(2) {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+}
+
+.choice-buttons .button:nth-child(2):hover {
+  background: linear-gradient(135deg, #1e7e34, #155d27);
+}

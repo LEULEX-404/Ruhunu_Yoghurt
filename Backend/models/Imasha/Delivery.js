@@ -28,12 +28,12 @@ const deliverySchema = new mongoose.Schema({
 
     status:{
         type: String,
-        enum: ['pending', 'assigned', 'delivered'],
+        enum: ['pending', 'assigned', 'delivered', 'completed'],
         default: 'pending'
     },
 
     assignedDriver:{
-        type: mongoose.Schema.Types.ObjectId, ref: "User"
+        type: mongoose.Schema.Types.ObjectId, ref: "Driver"
     },
     
     },{timestamps: true});

@@ -4,7 +4,8 @@ import '../Css/Attendence.css';
 
 export default function AttendencePage() {
     const [status, setStatus] = useState(null);
-    const [earlyLeaveReason, setEarlyLeaveReason] = useState('');
+    const [earlyLeaveReason, setEarlyLeaveReason] = useState(''); 
+    const [showLeaveForm, setShowLeaveForm] = useState(false);
 
 
     useEffect(() => {
@@ -68,12 +69,43 @@ export default function AttendencePage() {
 
     return (
         <div className="attendance-container">
-            <div className="attendance-card">
-              <h2>Attendance Portal</h2>
-              {!status && <button onClick={handleCheckIn}>✅ Check In</button>}
-              {status === "checked-in" && (
+        <div className="attendance-card">
+          <h2>Attendance Portal</h2>
+            
+  
+          {!status && <button onClick={handleCheckIn}>✅ Check In</button>}
+  
+          {!status && (
+              <button 
+                className="attendence-logout-button" 
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  window.location.href = "/";
+                }}
+              >
+                🚪 Logout
+              </button>
+            )}
+          {status === "checked-in" && (
+            <>
+              <h3>You are checked in today</h3>
+  
+              {!showLeaveForm ? (
+                <div className="leave-request-row">
+                <button onClick={() => setShowLeaveForm(true)}>
+                  ✍️ Request Early Leave
+                </button>
+                <button
+                  className="back-button"
+                  onClick={() => 
+                    setStatus(null)
+                  }
+                >
+                  Back
+                </button>
+              </div>
+              ) : (
                 <>
-                  <h3>You are checked in today</h3>
                   <h4>Request Early Leave</h4>
                   <textarea
                     rows="3"
@@ -81,12 +113,23 @@ export default function AttendencePage() {
                     value={earlyLeaveReason}
                     onChange={(e) => setEarlyLeaveReason(e.target.value)}
                   />
-                  <button onClick={handleEarlyLeave}>📤 Submit Early Leave</button>
+                  <div className="leave-buttons">
+                    <button onClick={handleEarlyLeave}>📤 Submit Early Leave</button>
+                    <button
+                      className="cancel-button"
+                      onClick={() => {
+                        setEarlyLeaveReason('');
+                        setShowLeaveForm(false); 
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </>
               )}
-            </div>
+            </>
+          )}
         </div>
+      </div>
       );
-
-
 }

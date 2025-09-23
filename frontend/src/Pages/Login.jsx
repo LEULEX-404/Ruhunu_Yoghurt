@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { login } from "../api/auth.js";
+import { Toaster, toast } from "sonner";
 import RegisterPage from "../Components/Register.js";
 import '../Css/Login.css';
 
@@ -28,25 +29,32 @@ export default function LoginPage() {
         if (data.user.role === "HR Manager" || data.user.role === "Delivery Manager"|| data.user.role === "Order Manager" || data.user.role === "Product Manager" || data.user.role === "Stock Manager" || data.user.role === "Driver") {
             setShowChoice(true);
             setUser(data.user);
-            alert(`Logged in as ${data.user.role}. Please choose your dashboard.`);
+            toast.success(`Logged in as ${data.user.role}. Please choose your dashboard.`);
         }
         else if (data.user.role === "Staff") {
-          window.location.href = "/attendence";
+          toast.success("✅ Welcome Staff! Redirecting to Attendance...");
+          setTimeout(() => {
+            window.location.href = "/attendence";
+          }, 1500);
         } 
         else if (data.user.role === "customer") {
+          toast.success("✅ Welcome back! Redirecting to your profile...");
+        setTimeout(() => {
           window.location.href = "/userProfile";
+        }, 1500);
         }
         else {
-            alert("Unauthorized role");
+          toast.error("❌ Unauthorized role. Please contact admin.");
         }
         
     }catch (error) {
-        alert(error.response.data.message || "Login failed");
+      toast.error(error.response?.data?.message || "❌ Login failed!");
     }
     };
 
     return (
         <div className="login-container">
+           <Toaster position="top-right" richColors />
       <div className="login-card">
         <div className="avatar">
           <span>🙍‍♂️</span>

@@ -108,7 +108,7 @@
 }
 
 /* Main content now respects sidebar */
-.main-content {
+.HR-main-content {
   margin-left: 250px;   /* push to right of sidebar */
   padding: 30px;
   flex: 1;
@@ -118,7 +118,7 @@
   box-sizing: border-box; /* prevent overflow from padding */
 }
 
-.main-content h1, .main-content h2 {
+.HR-main-content h1, .main-content h2 {
   font-weight: 600;
   margin-bottom: 20px;
   color: #222;
@@ -180,7 +180,7 @@ tr:hover {
   color: #fff;
 }
 
-.dashboard-container.dark .main-content {
+.dashboard-container.dark .HR-main-content {
   background: #1a1a1a;
   color: #eee;
 }
@@ -500,4 +500,95 @@ tr:hover {
 .dashboard-container.dark table th,
 .dashboard-container.dark table td {
   color: #eee;
+}
+
+.profile-summary {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0b6eff;
+}
+
+.profile-info h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #102a43;
+}
+
+.profile-info p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #627d98;
+}
+
+
+.react-confirm-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+
+.react-confirm-alert {
+  background: #ffffff;
+  border-radius: 12px; 
+  padding: 20px;
+  width: fit-content;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.react-confirm-alert h1 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.react-confirm-alert p {
+  font-size: 14px;
+  color: #555;
+}
+
+.react-confirm-alert-button-group button {
+  background-color: #4caf50; /* default green */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  margin: 0 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.react-confirm-alert-button-group button:hover {
+  background-color: #45a049; /* hover effect */
+}
+
+.react-confirm-alert-button-group button:nth-child(2) {
+  background-color: #f44336; /* red for cancel */
+}
+
+.react-confirm-alert-button-group button:nth-child(2):hover {
+  background-color: #d32f2f;
 }

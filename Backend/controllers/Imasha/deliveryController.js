@@ -3,8 +3,26 @@ import Driver from '../../models/Tharuka/Driver.js';
 import { getCoordinates, getDrivingDistance } from '../../utils/distance.js';
 import Order from '../../models/Lasiru/order.js';
 import AssignedDelivery from '../../models/Imasha/AssignDelivery.js';
+import Employee from '../../models/Tharuka/Employee.js';
 
 const WAREHOUSE_LOCATION = { lat:7.0412, lng:80.1289};
+
+export const getManagerById = async (req, res) => {
+    try{
+        const { id } = req.params;
+
+        const manager = await Employee.findById(id);
+
+        if(!manager){
+            return res.status(404).json({message: "Manager not Found."})
+        }
+        res.status(200).json(manager);
+    }
+    catch(err){
+        console.error(err);
+        res.status(500).json({message: "Error fetching manager.",error: err.message});
+    }
+}
 
 export const createDelivery = async (req,res) =>{
     try{

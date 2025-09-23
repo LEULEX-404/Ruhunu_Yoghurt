@@ -89,3 +89,82 @@ export async function deleteProduct(req, res){
     }
     
 }
+
+export async function getProductById(req, res){
+    const productId = req.params.productId
+
+    try {
+        const product = await Product.findOne(
+            {productId : productId}
+        )
+
+        if(product == null){
+            res.status(404).json({
+                message : "Product not found"
+            })
+            return
+        }
+
+        if(product.isAvailable){
+            res.json(product)
+        }else{
+            if (!isAdmin(req)) {
+                res.status(404).json({
+                    message : "Product not found"
+                })
+                return
+            } else {
+                res.json(product)
+            }
+        }
+    } catch (err) {
+        res.status(500).json({
+            message : "Internal server error.",
+            error : err
+        })
+    }
+}
+
+export async function addRating(req, res){
+    if(req.user == null){
+        res.status(403).json({
+            message : "Login First"
+        })
+        return
+    }
+
+    try{
+        const {productId, newRating} = req.body;
+
+        if(newRating < 1 || newRating > 5){
+            res.status(400).json({
+                message : "Rating must be between 1 and 5"
+            })
+        }
+
+        const product = await Product.findById(productId)
+
+        if(!product){
+            res.status(404).json({
+                message : "Product not found"
+            })
+        }
+
+        product.rating = (product.rating * product.numRatings + newRating) / (product.numRatings + 1)
+
+        product.numRatings += 1;
+
+        await product.save();
+
+        res.json({
+            message : "Rating added", 
+            rating: product.rating,
+            numRatings : product.numRatings
+        })
+    } catch (error){
+        res.status(500).json({
+            message : "Error adding rating",
+            error : error.message
+        })
+    }
+}

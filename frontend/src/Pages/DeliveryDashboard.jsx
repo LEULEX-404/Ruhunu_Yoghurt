@@ -134,7 +134,7 @@ export default function DeliveryDashboard()
         }
         else{
             setSelectDeliveries([...selectDeliveries, delivery])
-        }
+        } 
     }
     const handleSelectDriver = (driver) =>{
         setSelectDriver(driver);

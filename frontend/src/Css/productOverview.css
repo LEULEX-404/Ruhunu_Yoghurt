@@ -1,0 +1,231 @@
+/* Main page container */
+.product-overview-container {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    max-width: 1200px;
+    margin: auto;
+    gap: 32px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Image section */
+.product-image-section {
+    flex: 1 1 50%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Product details section */
+.product-details-section {
+    flex: 1 1 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-details-content {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Titles and sub-titles */
+.product-title-mobile {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.product-title-desktop {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    color: #333;
+    display: none; /* Hide the desktop title as we're not using media queries */
+}
+
+.product-alt-name {
+    font-size: 1rem;
+    color: #666;
+    font-weight: normal;
+}
+
+.product-id {
+    font-size: 0.9rem;
+    color: #999;
+    font-weight: 400;
+    margin-bottom: 16px;
+}
+
+.product-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 24px;
+}
+
+/* Product info grid (weight, expiry, rating) */
+.product-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.info-item {
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+.info-item strong {
+    color: #222;
+}
+
+/* Price display */
+.product-price-container {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.product-labelled-price {
+    font-size: 1.2rem;
+    color: #999;
+    text-decoration: line-through;
+}
+
+.product-price {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #dc3545; /* A color for a deal/sale */
+}
+
+.product-price-single {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 24px;
+    display: block;
+}
+
+/* Action buttons */
+.product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.add-to-cart-button,
+.buy-now-button {
+    padding: 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-to-cart-button {
+    background-color: #28a745;
+}
+
+.add-to-cart-button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.buy-now-button {
+    background-color: #007bff;
+}
+
+.buy-now-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Styling for the Loading component */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 1.5rem;
+    color: #666;
+}
+
+/* Existing Rating Display */
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    color: #ffc107;
+    font-size: 1.2rem;
+}
+
+.product-rating .fa-star {
+    color: #ffc107;
+}
+
+/* New Rating Section Styles */
+.rating-section {
+    margin-bottom: 24px;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.rating-section h4 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: #444;
+}
+
+.stars-container {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.star {
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.star:hover {
+    color: #ffc107;
+}
+
+.stars-container input[type="radio"] {
+    display: none;
+}
+
+.submit-rating-button {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    background-color: #28a745;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+.submit-rating-button:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.submit-rating-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}

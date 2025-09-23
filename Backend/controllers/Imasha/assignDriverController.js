@@ -93,12 +93,23 @@ export const getDeliveriesandDrivers = async (req,res)=>{
                     0
                 );
 
+                const remainingCapacity = driver.vehicleCapacity - totalWeight;
+
+                const driveAvalability = await Driver.findOne({driverID: driver.driverID})
+
+                    if(driveAvalability && remainingCapacity <= 0){
+                    driveAvalability.availability = false;
+                }
+
+                await driveAvalability.save();
+
                 return{
                     ...driver.toObject(),
                     assignedWeight: totalWeight,
-                    remainingCapacity: driver.vehicleCapacity - totalWeight
+                    remainingCapacity
                 };
             })
+            
         );
 
         res.json({
@@ -135,3 +146,22 @@ export const scheduleAssignedDelivery = async (req, res) =>{
         res.status(500).json({message: error.message});
     }
 };
+
+export const getStats = async (req, res) => {
+    try{
+        const totalDeliveries = await Delivery.countDocuments();
+        const pending = await AssignedDelivery.countDocuments({status: "sceduled"});
+        const completed = await AssignedDelivery.countDocuments({status: "completed"});
+        const drivers = await Driver.countDocuments({availability: true});
+
+        res.json({
+            totalDeliveries,
+            pending,
+            completed,
+            drivers
+        })
+    }
+    catch(err){
+        res.status(500).json({error:err.message});
+    }
+}

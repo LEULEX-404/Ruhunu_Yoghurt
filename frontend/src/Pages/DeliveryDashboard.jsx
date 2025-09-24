@@ -239,6 +239,10 @@ export default function DeliveryDashboard()
         return;
       }
 
+      if(!validateSchedule()){
+        return;
+      }
+
       axios.post('http://localhost:8070/api/deliveries/schedule', {
         assignedDeliveryId: sceduleDeliveryId,
         startTime,
@@ -255,6 +259,46 @@ export default function DeliveryDashboard()
         console.error(err);
         toast.error("Failed to scedule delivery");
       });
+    };
+
+    const validateSchedule = () => {
+      const now = new Date();
+      const start = new Date(startTime);
+      const end = new Date(endTime);
+
+      if(!startTime || !endTime){
+        toast.warning("Please select start and end time.");
+        return false;
+      }
+
+      const startHour =start.getHours();
+      if(startHour < 8 || startHour > 13){
+        toast.error("Start time must be between 8 AM and 11 AM.");
+        return false;
+      } 
+
+      if(start < now){
+        toast.warning("Start time cannot be in the past.");
+        return false;
+      }
+      if(end <now){
+        toast.warning("End time cannot be in the past.");
+        return false;
+      }
+
+      
+
+      const endHour = end.getHours();
+      if(endHour < 14 || endHour > 17){
+        toast.error("End time must be between 2 PM and 5 PM.");
+        return false;
+      }
+
+      if(end <= start){
+        toast.error("End time must be later than start time.");
+        return false;
+      }
+      return true;
     };
 
     const toggleDarkMode = () =>{
@@ -275,6 +319,8 @@ export default function DeliveryDashboard()
         window.location.href = "/login";
       },1500);
     };
+
+
 
     return(
         <div className="dashboard-wrapper">

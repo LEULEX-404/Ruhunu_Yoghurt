@@ -152,16 +152,54 @@ export const searchDeliveriesAndDrivers = async (req,res) =>{
             $or: deliveryconditon
         });
 
-        drivers = await Driver.find({
+        const driverQuery = {
             availability: true,
             $or: [
                 {name: query},
                 {currentLocation: query}
             ]
-        });
+        };
+
+        const rawDrivers = await Driver.find(driverQuery);
+        drivers = await Promise.all(rawDrivers.map(async (driver) => {
+            const assigned = await AssignedDelivery.find({
+                driver: driver.driverID,
+                status: { $in: ["assigned", "sceduled"] }
+            });
+
+            const totalWeight = assigned.reduce(
+                (sum,ad) => sum + (ad.totalWeight || 0),
+                0
+            );
+            const remainingCapacity = driver.vehicleCapacity - totalWeight;
+
+            return {
+                ...driver.toObject(),
+                assignedWeight: totalWeight,
+                remainingCapacity
+            };
+        }))
     }else{
-        deliveries = await Delivery.find({ status: "pending" });
-      drivers = await Driver.find({ availability: true });
+        deliveries = await Delivery.find({status: "pending"});
+        const rawDrivers = await Driver.find({availability: true});
+
+        drivers = await Promise.all(rawDrivers.map(async (driver) => {
+            const assigned = await AssignedDelivery.find({
+                driver: driver.driverID,
+                status: { $in: ["assigned", "sceduled"] }
+            });
+            const totalWeight = assigned.reduce(
+                (sum,ad) => sum + (ad.totalWeight || 0),
+                0
+            );
+            const remainingCapacity = driver.vehicleCapacity - totalWeight;
+
+            return {
+                ...driver.toObject(),
+                assignedWeight: totalWeight,
+                remainingCapacity
+            };
+        }))
     }
         res.json({Deliveries: deliveries, Drivers: drivers});
     }

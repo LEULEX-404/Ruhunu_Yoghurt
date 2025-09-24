@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ToastContainer } from "react-toastify";
 import { Toaster, toast } from "sonner";
 import { confirmAlert } from 'react-confirm-alert';
 import "react-toastify/dist/ReactToastify.css";
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { FiUsers, FiHome, FiLogOut, FiMoon,FiSun } from 'react-icons/fi';
+import { FiUserX, FiHome, FiLogOut, FiMoon,FiSun ,FiBarChart2, FiCheckSquare, FiUserCheck, FiUserPlus } from 'react-icons/fi';
 import '../Css/HrDashboard.css';
 
 export default function HrDashboard() {
@@ -211,28 +210,62 @@ export default function HrDashboard() {
             <div className="wrapper">
                 <aside className="HR-sidebar">
                     <div className="HR-sidebar-header">
-                        <h2>HR Dashboard</h2>
+                        <h2>Human & Resource Management</h2>
+                        <div className='HR-manager-card'>
+                            <img
+                                src = 'https://cdn-icons-png.flaticon.com/512/3237/3237472.png' 
+                                alt='Profile' 
+                                className='profile-avatar'
+                            />
+                            <div>
+                                <h4 className="HR-manager-name"><p>{employee?.position}</p></h4>
+                                
+                                <p className="HR-manager-role">{employee?.employeeID}</p>
+                                <p className="HR-manager-role">{employee?.name}</p>
+                                <p className="HR-manager-role">{employee?.email}</p>
+                            </div>
+
+                        </div>
                     </div>
                         <ul className="HR-sidebar-menu">
-                            <li onClick ={() => setView('dashboard')}>
-                                <FiHome /> Dashboard
-                            </li>
-                            <li onClick ={() => setView('add')}>
-                                <FiUsers /> Add Employee
-                            </li>
-                            <li onClick ={() => setView('unassigned')}>
-                                <FiUsers /> Unassigned
-                            </li>
-                            <li onClick ={() => setView('assigned')}>
-                                <FiUsers /> Assigned
-                            </li>
-                            <li onClick ={() => setView('attendence')}>
-                                <FiUsers /> Attendence
-                            </li>
-                            <li onClick ={() => setView('reports')}>
-                                <FiUsers /> Reports
-                            </li>
+                          <li 
+                            className={view === 'dashboard' ? 'active' : ''} 
+                            onClick={() => setView('dashboard')}
+                          >
+                            <FiHome /> Dashboard
+                          </li>
+                          <li 
+                            className={view === 'add' ? 'active' : ''} 
+                            onClick={() => setView('add')}
+                          >
+                           <FiUserPlus /> Add Employee
+                          </li>
+                          <li 
+                            className={view === 'unassigned' ? 'active' : ''} 
+                            onClick={() => setView('unassigned')}
+                          >
+                            <FiUserX /> Unassigned
+                          </li>
+                          <li 
+                            className={view === 'assigned' ? 'active' : ''} 
+                            onClick={() => setView('assigned')}
+                          >
+                            <FiUserCheck /> Assigned
+                          </li>
+                          <li 
+                            className={view === 'attendence' ? 'active' : ''} 
+                            onClick={() => setView('attendence')}
+                          >
+                            <FiCheckSquare /> Attendence
+                          </li>
+                          <li 
+                            className={view === 'reports' ? 'active' : ''} 
+                            onClick={() => setView('reports')}
+                          >
+                            <FiBarChart2 /> Reports
+                          </li>
                         </ul>
+
 
                         <div className="HR-sidebar-footer">
                             <button className = 'dark-mode-btn' onClick={toggleDarkMode}>
@@ -247,26 +280,47 @@ export default function HrDashboard() {
 
                 <main className="HR-main-content">
                     <div className = 'topbar'>
-                        
-
-                    <div className='profile-summary'>
-                        <img src='https://cdn-icons-png.flaticon.com/512/3237/3237472.png' alt='Profile' className='profile-avatar'/>
-                        <div className='profile-info'>
-                            <h3>HR Manager</h3>
-                            <p><strong>EMID: </strong>{employee?.employeeID}</p>
-                            <p><strong>Name: </strong>{employee?.name}</p>
-                            <p><strong>Email: </strong>{employee?.email}</p>
-                        </div>
-                    </div>
-                    
+                        <h1>Human & Resource Management</h1>
+                        <p className="subtitle">Monitor and manage all employee & user operations</p>
                     </div>
                     
 
                     {view === 'dashboard' && (
-                        <div className = 'dashboard-view'>
-                            <h2>Welcome to the HR Dashboard</h2>
+                        <div className='dashboard-view'>
+                          <h2>Welcome to the HR Dashboard</h2>
+                                            
+                          <div className="HR-stats-container">
+                          <div className="stats-row">
+                              <div className="stat-card blue" data-tooltip="Total number of employees">
+                                <h3>Employees</h3>
+                                <span>{employees.length}</span>
+                              </div>
+                              <div className="stat-card green" data-tooltip="Drivers available for delivery">
+                                <h3>Available Drivers</h3>
+                                <span>{employees.filter(emp => emp.position === "Driver").length}</span>
+                              </div>
+                              <div className="stat-card orange" data-tooltip="Staff available for Work">
+                                <h3>Available Staff</h3>
+                                <span>{employees.filter(emp => emp.position === "Staff").length}</span>
+                              </div>
+                              <div className="stat-card purple" data-tooltip="All Manager Roles">
+                                <h3>Manager</h3>
+                                <span>{employees.filter(emp => emp.position === "HR Manager" ||emp.position === "Delivery Manager"  ||emp.position === "Product Manager"  ||emp.position === "Order Manager"  ||emp.position === "Stock Manager" ).length}</span>
+                              </div>
+                            </div>
+
+                          </div>
+                          <div className="recent-activities">
+                             <h3>Recent Activities</h3>
+                             <ul>
+                               <li>🚚 Delivery #123 assigned to Driver John</li>
+                               <li>👤 New Employee: Sarah added to HR system</li>
+                               <li>✅ Delivery #122 completed</li>
+                             </ul>
+                          </div>
                         </div>
                     )}
+
 
 
                     {view === 'add' && (
@@ -292,13 +346,17 @@ export default function HrDashboard() {
 
                     {(view === 'unassigned' ) && (
                         <div className = 'content-card'>
+                            <div className='unassingn-employee'>
                             <h2>UNASSIGNED EMPLOYEE</h2>
-                            <input className = 'search-bar'
-                              type="text"
-                              placeholder="Search Employee..."
-                              value={employeeSearch}
-                              onChange={(e) => setEmployeeSearch(e.target.value)}
-                            />
+                            </div>
+                            <div className='search-container'>
+                                <input className = 'search-bar'
+                                  type="text"
+                                  placeholder="Search Employee..."
+                                  value={employeeSearch}
+                                  onChange={(e) => setEmployeeSearch(e.target.value)}
+                                />
+                            </div>
                             <table className>
                                 <thead>
                                     <tr>
@@ -332,14 +390,20 @@ export default function HrDashboard() {
 
                     {(view === 'assigned' ) && (
                         <div className = 'content-card'>
-                            <h2>ASSIGNED EMPLOYEE</h2>
-                            <input className = 'search-bar'
-                              type="text"
-                              placeholder="Search Employee..."
-                              value={employeeSearch}
-                              onChange={(e) => setEmployeeSearch(e.target.value)}
-                            />
+                            <div className='assign-employee'>
+                            <h2>ASSIGNED EMPLOYEES</h2>
+                            </div>
+                            <div className='search-container'>
+                                <input className = 'search-bar'
+                                  type="text"
+                                  placeholder="Search Employee..."
+                                  value={employeeSearch}
+                                  onChange={(e) => setEmployeeSearch(e.target.value)}
+                                />
+                            </div>
+                            <div className='employee-table'>
                             <h3>EMPLOYEES</h3>
+                            </div>
                             <table className>
                                 <thead>
                                     <tr>
@@ -378,8 +442,9 @@ export default function HrDashboard() {
                                     ))}
                                 </tbody>
                             </table>
-
+                            <div className='driver-table'>
                             <h3>DRIVER</h3>
+                            </div>
                             <table className>
                                 <thead>
                                     <tr>

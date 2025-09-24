@@ -22,6 +22,10 @@ export default function HrDashboard() {
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editEmployee, setEditEmployee] = useState(null);
 
+    const [errors, setErrors] = useState({});
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+
     const fetchEmployee = async () =>{
 
         const storedEmployee = localStorage.getItem("user");
@@ -108,7 +112,10 @@ export default function HrDashboard() {
     const handleAddEmployee = async (e) =>{
         e.preventDefault();
 
+        if(validateForm()){
+
         try{
+            
             const response = await axios.post(`http://localhost:8070/api/employees/add`, newEmployee);
             console.log('Employee added:', response.data);
             toast.success("Employee Added Successfully");
@@ -127,6 +134,39 @@ export default function HrDashboard() {
             toast.error("Failed to add employee");
         }
     };
+}
+
+    const validateForm = () =>{
+        let newErrors = {};
+
+        if(!/^(EM|D)[0-9][0-9]+$/.test(newEmployee.employeeID)){
+            newErrors.employeeID = "Employee ID is required";
+        }
+
+        if(!/^[A-Za-z\s]+$/.test(newEmployee.name)){
+            newErrors.name = "Name should contain only letters and spaces";
+        }
+
+        if(!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(newEmployee.email)){
+            newErrors.email = "Invalid email format";
+        }
+
+        if(!/^[0-9]{10}$/.test(newEmployee.phone)){
+            newErrors.phone = "Phone must be 10 digits";
+        }
+
+        if(newEmployee.password.length < 6){
+            newErrors.password = "Password must be atleast 6 characters";
+        }
+
+        if (confirmPassword !== newEmployee.password) {
+            newErrors.confirmPassword = "Passwords do not match";
+        }
+
+        setErrors(newErrors);
+
+        return Object.keys(newErrors).length === 0;
+    }
 
     const handleUpdateEmployee = async (e) =>{
         e.preventDefault();
@@ -331,10 +371,22 @@ export default function HrDashboard() {
                                 <form onSubmit = { handleAddEmployee } className = 'add-form'>
                                     <div className = 'form-group'>
                                         <input type = 'text' placeholder='Employee ID' value={newEmployee.employeeID} onChange={(e) => setNewEmployee({...newEmployee, employeeID: e.target.value})} required/>
+                                            {errors.employeeID && <span className="error">{errors.employeeID}</span>}
+
                                         <input type = 'text' placeholder='Name' value={newEmployee.name} onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})} required/>
+                                            {errors.name && <span className="error">{errors.name}</span>}
+
                                         <input type = 'email' placeholder='Email' value={newEmployee.email} onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})} required/>
+                                            {errors.email && <span className="error">{errors.email}</span>}
+
                                         <input type = 'text' placeholder='Phone' value={newEmployee.phone} onChange={(e) => setNewEmployee({...newEmployee, phone: e.target.value})} required/>
+                                            {errors.phone && <span className="error">{errors.phone}</span>}
+
                                         <input type = 'password' placeholder='Password' value={newEmployee.password} onChange={(e) => setNewEmployee({...newEmployee, password: e.target.value})} required/>
+                                            {errors.password && <span className="error">{errors.password}</span>}
+
+                                        <input type = 'password' placeholder='Confirm Password' value={newEmployee.confirmPassword} onChange={(e) => setConfirmPassword( e.target.value)} required/>
+                                            {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
                                     </div>
 
                                     <button type = 'submit' className='submit-btn'>Add Employee</button>
@@ -489,9 +541,9 @@ export default function HrDashboard() {
                     )}
 
 
-                    {view === "attendance" && (
+                    {view === "attendence" && (
                         <div className="content-card">
-                            <h2>Attendance Tracking Section (To Implement)</h2>
+                            <h2>Attendance Tracking Section</h2>
                         </div>
                     )}
 

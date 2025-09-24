@@ -170,4 +170,55 @@ export const searchDeliveriesAndDrivers = async (req,res) =>{
     }
 };
 
+export const searchAssignedDeliveries = async (req,res) =>{
+    try{
+        const { search } = req.query;
+        let assignedDeliveries = [];
+        if(search){
+        const query  = search ? { $regex: search, $options: "i"} : {};
+        const isNumeric = !isNaN(search);
+
+        let pipeline = [
+      { $match: { status: "sceduled" } },
+      {
+        $lookup: {
+          from: "deliveries",
+          localField: "deliveries",
+          foreignField: "_id",
+          as: "deliveries"
+        }
+    },{
+         $lookup: {
+          from: "drivers",
+          localField: "driver",
+          foreignField: "driverID",
+          as: "drivers"
+        }
+      }
+    ];
+
+        let assignedconditon = [
+                {"deliveries.orderID": query},
+                {"deliveries.customerName": query},
+                {"drivers.name": query},
+                {"drivers.currentLocation": query},
+            ];
+
+        if(isNumeric){
+            assignedconditon.push({
+                productWeight: Number(search)
+            });
+        }
+        pipeline.push({ $match: { $or: assignedconditon } });
+
+        assignedDeliveries = await AssignedDelivery.aggregate(pipeline);
+    }
+    console.log(assignedDeliveries);
+        res.json(assignedDeliveries);
+    }
+    catch(err){
+        res.status(500).json({error: err.message});
+    }
+};
+
 

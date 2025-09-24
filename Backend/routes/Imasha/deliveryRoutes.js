@@ -1,13 +1,19 @@
-import express from `express`;
-import {createDelivery, getDeliveries, compleateDelivery, getPendingOrders, getAssignDeliveries} from "../../controllers/Imasha/deliveryController.js";
-import {assignDelivery, getDeliveriesandDrivers} from "../../controllers/Imasha/assignDriverController.js";
+import express from 'express';
+import {createDelivery, getPendingOrders,getAssignDeliveries, getSearchOrder, searchDeliveriesAndDrivers, getManagerById, searchAssignedDeliveries} from "../../controllers/Imasha/deliveryController.js";
+import {assignDelivery, getDeliveriesandDrivers, getStats, scheduleAssignedDelivery} from "../../controllers/Imasha/assignDriverController.js";
 
 const router = express.Router();
 
+router.get("/manager/:id",getManagerById);
 router.post("/create",createDelivery);
-router.get("/",getDeliveries);
 router.get("/pending",getPendingOrders);
 router.post("/assign",assignDelivery);
 router.get("/assign",getDeliveriesandDrivers);
-router.put("/:id/complete",compleateDelivery);
 router.get("/deliveries",getAssignDeliveries);
+router.get("/search/orders", getSearchOrder);
+router.get("/search/deliveries", searchDeliveriesAndDrivers);
+router.get("/search/assigned",searchAssignedDeliveries);
+router.post("/schedule", scheduleAssignedDelivery);
+router.get("/stats",getStats);
+
+export default router;

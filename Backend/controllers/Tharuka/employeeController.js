@@ -1,4 +1,5 @@
-import Employee from '../../models/Tharuka/employee.js';
+import Employee from '../../models/Tharuka/Employee.js';
+import Driver from '../../models/Tharuka/Driver.js';
 
 export const createEmployee = async (req, res) => {
     try{
@@ -47,18 +48,54 @@ export const getEmployeeById = async (req, res) => {
 export const updateEmployee = async (req, res) => {
     try{
         const { id } = req.params;
-        const { name, email, position, phone } = req.body;
+        const { EmployeeID, name, email, position, phone, vehicleCapacity } = req.body;
 
         const updatEmployee = await Employee.findByIdAndUpdate(
             id,
-            { name, email, position, phone },
+            { EmployeeID, name, email, position, phone },
             { new: true }
         );
 
         if(!updatEmployee){
             return res.status(404).json({ message: 'Employee not found' });
         }
-        res.status(200).json({ message: 'Employee updated successfully', employee: updatEmployee });
+
+        if (position === "Driver") {
+          const existingDriver = await Driver.findOne({ driverID: updatEmployee._id });
+
+          if (!existingDriver) {
+
+            const newDriver = new Driver({
+              driverID: updatEmployee._id,
+              employeeID: EmployeeID,
+              name: updatEmployee.name,
+              email: updatEmployee.email,
+              phone: updatEmployee.phone,
+              vehicleCapacity: Number(vehicleCapacity)
+            });
+
+
+            await newDriver.save();
+
+          }else {
+
+            existingDriver.employeeID = updatEmployee.employeeID;
+            existingDriver.name = updatEmployee.name;
+            existingDriver.email = updatEmployee.email;
+            existingDriver.phone = updatEmployee.phone;
+            existingDriver.vehicleCapacity = Number(vehicleCapacity);
+
+            await existingDriver.save();
+          }
+
+        } else {
+
+          await Driver.findOneAndDelete({ employeeID: updatEmployee.employeeID });
+
+        }
+
+        res.status(200).json({ message: 'Employee updated successfully', employee: updatEmployee,employeeID: EmployeeID });
+
     }catch(error){
         res.status(500).json({ message: 'Error updating employee', error: error.message });
     }
@@ -75,5 +112,44 @@ export const deleteEmployee = async (req, res) => {
         res.status(200).json({ message: 'Employee deleted successfully' });
     }catch(error){
         res.status(500).json({ message: 'Error deleting employee', error: error.message });
+    }
+};
+
+export function isAdmin(req){
+    if(req.employee == null){
+        return false;
+    }
+    
+    if(req.employee.position == "Product Manager" || req.employee.position == "Stock Manager") {
+        return true;
+    }
+    
+    return false;
+};
+
+export const getSearchEmployee =async (req, res) =>{
+
+        const search = req.query.search || "";
+
+        console.log('search',search);
+
+        let query = { };
+
+        if(search){
+            query.$or = [
+                {employeeID: {$regex: search, $options: "i"}},
+                {name: {$regex: search, $options: "i"}},
+                {position: {$regex: search, $options: "i"}}
+            ]
+        };
+    try{
+        const employees = await Employee.find(query).select(
+            "employeeID name email position phone"
+        );
+
+        res.json(employees);
+    }
+    catch(err){
+        res.status(500).json({error: err.message});
     }
 };

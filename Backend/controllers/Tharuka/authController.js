@@ -1,4 +1,5 @@
 import User from '../../models/Tharuka/User.js';
+import Employee from '../../models/Tharuka/Employee.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
@@ -29,17 +30,31 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     const { email, password } = req.body;
     try{
-        const user = await User.findOne({ email });
-        if(!user)
-            return res.status(400).json({ message: 'Invalid credentials'});
+        let user = await User.findOne({ email });
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        if (!user) {
+            user = await Employee.findOne({ email });
+        }
+        if(!user)
+            return res.status(400).json({ message: 'Cannot find user with this email'});
+
+        let isMatch = false;
+        
+        if(user.role)
+        {
+         isMatch = await bcrypt.compare(password, user.password);
+        }
+        else{
+            isMatch = password === user.password
+        }
         if(!isMatch)
             return res.status(400).json({ message: 'Invalid credentials'});
 
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1d' });
+        const userRole = user.role || user.position;
 
-        res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+        const token = jwt.sign({ id: user._id, role: userRole }, process.env.SECRET_KEY, { expiresIn: '1d' });
+
+        res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: userRole, employeeID: user.employeeID || null } });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }

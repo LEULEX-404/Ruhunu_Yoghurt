@@ -21,7 +21,7 @@ const employeeSchema = new mongoose.Schema({
 
     position: {
     type: String,
-    enum: ["Unassigned", "Manager", "Driver", "Staff"],
+    enum: ["Unassigned", "HR Manager", "Delivery Manager", "Product Manager", "Stock Manager", "Order Manager", "Driver", "Staff"],
     default: "Unassigned"
     },
 
@@ -38,4 +38,4 @@ const employeeSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-export default mongoose.model("Employee", employeeSchema);
+export default mongoose.models.Employee ||mongoose.model("Employee", employeeSchema);

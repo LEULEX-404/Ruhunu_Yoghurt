@@ -1,0 +1,174 @@
+/* src/Css/Attendance.css */
+
+/* Page container */
+.attendance-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card box */
+.attendance-card {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 15px;
+  padding: 30px 25px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.attendance-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Page title */
+.attendance-card h2 {
+  font-size: 28px;
+  color: #102a43;
+  margin-bottom: 20px;
+}
+
+/* Checked-in message */
+.attendance-card h3 {
+  font-size: 20px;
+  color: #334e68;
+  margin-bottom: 15px;
+}
+
+/* Section heading */
+.attendance-card h4 {
+  font-size: 16px;
+  color: #627d98;
+  margin-bottom: 10px;
+}
+
+/* Buttons */
+.attendance-card button {
+  background: linear-gradient(90deg, #4f9cf9, #0b6eff);
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.attendance-card button:hover {
+  background: linear-gradient(90deg, #0b6eff, #4f9cf9);
+  transform: translateY(-2px);
+}
+
+/* Textarea */
+.attendance-card textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid #bcccdc;
+  resize: none;
+  font-size: 14px;
+  margin-bottom: 15px;
+  transition: border-color 0.3s;
+}
+
+.attendance-card textarea:focus {
+  outline: none;
+  border-color: #4f9cf9;
+  box-shadow: 0 0 5px rgba(79, 156, 249, 0.5);
+}
+
+/* Loading text */
+.attendance-container p {
+  font-size: 18px;
+  color: #334e68;
+  margin-top: 50px;
+}
+
+.attendance-card .attendence-logout-button {
+  background: linear-gradient(135deg, #ff4d4d, #cc0000);
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius:10px;
+  width:140px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 15px;
+  margin-left: 20px;
+}
+
+.attendance-card .attendence-logout-button:hover {
+  background: linear-gradient(135deg, #cc0000, #800000);
+  transform: translateY(-2px);
+}
+
+.attendance-card .attendence-logout-button:active {
+  transform: scale(0.96);
+}
+
+
+.leave-request-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+
+.attendance-card .back-button {
+  background: linear-gradient(135deg, #6c757d, #495057);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.attendance-card .back-button:hover {
+  background: linear-gradient(135deg, #495057, #343a40);
+  transform: translateY(-2px);
+}
+
+.attendance-card .back-button:active {
+  transform: scale(0.96);
+}
+
+
+.attendance-card .cancel-button {
+  background: linear-gradient(135deg, #ff4d4d, #cc0000);
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius:10px;
+  width:140px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 15px;
+  margin-left: 20px;
+}
+
+.attendance-card .cancel-button:hover {
+  background: linear-gradient(135deg, #cc0000, #800000);
+  transform: translateY(-2px);
+}
+
+.attendance-card .cancel-button:active {
+  transform: scale(0.96);
+}

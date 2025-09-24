@@ -22,6 +22,7 @@ export default function DeliveryDashboard()
     const [selectDriver, setSelectDriver] = useState(null);
 
     const [assignedDeliveries, setAssignedDeliveries] = useState([]);
+    const [assignedSearch, setAssignedSearch] = useState([]);
 
     const [showModal, setShowModal] = useState(false);
     const [sceduleDeliveryId, setSceduleDeliveryId] = useState(null);
@@ -114,6 +115,21 @@ export default function DeliveryDashboard()
         };
     };
 
+    const searchAssignedDeliveries = async (searchText) =>{
+      try{
+        if(!searchText){
+          return deliveriesAssigned();
+        }
+        const res = await axios.get(
+          `http://localhost:8070/api/deliveries/search/assigned?search=${searchText}`
+        );
+        setAssignedDeliveries(res.data);
+      }
+      catch(err){
+        console.error(err);
+        toast.error("Failed to search assigned deliveries.")
+      }
+    }
     const fetchStats = async () =>{
       try{
         const res = await axios.get('http://localhost:8070/api/deliveries/stats')
@@ -135,6 +151,8 @@ export default function DeliveryDashboard()
         
         deliveriesAssigned();
 
+        searchAssignedDeliveries();
+
         fetchStats();
         
     },[])
@@ -154,6 +172,13 @@ export default function DeliveryDashboard()
 
       return() => clearTimeout(delayDebounce);
     }, [deliverySearch]);
+
+    useEffect(() =>{
+      const delayDebounce = setTimeout(() =>{
+        searchAssignedDeliveries(assignedSearch);
+      },400);
+      return() => clearTimeout(delayDebounce);
+    }, [assignedSearch]);
 
     const handleCreateDelivery = (orderNumber) =>{
         axios.post(`http://localhost:8070/api/deliveries/create`,{orderNumber}).then(() =>{
@@ -316,6 +341,17 @@ export default function DeliveryDashboard()
                   className="search-input"
                 />
         )}
+
+        {activeSection === "deliveries" && (
+          <input
+                  type="text"
+                  placeholder="Search assigned deliveries..."
+                  value={assignedSearch}
+                  onChange={(e) => setAssignedSearch(e.target.value)}
+                  className="search-input"
+                />
+        )}
+
         
         
         
@@ -351,7 +387,7 @@ export default function DeliveryDashboard()
                           <div className="order-items">
                             <h4>Items:</h4>
                             <ul>
-                                 {order.items.map((item, index) => (
+                                 {order.items?.map((item, index) => (
                                  <li key={index}>
                                     {item.product} - {item.quantity}
                                 </li>
@@ -435,9 +471,9 @@ export default function DeliveryDashboard()
             <div className="delivery-list">
               <h4><PackageCheck color='blue' size={32}/> Deliveries:</h4>
               <ul>
-                {ad.deliveries.map((d, i) => (
+                {ad.deliveries?.map((d, i) => (
                   <li key={i}>
-                    <b>{d.orderID}</b> - {d.customerName} ({d.productWeight} kg)
+                    <b>{d.orderID}</b> - {d.customerName}
                   </li>
                 ))}
               </ul>

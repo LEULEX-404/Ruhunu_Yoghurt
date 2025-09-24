@@ -24,22 +24,44 @@ export async function saveProduct(req, res){
     })
 }
 
-export async function getProduct(req, res){
+export async function getProduct(req, res) {
     try {
-        if (isAdmin(req)) {
-            const products = await Product.find()
-            res.json(products)
-        }else{
-            const products = await Product.find({isAvailable : true})
-            res.json(products)
+        const { rating, sort } = req.query;
+        const query = {};
+
+        // ✅ if not admin, only return available products
+        if (!isAdmin(req)) {
+            query.isAvailable = true;
         }
+
+        // ⭐ rating filter
+        if (rating) {
+            if (rating === "1-3") {
+                query.rating = { $gte: 1, $lte: 3 }; // between 1 and 3
+            } else if (rating === "3plus") {
+                query.rating = { $gt: 3 }; // above 3
+            }
+        }
+
+        // 💰 sorting
+        let sortOption = {};
+        if (sort === "price_asc") {
+            sortOption.price = 1; // low to high
+        } else if (sort === "price_desc") {
+            sortOption.price = -1; // high to low
+        }
+
+        const products = await Product.find(query).sort(sortOption);
+        res.json(products);
+
     } catch (err) {
-        res.json({
-            message : "Failed to get products",
-            error : err
-        })
+        res.status(500).json({
+            message: "Failed to get products",
+            error: err.message
+        });
     }
 }
+
 
 export async function updateProduct(req, res){
     if(!isAdmin(req)){

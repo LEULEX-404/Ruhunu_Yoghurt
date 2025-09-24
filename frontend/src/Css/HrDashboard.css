@@ -61,6 +61,7 @@
   cursor: pointer;
   border-radius: 12px;
   transition: all 0.3s ease;
+  font-size: 16px;
   font-weight: 500;
   color: #e0e7ff;
   background: rgba(255, 255, 255, 0.05);
@@ -298,6 +299,13 @@
   font-weight: 700;
   color: #4e73df;
   letter-spacing: 0.5px;
+}
+
+.error {
+  color: #e63946;
+  font-size: 13px;
+  margin-top: 4px;
+  display: block;
 }
 
 /* Table container */

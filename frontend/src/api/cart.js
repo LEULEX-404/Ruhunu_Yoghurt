@@ -21,7 +21,7 @@ export function removeFromCart(productId){
 export function addToCart(product, qty){
     let cart = getCart()
     let index = cart.findIndex((item) => {
-        return item.productId == product.product
+        return item.productId == product.productId
     })
 
     if(index == -1){

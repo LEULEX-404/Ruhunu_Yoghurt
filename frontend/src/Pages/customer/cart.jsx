@@ -19,7 +19,7 @@ export default function CartPage(){
                 }} className="checkout-button">Checkout</Link>
             </div>
             {
-                cart.localeCompare((item) => {
+                cart.map((item) => {
                     console.log(item)
                     return(
                         <div key={item.productId} className="cart-item-card">

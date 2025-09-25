@@ -287,3 +287,28 @@ export const searchAssignedDeliveries = async (req,res) =>{
 };
 
 
+export const reorderDelivery = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const delivery = await Delivery.findById(id);
+    if (!delivery) {
+      return res.status(404).json({ message: "Delivery not found" });
+    }
+
+    const order = await Order.findOne({ orderNumber: delivery.orderID });
+    if (!order) {
+      return res.status(404).json({ message: "Related order not found" });
+    }
+
+    order.status = "pending";
+    await order.save();
+
+    await Delivery.findByIdAndDelete(id);
+
+    res.json({ message: "Re-order successful!", order, delivery });
+  } catch (err) {
+    console.error("Reorder error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

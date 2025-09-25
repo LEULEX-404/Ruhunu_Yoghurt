@@ -69,3 +69,30 @@ export const earlyLeave = async (req, res) => {
     }
     
 };
+
+export const getAllTodaysAttendance = async (req, res) => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        
+        const records = await Attendence.find({
+          date: {
+            $gte: today,
+            $lt: tomorrow
+          }
+        });
+
+        console.log(records);
+        
+      res.json(records);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error fetching today's attendance",
+        error: error.message
+      });
+    }
+  };
+  
+  

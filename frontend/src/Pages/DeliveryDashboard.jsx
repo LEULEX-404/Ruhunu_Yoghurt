@@ -218,6 +218,18 @@ export default function DeliveryDashboard()
         setSelectDriver(driver);
     }
 
+    const handleReorder = async (id) => {
+  try {
+    await axios.delete(`http://localhost:8070/api/deliveries/delivery/reorder/${id}`);
+    toast.success("Re-order successful!");
+    driversDeliveries();
+    pendingOrders();
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to re-order");
+  }
+};
+
     const handleAssignDelivery = () =>{
         if(!selectDriver || selectDeliveries.length === 0)return;
         const deliveryIds = selectDeliveries.map(d => d._id);
@@ -437,8 +449,6 @@ export default function DeliveryDashboard()
 
         {activeSection === "createDelivery" && (
             <div>
-                
-
                 <div className = "order-list">
                     {orders.map(order => (
                         <div key ={order._id} className ="order-card">
@@ -467,6 +477,7 @@ export default function DeliveryDashboard()
             </div>
         )}
 
+
         {activeSection === "assignDriver" && (
         <div className="assign-section">
           <div className="side deliveries-side">
@@ -483,7 +494,17 @@ export default function DeliveryDashboard()
             <p>Address: {del.address}</p>
             <p>Distance: {del.distanceKm} Km</p>
             <p>Cost: Rs. {del.cost}</p>
+            <button 
+              className="reorder-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleReorder(del._id);
+              }}
+            >
+              Re-Order
+            </button>
           </div>
+          
         ))}
         </div>
 

@@ -79,7 +79,9 @@ export const getPendingOrders = async (req, res) =>{
 
 export const getAssignDeliveries = async (req,res) =>{
     try{
-        const assignDeliveries = await AssignedDelivery.find({})
+        const assignDeliveries = await AssignedDelivery.find({
+            status: { $in: ["assigned", "sceduled"] } 
+        })
         .populate({
             path: "driver",
             model: "Driver",
@@ -98,6 +100,31 @@ export const getAssignDeliveries = async (req,res) =>{
         res.status(500).json({message: error.message});
     }
 };
+
+export const getCompletedDeliveries = async (req,res) =>{
+    try{
+        const assignDeliveries = await AssignedDelivery.find({
+            status: { $in: ["completed"] } 
+        })
+        .populate({
+            path: "driver",
+            model: "Driver",
+            match: {},
+            select: "name vehicleCapacity currentLocation",
+            localField: "driver",
+            foreignField: "driverID"
+        })
+        .populate("deliveries", "orderID customerName address cost");
+
+        res.status(200).json(assignDeliveries)
+    }
+    catch(error)
+    {
+        console.error(error);
+        res.status(500).json({message: error.message});
+    }
+};
+
 
 export const getSearchOrder = async (req, res) =>{
     try{

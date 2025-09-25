@@ -20,7 +20,7 @@ export const assignDelivery = async (req, res)=>{
             newDeliveriesWeight = newDeliveriesWeight + d.productWeight;
         });
 
-        let assigned = await AssignedDelivery.findOne({driver:driverId})
+        let assigned = await AssignedDelivery.findOne({driver:driverId,status: { $ne: "completed" }})
         if(!assigned){
             if(newDeliveriesWeight > driver.vehicleCapacity){
                 return res.status(400).json({message: "Cannot assigned: Exceeds vehicle capacity"});
@@ -138,6 +138,12 @@ export const scheduleAssignedDelivery = async (req, res) =>{
 
         await assigned.save();
 
+        const driver = await Driver.findOne({driverID: assigned.driver});
+               driver.availability = false;
+
+            await driver.save();
+
+
         res.status(200).json({message: "Delivery sceduled successfully", assigned});
     }
     catch(error)
@@ -149,7 +155,7 @@ export const scheduleAssignedDelivery = async (req, res) =>{
 
 export const getStats = async (req, res) => {
     try{
-        const totalDeliveries = await Delivery.countDocuments();
+        const totalDeliveries = await Delivery.countDocuments({status:"pending"});
         const pending = await AssignedDelivery.countDocuments({status: "sceduled"});
         const completed = await AssignedDelivery.countDocuments({status: "completed"});
         const drivers = await Driver.countDocuments({availability: true});

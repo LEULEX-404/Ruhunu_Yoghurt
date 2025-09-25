@@ -6,8 +6,15 @@ export default function DriverPortal() {
 
   const [driver, setDriver] = useState(null);
   const [delivery, setDelivery] = useState([]);
+  const [completedDelivery, setCompletedDelivery] = useState([]);
 
   const [activeSection, setActiveSection] = useState("profile");
+
+  const [showModal, setShowModal] = useState(false);
+const [editName, setEditName] = useState("");
+const [editEmail, setEditEmail] = useState("");
+const [editPhone, setEditPhone] = useState("");
+
 
 
   const fetchDriver = async ()=>{
@@ -39,9 +46,27 @@ const fetchDeliveries = async () =>{
   }
 }
 
+const fetchCompletedDeliveries = async () =>{
+
+  const storedDriver = localStorage.getItem("user");
+  console.log('driver:',storedDriver)
+
+  if(storedDriver){
+      const parsedDriver = JSON.parse(storedDriver);
+
+      const res = await axios.get(`http://localhost:8070/api/driver/delivery/completed/${parsedDriver.id}`);
+      setCompletedDelivery(res.data);
+      console.log(res.data);
+  }
+}
+
 const handleCompleteDelivery = async (deliveryId) => {
   try{
     await axios.put(`http://localhost:8070/api/driver/complete/${deliveryId}`);
+
+    fetchDeliveries();
+    fetchCompletedDeliveries();
+    fetchDriver()
 }
 catch(err){
   console.error("Error completing delivery:",err);
@@ -49,10 +74,30 @@ catch(err){
 }
 };
 
+const handleUpdateProfile = async () => {
+     try {
+      const storedDriver = JSON.parse(localStorage.getItem("user"));
+      await axios.put(`http://localhost:8070/api/driver/${storedDriver.id}`, {
+        name: editName,
+        email: editEmail,
+        phone: editPhone
+      });
+
+      setShowModal(false);
+      fetchDriver();
+      alert("Profile updated successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update profile");
+    }
+}
+
+
   useEffect(() => {
 
     fetchDriver();
     fetchDeliveries();
+    fetchCompletedDeliveries();
   },[])
 
   return (
@@ -67,46 +112,83 @@ catch(err){
             Driver Profile
           </button>
           <button
-            className={activeSection === "performance" ? "active" : ""}
-            onClick={() => setActiveSection("performance")}
+            className={activeSection === "deliveries" ? "active" : ""}
+            onClick={() => setActiveSection("deliveries")}
           >
-            Performance Points
+            Deliveries
           </button>
-          <button
+           <button
             className={activeSection === "history" ? "active" : ""}
             onClick={() => setActiveSection("history")}
           >
-            History & Deliveries
+            History
           </button>
         </nav>
       </div>
 
       <div className="main-content">
         {activeSection === "profile" && (
-          <div className="section">
-            <h2>Driver Profile</h2>
-            <div className="card">
-              <p><strong>Name:</strong>{driver?.name}</p>
-              <p><strong>Email:</strong>{driver?.email}</p>
-              <p><strong>Phone:</strong>{driver?.phone}</p>
+        <div className="section">
+          <h2>Driver Profile</h2>
+          <div className="profile-card">
+            <div className="profile-header">
+              <img 
+                src="https://cdn-icons-png.flaticon.com/512/3237/3237472.png" 
+                alt="Driver Avatar" 
+                className="profile-avatar"
+              />
+              <div className="profile-info">
+                <h3>{driver?.name}</h3>
+                <p><strong>Email:</strong> {driver?.email}</p>
+                <p><strong>Phone:</strong> {driver?.phone}</p>
+              </div>
+            </div>
+        
+            <div className="profile-stats">
+              <div className="driver-stat-card">
+                <h4>{driver?.points}</h4>
+                <p>Performance Points</p>
+              </div>
+              <div className="driver-stat-card">
+                <h4>{completedDelivery.length}</h4>
+                <p>Completed Deliveries</p>
+              </div>
+              <div className="driver-stat-card">
+                <h4>{delivery.length}</h4>
+                <p>Ongoing Deliveries</p>
+              </div>
+            </div>
+        
+            <div className="profile-actions">
+              <button 
+                  className="update-btn" 
+                  onClick={() => {
+                    setEditName(driver?.name || "");
+                    setEditEmail(driver?.email || "");
+                    setEditPhone(driver?.phone || "");
+                    setShowModal(true);
+                  }}
+                >
+                  Update Profile
+              </button>
+              <button className="signout-btn" 
+                onClick={() => {
+                localStorage.removeItem("user");
+                window.location.href = "/login";
+                }}
+              >Sign Out</button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {activeSection === "performance" && (
-          <div className="section">
-            <h2>Performance Points</h2>
-            <div className="card">
-              <p><strong>Total Points:</strong> 120</p>
-              <p><strong>Rank:</strong> Gold Driver</p>
-              <p><strong>Achievements:</strong> On-time deliveries</p>
-            </div>
-          </div>
-        )}
 
-        {activeSection === "history" && (
+
+
+
+        {activeSection === "deliveries" && (
           <div className="driver-delivery-section">
-            <h2>Pending Delivery</h2>
+            <h2>Deliveries</h2>
             <div className="card">
               {delivery.map(del =>(
                 <div key = {del._id} className="driver-delivery-card">
@@ -134,6 +216,73 @@ catch(err){
           </div>
           </div>
         )}
+
+        {activeSection === "history" && (
+          <div className="section">
+            <h2>History</h2>
+            <div className="card">
+              {completedDelivery.map(del =>(
+                <div key = {del._id} className="driver-delivery-card">
+                <p><strong>Total Weight: </strong>{del.totalWeight} Kg</p>
+                <p><strong>Assign Date: </strong>{new Date(del.assignDate).toLocaleDateString()}</p>
+                <p><strong>Start Time: </strong>{new Date(del.startTime).toLocaleTimeString()}</p>
+                <p><strong>End Time: </strong>{new Date(del.endTime).toLocaleTimeString()}</p>
+                <h4>Orders:</h4>
+                <ul>
+                  {del.deliveries.map((d, index)=>(
+                    <li key = {index}>
+                      {d.orderID} - {d.customerName} - {d.status}
+                    </li>
+                  ))}
+                </ul>
+            </div>
+              ))}
+              
+            </div>
+          </div>
+        )}
+
+        {showModal && (
+            <div className="modal-overlay">
+              <div className="modal">
+                <h2>Update Profile</h2>
+                  
+                <label>Name:</label>
+                <input 
+                  type="text" 
+                  value={editName} 
+                  onChange={(e) => setEditName(e.target.value)} 
+                />
+
+                <label>Email:</label>
+                <input 
+                  type="email" 
+                  value={editEmail} 
+                  onChange={(e) => setEditEmail(e.target.value)} 
+                />
+
+                <label>Phone:</label>
+                <input 
+                  type="text" 
+                  value={editPhone} 
+                  onChange={(e) => setEditPhone(e.target.value)} 
+                />
+
+                <div className="modal-actions">
+                  <button 
+                    className="save-btn"
+                    onClick={async () => {
+                      handleUpdateProfile();
+                    }}
+                  >
+                    Save
+                  </button>
+                  <button className="cancel-btn" onClick={() => setShowModal(false)}>Cancel</button>
+                </div>
+              </div>
+            </div>
+          )}
+
       </div>
     </div>
   );

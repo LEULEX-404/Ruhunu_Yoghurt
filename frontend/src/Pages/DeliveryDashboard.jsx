@@ -22,6 +22,8 @@ export default function DeliveryDashboard()
     const [selectDriver, setSelectDriver] = useState(null);
 
     const [assignedDeliveries, setAssignedDeliveries] = useState([]);
+    const [completedDeliveries, setCompletedDeliveries] = useState([]);
+    const [assignedSearch, setAssignedSearch] = useState([]);
 
     const [showModal, setShowModal] = useState(false);
     const [sceduleDeliveryId, setSceduleDeliveryId] = useState(null);
@@ -114,6 +116,32 @@ export default function DeliveryDashboard()
         };
     };
 
+      const deliveriesCompleted = async () =>{
+          try{
+            const res = await axios.get('http://localhost:8070/api/deliveries/deliveries/completed')
+            const deliveriesArray = Array.isArray(res.data) ? res.data : [];
+            setCompletedDeliveries(deliveriesArray);
+        }catch(err){
+            console.error(err);
+            toast.error("Failed to fetch assigned deliveries.");
+        };
+    };
+
+    const searchAssignedDeliveries = async (searchText) =>{
+      try{
+        if(!searchText){
+          return deliveriesAssigned();
+        }
+        const res = await axios.get(
+          `http://localhost:8070/api/deliveries/search/assigned?search=${searchText}`
+        );
+        setAssignedDeliveries(res.data);
+      }
+      catch(err){
+        console.error(err);
+        toast.error("Failed to search assigned deliveries.")
+      }
+    }
     const fetchStats = async () =>{
       try{
         const res = await axios.get('http://localhost:8070/api/deliveries/stats')
@@ -135,6 +163,10 @@ export default function DeliveryDashboard()
         
         deliveriesAssigned();
 
+        deliveriesCompleted();
+
+        searchAssignedDeliveries();
+
         fetchStats();
         
     },[])
@@ -154,6 +186,13 @@ export default function DeliveryDashboard()
 
       return() => clearTimeout(delayDebounce);
     }, [deliverySearch]);
+
+    useEffect(() =>{
+      const delayDebounce = setTimeout(() =>{
+        searchAssignedDeliveries(assignedSearch);
+      },400);
+      return() => clearTimeout(delayDebounce);
+    }, [assignedSearch]);
 
     const handleCreateDelivery = (orderNumber) =>{
         axios.post(`http://localhost:8070/api/deliveries/create`,{orderNumber}).then(() =>{
@@ -214,6 +253,10 @@ export default function DeliveryDashboard()
         return;
       }
 
+      if(!validateSchedule()){
+        return;
+      }
+
       axios.post('http://localhost:8070/api/deliveries/schedule', {
         assignedDeliveryId: sceduleDeliveryId,
         startTime,
@@ -230,6 +273,52 @@ export default function DeliveryDashboard()
         console.error(err);
         toast.error("Failed to scedule delivery");
       });
+    };
+
+    const validateSchedule = () => {
+      const now = new Date();
+      const start = new Date(startTime);
+      const end = new Date(endTime);
+      
+      const startHour =start.getHours();
+      const endHour = end.getHours();
+      const endMinute = end.getMinutes();
+
+      const minStartTime = new Date(now.getTime() + 60 * 60 * 1000);
+
+      if(!startTime || !endTime){
+        toast.warning("Please select start and end time.");
+        return false;
+      }
+
+      if(startHour < 8 || startHour > 14){
+        toast.error("Start time must be between 8 AM and 11 AM.");
+        return false;
+      }
+
+      if(start < minStartTime){
+        toast.warning("Start time must be at least 1 hour from now.");
+        return false;
+      }
+
+      if(start < now){
+        toast.warning("Start time cannot be in the past.");
+        return false;
+      }
+      if(end <now){
+        toast.warning("End time cannot be in the past.");
+        return false;
+      }
+
+      if(endHour < 14 || (endHour === 17 && endMinute > 0) || endHour > 17){
+          toast.error("End time must be between 2 PM and 5 PM.");
+          return false;
+      }
+      if(end <= start){
+        toast.error("End time must be later than start time.");
+        return false;
+      }
+      return true;
     };
 
     const toggleDarkMode = () =>{
@@ -250,6 +339,8 @@ export default function DeliveryDashboard()
         window.location.href = "/login";
       },1500);
     };
+
+
 
     return(
         <div className="dashboard-wrapper">
@@ -274,7 +365,7 @@ export default function DeliveryDashboard()
                     <li className = {activeSection === "createDelivery" ? "active" : ""}onClick = {() => setActiveSection ("createDelivery")}><Package size={18} /> Create Delivery</li>
                     <li className = {activeSection === "assignDriver"? "active" : ""}onClick = {() => setActiveSection ("assignDriver")}><UserCheck size={18} /> Assign Driver</li>
                     <li className = {activeSection === "deliveries"? "active" : ""}onClick = {() => setActiveSection ("deliveries")}><Truck size={18} /> Deliveries</li>
-                    <li className = {activeSection === "feedback"? "active" : ""}onClick = {() => setActiveSection ("feedback")}><CheckCheck size={18} /> Completed</li>
+                    <li className = {activeSection === "completed"? "active" : ""}onClick = {() => setActiveSection ("completed")}><CheckCheck size={18} /> Completed</li>
                     <li className = {activeSection === "reports"? "active" : ""}onClick = {() => setActiveSection ("reports")}><BarChart3 size={18} /> Reports</li>
                 </ul>
                 <div className="bottom-content">
@@ -316,17 +407,28 @@ export default function DeliveryDashboard()
                   className="search-input"
                 />
         )}
+
+        {activeSection === "deliveries" && (
+          <input
+                  type="text"
+                  placeholder="Search assigned deliveries..."
+                  value={assignedSearch}
+                  onChange={(e) => setAssignedSearch(e.target.value)}
+                  className="search-input"
+                />
+        )}
+
         
         
         
         <div className="stats-row">
-          <div className="stat-card blue">Total Deliveries <br></br>
+          <div className="stat-card blue">Pending Deliveries <br></br>
             <span><strong>{stats?.totalDeliveries}</strong></span></div>
 
-          <div className="stat-card orange">Pending <br></br>
+          <div className="stat-card orange">Scheduled Deliveries <br></br>
             <span><strong>{stats?.pending}</strong></span></div>
 
-          <div className="stat-card green">Completed <br></br>
+          <div className="stat-card green">Completed Deliveries<br></br>
             <span><strong>{stats?.completed}</strong></span></div>
 
           <div className="stat-card purple">Active Drivers <br></br>
@@ -351,7 +453,7 @@ export default function DeliveryDashboard()
                           <div className="order-items">
                             <h4>Items:</h4>
                             <ul>
-                                 {order.items.map((item, index) => (
+                                 {order.items?.map((item, index) => (
                                  <li key={index}>
                                     {item.product} - {item.quantity}
                                 </li>
@@ -413,7 +515,7 @@ export default function DeliveryDashboard()
       )}
 
       {activeSection === "deliveries" && (
-    <div className="schedule-wrapper">
+      <div className="schedule-wrapper">
       <h2><Truck color= '#1e3a8a' size={36} /> Scheduled Deliveries</h2>
 
       {assignedDeliveries.length === 0 && <p>No assigned deliveries yet.</p>}
@@ -423,6 +525,23 @@ export default function DeliveryDashboard()
           <div key={ad._id} className="driver-card">
             <div className="driver-header">
               <h3>{ad.driver?.name || "Unknown Driver"}</h3>
+
+      <p className="status-label"
+           style={{
+          color: ad.status === "sceduled" ? "green" : "red",
+          fontWeight: "bold",
+          marginTop: "5px",
+          textTransform: "uppercase",
+          fontSize: "12px",
+          backdropFilter: "blur(5px)",
+          backgroundColor: ad.status === "sceduled" ? "rgba(0, 128, 0, 0.1)" : "rgba(255, 0, 0, 0.1)",
+          padding: "2px 6px",
+          borderRadius: "4px",
+          width: "fit-content"
+        }}>
+        {ad.status === "sceduled" ? "Scheduled" : "Not Scheduled"}
+      </p>
+
               <p className="capacity">Capacity: {ad.driver?.vehicleCapacity} kg</p>
               <p className="location"><MapPinned color='red' size={22}/> {ad.driver?.currentLocation || "N/A"}</p>
             </div>
@@ -435,9 +554,9 @@ export default function DeliveryDashboard()
             <div className="delivery-list">
               <h4><PackageCheck color='blue' size={32}/> Deliveries:</h4>
               <ul>
-                {ad.deliveries.map((d, i) => (
+                {ad.deliveries?.map((d, i) => (
                   <li key={i}>
-                    <b>{d.orderID}</b> - {d.customerName} ({d.productWeight} kg)
+                    <b>{d.orderID}</b> - {d.customerName}
                   </li>
                 ))}
               </ul>
@@ -446,13 +565,55 @@ export default function DeliveryDashboard()
             <button
               className="schedule-btn"
               onClick={() => handleSchedule(ad._id)}
+              disabled={ad.status === "sceduled"}
+              style={{
+                backgroundColor: ad.status === "sceduled" ? "#ccc" : "#007bff",
+                cursor: ad.status === "sceduled" ? "not-allowed" : "pointer",
+              }}
             >
-              Schedule
+              {ad.status === "sceduled" ? "Scheduled" : "Schedule"}
             </button>
           </div>
           
         ))}
 
+      </div>
+    </div>
+    )}
+
+    {activeSection === "completed" && (
+      <div className="schedule-wrapper">
+      <h2><Truck color= '#1e3a8a' size={36} /> Completed Deliveries</h2>
+
+      {completedDeliveries.length === 0 && <p>No completed deliveries yet.</p>}
+      <div className="driver-cards-container">
+        {completedDeliveries.map((ad) => (
+          <div key={ad._id} className="driver-card">
+            <div className="driver-header">
+              <h3>{ad.driver?.name || "Unknown Driver"}</h3>
+              <p className="capacity">Capacity: {ad.driver?.vehicleCapacity} kg</p>
+            </div>
+            <div className="driver-info">
+              <p><b>Total Weight:</b> {ad.totalWeight} kg</p>
+              <p><b>Assigned On:</b> {new Date(ad.assignDate).toLocaleDateString()}</p>
+              <p><b>Start Time:</b> {new Date(ad.startTime).toLocaleTimeString()}</p>
+              <p><b>End Time:</b> {new Date(ad.endTime).toLocaleTimeString()}</p>
+            </div>
+            <div className="delivery-list">
+              <h4><PackageCheck color='blue' size={32}/> Deliveries:</h4>
+              <ul>
+                {ad.deliveries?.map((d, i) => (
+                  <li key={i}>
+                    <b>{d.orderID}</b> - {d.customerName} - {d.status}
+                  </li>
+                ))}
+              </ul>
+              <p className="completed-label">
+                  Completed
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
     )}
@@ -478,7 +639,10 @@ export default function DeliveryDashboard()
 
               <div className="modal-actions">
                 <button onClick={submitSchedule}>Confirm</button>
-                <button onClick={() => setShowModal(false)}>Cancel</button>
+                <button onClick={() => {
+                  setShowModal(false);
+                  setStartTime("");
+                  setEndTime("")}}>Cancel</button>
               </div>
             </div>
           </div>

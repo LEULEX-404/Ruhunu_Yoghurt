@@ -79,7 +79,9 @@ export const getPendingOrders = async (req, res) =>{
 
 export const getAssignDeliveries = async (req,res) =>{
     try{
-        const assignDeliveries = await AssignedDelivery.find({})
+        const assignDeliveries = await AssignedDelivery.find({
+            status: { $in: ["assigned", "sceduled"] } 
+        })
         .populate({
             path: "driver",
             model: "Driver",
@@ -98,6 +100,31 @@ export const getAssignDeliveries = async (req,res) =>{
         res.status(500).json({message: error.message});
     }
 };
+
+export const getCompletedDeliveries = async (req,res) =>{
+    try{
+        const assignDeliveries = await AssignedDelivery.find({
+            status: { $in: ["completed"] } 
+        })
+        .populate({
+            path: "driver",
+            model: "Driver",
+            match: {},
+            select: "name vehicleCapacity currentLocation",
+            localField: "driver",
+            foreignField: "driverID"
+        })
+        .populate("deliveries", "orderID customerName address cost");
+
+        res.status(200).json(assignDeliveries)
+    }
+    catch(error)
+    {
+        console.error(error);
+        res.status(500).json({message: error.message});
+    }
+};
+
 
 export const getSearchOrder = async (req, res) =>{
     try{
@@ -152,18 +179,107 @@ export const searchDeliveriesAndDrivers = async (req,res) =>{
             $or: deliveryconditon
         });
 
-        drivers = await Driver.find({
+        const driverQuery = {
             availability: true,
             $or: [
                 {name: query},
                 {currentLocation: query}
             ]
-        });
+        };
+
+        const rawDrivers = await Driver.find(driverQuery);
+        drivers = await Promise.all(rawDrivers.map(async (driver) => {
+            const assigned = await AssignedDelivery.find({
+                driver: driver.driverID,
+                status: { $in: ["assigned", "sceduled"] }
+            });
+
+            const totalWeight = assigned.reduce(
+                (sum,ad) => sum + (ad.totalWeight || 0),
+                0
+            );
+            const remainingCapacity = driver.vehicleCapacity - totalWeight;
+
+            return {
+                ...driver.toObject(),
+                assignedWeight: totalWeight,
+                remainingCapacity
+            };
+        }))
     }else{
-        deliveries = await Delivery.find({ status: "pending" });
-      drivers = await Driver.find({ availability: true });
+        deliveries = await Delivery.find({status: "pending"});
+        const rawDrivers = await Driver.find({availability: true});
+
+        drivers = await Promise.all(rawDrivers.map(async (driver) => {
+            const assigned = await AssignedDelivery.find({
+                driver: driver.driverID,
+                status: { $in: ["assigned", "sceduled"] }
+            });
+            const totalWeight = assigned.reduce(
+                (sum,ad) => sum + (ad.totalWeight || 0),
+                0
+            );
+            const remainingCapacity = driver.vehicleCapacity - totalWeight;
+
+            return {
+                ...driver.toObject(),
+                assignedWeight: totalWeight,
+                remainingCapacity
+            };
+        }))
     }
         res.json({Deliveries: deliveries, Drivers: drivers});
+    }
+    catch(err){
+        res.status(500).json({error: err.message});
+    }
+};
+
+export const searchAssignedDeliveries = async (req,res) =>{
+    try{
+        const { search } = req.query;
+        let assignedDeliveries = [];
+        if(search){
+        const query  = search ? { $regex: search, $options: "i"} : {};
+        const isNumeric = !isNaN(search);
+
+        let pipeline = [
+      { $match: { status: "sceduled" } },
+      {
+        $lookup: {
+          from: "deliveries",
+          localField: "deliveries",
+          foreignField: "_id",
+          as: "deliveries"
+        }
+    },{
+         $lookup: {
+          from: "drivers",
+          localField: "driver",
+          foreignField: "driverID",
+          as: "drivers"
+        }
+      }
+    ];
+
+        let assignedconditon = [
+                {"deliveries.orderID": query},
+                {"deliveries.customerName": query},
+                {"drivers.name": query},
+                {"drivers.currentLocation": query},
+            ];
+
+        if(isNumeric){
+            assignedconditon.push({
+                productWeight: Number(search)
+            });
+        }
+        pipeline.push({ $match: { $or: assignedconditon } });
+
+        assignedDeliveries = await AssignedDelivery.aggregate(pipeline);
+    }
+    console.log(assignedDeliveries);
+        res.json(assignedDeliveries);
     }
     catch(err){
         res.status(500).json({error: err.message});

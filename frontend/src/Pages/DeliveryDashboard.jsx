@@ -218,6 +218,18 @@ export default function DeliveryDashboard()
         setSelectDriver(driver);
     }
 
+    const handleReorder = async (id) => {
+  try {
+    await axios.delete(`http://localhost:8070/api/deliveries/delivery/reorder/${id}`);
+    toast.success("Re-order successful!");
+    driversDeliveries();
+    pendingOrders();
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to re-order");
+  }
+};
+
     const handleAssignDelivery = () =>{
         if(!selectDriver || selectDeliveries.length === 0)return;
         const deliveryIds = selectDeliveries.map(d => d._id);
@@ -248,12 +260,7 @@ export default function DeliveryDashboard()
     };
 
     const submitSchedule = () => {
-      if(!startTime || !endTime){
-        toast.warning("Please select start and end time.");
-        return;
-      }
-
-      if(!validateSchedule()){
+  if(!validateSchedule()){
         return;
       }
 
@@ -291,8 +298,13 @@ export default function DeliveryDashboard()
         return false;
       }
 
-      if(startHour < 8 || startHour > 14){
-        toast.error("Start time must be between 8 AM and 11 AM.");
+      if(startHour < 8 || startHour > 11){
+        toast.warning("Start time must be between 8 AM and 11 AM.");
+        return false;
+      }
+
+      if(start < now){
+        toast.warning("Start time cannot be in the past.");
         return false;
       }
 
@@ -301,23 +313,18 @@ export default function DeliveryDashboard()
         return false;
       }
 
-      if(start < now){
-        toast.warning("Start time cannot be in the past.");
-        return false;
-      }
-      if(end <now){
-        toast.warning("End time cannot be in the past.");
+      if(end <= start){
+        toast.warning("End time must be later than start time.");
         return false;
       }
 
+
+
       if(endHour < 14 || (endHour === 17 && endMinute > 0) || endHour > 17){
-          toast.error("End time must be between 2 PM and 5 PM.");
+          toast.warning("End time must be between 2 PM and 5 PM.");
           return false;
       }
-      if(end <= start){
-        toast.error("End time must be later than start time.");
-        return false;
-      }
+
       return true;
     };
 
@@ -437,8 +444,6 @@ export default function DeliveryDashboard()
 
         {activeSection === "createDelivery" && (
             <div>
-                
-
                 <div className = "order-list">
                     {orders.map(order => (
                         <div key ={order._id} className ="order-card">
@@ -467,6 +472,7 @@ export default function DeliveryDashboard()
             </div>
         )}
 
+
         {activeSection === "assignDriver" && (
         <div className="assign-section">
           <div className="side deliveries-side">
@@ -483,7 +489,17 @@ export default function DeliveryDashboard()
             <p>Address: {del.address}</p>
             <p>Distance: {del.distanceKm} Km</p>
             <p>Cost: Rs. {del.cost}</p>
+            <button 
+              className="reorder-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleReorder(del._id);
+              }}
+            >
+              Re-Order
+            </button>
           </div>
+          
         ))}
         </div>
 

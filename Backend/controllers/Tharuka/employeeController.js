@@ -67,7 +67,7 @@ export const updateEmployee = async (req, res) => {
 
             const newDriver = new Driver({
               driverID: updatEmployee._id,
-              employeeID: EmployeeID,
+              employeeID: updatEmployee.EmployeeID,
               name: updatEmployee.name,
               email: updatEmployee.email,
               phone: updatEmployee.phone,

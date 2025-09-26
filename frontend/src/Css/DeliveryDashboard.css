@@ -116,11 +116,15 @@ body {
 }
 
 .sidebar .bottom-content button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
   background: #f87171;
   border: none;
   color: white;
   padding: 12px;
+  margin-top: 32px;
   border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
@@ -396,8 +400,21 @@ body {
   box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
 }
 
+.reorder-btn {
+  background: #ff9800;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 8px;
+}
 
-/* ===== Assign Section (Modernized) ===== */
+.reorder-btn:hover {
+  background: #e68900;
+}
+
+
 .assign-section {
   display: flex;
   gap: 24px;

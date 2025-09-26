@@ -4,8 +4,22 @@ import { FaStar } from "react-icons/fa"
 
 export default function ProductCard({ product }) {
 
+    const isExpiringSoon = () => {
+        if(!product.expDate){
+            return false
+        }
+
+
+        const expDate = new Date(product.expDate)
+        const today = new Date()
+        const timeDiff = expDate.getTime() - today.getTime()
+        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24))
+
+        return daysDiff <= 7 && daysDiff >= 0;
+    }
+
     return (
-        <Link to={"/overview/" + product.productId}             className="product-card">
+        <Link to={"/overview/" + product.productId} className={`product-card ${isExpiringSoon() ? "expiring-soon" : ""}`}>
             <div className="product-card-image-container">
                 <img
                     src={product.images?.[0] || "https://via.placeholder.com/300"}

@@ -25,8 +25,7 @@ export default function HrDashboard() {
     
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editEmployee, setEditEmployee] = useState(null);
-
-    const [errors, setErrors] = useState({});
+    
     const [confirmPassword, setConfirmPassword] = useState("");
 
 
@@ -155,6 +154,7 @@ export default function HrDashboard() {
                 phone: '',
                 password: ''
             });
+            setConfirmPassword('');
             fetchEmployees();
         
         }catch(error){
@@ -165,44 +165,57 @@ export default function HrDashboard() {
 }
 
     const validateForm = () =>{
-        let newErrors = {};
+
+        if(newEmployee.employeeID.trim() === '' || newEmployee.name.trim() === '' || newEmployee.email.trim() === '' || newEmployee.phone.trim() === '' || newEmployee.password.trim() === '' || confirmPassword.trim() === ''){
+            toast.error("All fields are required");
+            return false;
+        }
 
         if(!/^(EM|D)[0-9][0-9]+$/.test(newEmployee.employeeID)){
-            newErrors.employeeID = "Employee ID is required";
+            toast.error("Enter a valid Employee ID");
+            return false;
         }
 
         if(!/^[A-Za-z\s]+$/.test(newEmployee.name)){
-            newErrors.name = "Name should contain only letters and spaces";
+            toast.error("Name should contain only letters and spaces");
+            return false;
         }
 
-        if(!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(newEmployee.email)){
-            newErrors.email = "Invalid email format";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(newEmployee.email)) {
+            toast.error("Please enter a valid email address");
+            return false;
         }
 
-        if(!/^[0-9]{10}$/.test(newEmployee.phone)){
-            newErrors.phone = "Phone must be 10 digits";
+
+
+        if(!/^0+[0-9]{9}$/.test(newEmployee.phone)){
+            toast.error("Phone must be valid 10 digits");
+            return false;
         }
 
         if(newEmployee.password.length < 6){
-            newErrors.password = "Password must be atleast 6 characters";
+            toast.error("Password must be atleast 6 characters");
+            return false;
         }
 
         if (confirmPassword !== newEmployee.password) {
-            newErrors.confirmPassword = "Passwords do not match";
+            toast.error("Passwords do not match");
+            return false;
         }
-
-        setErrors(newErrors);
-
-        return Object.keys(newErrors).length === 0;
+        return true;
     }
 
     const handleUpdateEmployee = async (e) =>{
         e.preventDefault();
 
         if (!editEmployee) {
-            alert("No employee selected to update!");
+            toast.warning("No employee selected to update!");
             return;
         }
+
+        if(validateUpdateForm()){
 
         try{
             const response = await axios.put(`http://localhost:8070/api/employees/update/${editEmployee._id}`, 
@@ -217,7 +230,47 @@ export default function HrDashboard() {
             console.error('Error updating employee:', error);
             toast.error("Failed to update employee");
         }
+      }
     }
+const validateUpdateForm = () =>{
+  
+        if(editEmployee.name.trim() === '' || editEmployee.email.trim() === '' || editEmployee.phone.trim() === '' ){
+            toast.error("All fields are required");
+            return false;
+        }
+
+        if(!/^[A-Za-z\s]+$/.test(editEmployee.name)){
+            toast.error("Name should contain only letters and spaces");
+            return false;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(editEmployee.email)) {
+            toast.error("Please enter a valid email address");
+            return false;
+        }
+
+        if(!/^0+[0-9]{9}$/.test(editEmployee.phone)){
+            toast.error("Phone must be valid 10 digits");
+            return false;
+        }
+
+               
+        
+      if(editEmployee.position === 'Driver'){
+
+        if(editEmployee.vehicleCapacity === null){
+            toast.error("Enter Vehicle Capacity for Driver");
+        }
+        if(editEmployee.vehicleCapacity <= 0 || editEmployee.vehicleCapacity === undefined){
+            toast.error("Enter a valid Vehicle Capacity");
+            return false;
+        }
+      }
+        return true;
+
+  };
 
     const handleDeleteEmployee = (id) => {
         confirmAlert({
@@ -249,8 +302,14 @@ export default function HrDashboard() {
     const handleAssignRole = async (e) =>{
         e.preventDefault();
 
+        if(validateAssignRole()){
+
         try{
-            const response = await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, { position: selectedEmployee.position, EmployeeID: selectedEmployee.employeeID, vehicleCapacity: selectedEmployee.vehicleCapacity || 0 });
+            const response = await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, 
+              { position: selectedEmployee.position, 
+                EmployeeID: selectedEmployee.employeeID, 
+                vehicleCapacity: selectedEmployee.vehicleCapacity || 0 
+              });
             console.log('Role assigned:', response.data);
             toast.success("Role Assigned Successfully");
             fetchEmployees();
@@ -260,7 +319,34 @@ export default function HrDashboard() {
             console.error('Error assigning role:', error);
             toast.error("Failed to Assign Role");
         }
+      }
     };
+
+    const validateAssignRole = async () =>{
+
+    if(selectedEmployee.position === 'Driver'){
+
+      if(selectedEmployee.employeeID.trim() === ''){
+            toast.error("All fields are required");
+            return false;
+        }
+
+      if(!/^(EM|D)[0-9][0-9]+$/.test(selectedEmployee.employeeID)){
+            toast.error("Enter a valid Employee ID");
+            return false;
+        }
+
+        if(selectedEmployee.vehicleCapacity === null){
+            toast.error("Enter Vehicle Capacity for Driver");
+            return false;
+        }
+        if(selectedEmployee.vehicleCapacity <= 0 || selectedEmployee.vehicleCapacity === undefined){
+            toast.error("Enter a valid Vehicle Capacity");
+            return false;
+        }
+    }
+        return true;
+  }
 
     const handleSignOut = () =>{
         localStorage.removeItem("token");
@@ -398,23 +484,17 @@ export default function HrDashboard() {
 
                                 <form onSubmit = { handleAddEmployee } className = 'add-form'>
                                     <div className = 'form-group'>
-                                        <input type = 'text' placeholder='Employee ID' value={newEmployee.employeeID} onChange={(e) => setNewEmployee({...newEmployee, employeeID: e.target.value})} required/>
-                                            {errors.employeeID && <span className="error">{errors.employeeID}</span>}
+                                        <input type = 'text' placeholder='Employee ID' value={newEmployee.employeeID} onChange={(e) => setNewEmployee({...newEmployee, employeeID: e.target.value})}/>
 
-                                        <input type = 'text' placeholder='Name' value={newEmployee.name} onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})} required/>
-                                            {errors.name && <span className="error">{errors.name}</span>}
+                                        <input type = 'text' placeholder='Name' value={newEmployee.name} onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}/>
 
-                                        <input type = 'email' placeholder='Email' value={newEmployee.email} onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})} required/>
-                                            {errors.email && <span className="error">{errors.email}</span>}
+                                        <input type = 'text' placeholder='Email' value={newEmployee.email} onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}/>
 
-                                        <input type = 'text' placeholder='Phone' value={newEmployee.phone} onChange={(e) => setNewEmployee({...newEmployee, phone: e.target.value})} required/>
-                                            {errors.phone && <span className="error">{errors.phone}</span>}
+                                        <input type = 'text' placeholder='Phone' value={newEmployee.phone} onChange={(e) => setNewEmployee({...newEmployee, phone: e.target.value})} />
 
-                                        <input type = 'password' placeholder='Password' value={newEmployee.password} onChange={(e) => setNewEmployee({...newEmployee, password: e.target.value})} required/>
-                                            {errors.password && <span className="error">{errors.password}</span>}
+                                        <input type = 'password' placeholder='Password' value={newEmployee.password} onChange={(e) => setNewEmployee({...newEmployee, password: e.target.value})}/>
 
-                                        <input type = 'password' placeholder='Confirm Password' value={newEmployee.confirmPassword} onChange={(e) => setConfirmPassword( e.target.value)} required/>
-                                            {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
+                                        <input type = 'password' placeholder='Confirm Password' value={confirmPassword} onChange={(e) => setConfirmPassword( e.target.value)}/>
                                     </div>
 
                                     <button type = 'submit' className='submit-btn'>Add Employee</button>
@@ -587,99 +667,96 @@ export default function HrDashboard() {
                           <FiClock /> View Early Leave Requests
                         </button>
                     
-{/* ================= EMPLOYEE TABLE ================= */}
-<div className="driver-table">
-  <h3>ASSIGNED EMPLOYEE</h3>
-</div>
-<table className="attendance-table">
-  <thead>
-    <tr>
-      <th>Employee ID</th>
-      <th>Name</th>
-      <th>Position</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    {employees
-      .filter((emp) =>
-        view === "unassigned"
-          ? emp.position === "Unassigned"
-          : emp.position !== "Unassigned" && emp.position !== "Driver"
-      )
-      .sort((a, b) => {
-        const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
-        const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
-        return numA - numB;
-      })
-      .map((emp) => {
-        const record = Array.isArray(todaysAttendance)
-          ? todaysAttendance.find((r) => r.employeeID === emp.employeeID)
-          : null;
 
-        let status = record ? "Present" : "Absent";
-        let color = record ? "green" : "red";
+                          <div className="driver-table">
+                            <h3>ASSIGNED EMPLOYEE</h3>
+                          </div>
+                          <table className="attendance-table">
+                            <thead>
+                              <tr>
+                                <th>Employee ID</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Status</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {employees
+                                .filter((emp) =>
+                                  view === "unassigned"
+                                    ? emp.position === "Unassigned"
+                                    : emp.position !== "Unassigned" && emp.position !== "Driver"
+                                )
+                                .sort((a, b) => {
+                                  const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
+                                  const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
+                                  return numA - numB;
+                                })
+                                .map((emp) => {
+                                  const record = Array.isArray(todaysAttendance)
+                                    ? todaysAttendance.find((r) => r.employeeID === emp.employeeID)
+                                    : null;
+                                
+                                  let status = record ? "Present" : "Absent";
+                                  let color = record ? "green" : "red";
+                                
+                                  return (
+                                    <tr key={emp._id}>
+                                      <td>{emp.employeeID}</td>
+                                      <td>{emp.name}</td>
+                                      <td>{emp.position}</td>
+                                      <td style={{ color, fontWeight: "bold" }}>{status}</td>
+                                    </tr>
+                                  );
+                                })}
+                            </tbody>
+                          </table>
+                              
+                          <div className="driver-table">
+                            <h3>DRIVER</h3>
+                          </div>
+                              
+                          <table className="attendance-table">
+                            <thead>
+                              <tr>
+                                <th>Driver ID</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Status</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {employees
+                                .filter((emp) =>
+                                  view === "unassigned"
+                                    ? emp.position === "Unassigned"
+                                    : emp.position !== "Unassigned" && emp.position === "Driver"
+                                )
+                                .sort((a, b) => {
+                                  const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
+                                  const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
+                                  return numA - numB;
+                                })
+                                .map((emp) => {
+                                  const record = Array.isArray(todaysAttendance)
+                                    ? todaysAttendance.find((r) => r.employeeID === emp.employeeID)
+                                    : null;
+                                
+                                  let status = record ? "Present" : "Absent";
+                                  let color = record ? "green" : "red";
+                                
+                                  return (
+                                    <tr key={emp._id}>
+                                      <td>{emp.employeeID}</td>
+                                      <td>{emp.name}</td>
+                                      <td>{emp.position}</td>
+                                      <td style={{ color, fontWeight: "bold" }}>{status}</td>
+                                    </tr>
+                                  );
+                                })}
+                            </tbody>
+                          </table>
 
-        return (
-          <tr key={emp._id}>
-            <td>{emp.employeeID}</td>
-            <td>{emp.name}</td>
-            <td>{emp.position}</td>
-            <td style={{ color, fontWeight: "bold" }}>{status}</td>
-          </tr>
-        );
-      })}
-  </tbody>
-</table>
-
-<div className="driver-table">
-  <h3>DRIVER</h3>
-</div>
-
-{/* ================= DRIVER TABLE ================= */}
-<table className="attendance-table">
-  <thead>
-    <tr>
-      <th>Driver ID</th>
-      <th>Name</th>
-      <th>Position</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    {employees
-      .filter((emp) =>
-        view === "unassigned"
-          ? emp.position === "Unassigned"
-          : emp.position !== "Unassigned" && emp.position === "Driver"
-      )
-      .sort((a, b) => {
-        const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
-        const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
-        return numA - numB;
-      })
-      .map((emp) => {
-        const record = Array.isArray(todaysAttendance)
-          ? todaysAttendance.find((r) => r.employeeID === emp.employeeID)
-          : null;
-
-        let status = record ? "Present" : "Absent";
-        let color = record ? "green" : "red";
-
-        return (
-          <tr key={emp._id}>
-            <td>{emp.employeeID}</td>
-            <td>{emp.name}</td>
-            <td>{emp.position}</td>
-            <td style={{ color, fontWeight: "bold" }}>{status}</td>
-          </tr>
-        );
-      })}
-  </tbody>
-</table>
-                        
- 
-                        
                         {showEarlyLeave && (
                           <div className="leave-modal-overlay">
                             <div className="leave-modal-content">
@@ -687,7 +764,7 @@ export default function HrDashboard() {
                               <button className="leave-close-btn" onClick={() => setShowEarlyLeave(false)}>
                                 ✖
                               </button>
-                        
+
                               {Array.isArray(todaysAttendance) &&
                               todaysAttendance.filter((r) => r.earlyLeave).length === 0 ? (
                                 <p>No early leave requests today</p>
@@ -749,14 +826,13 @@ export default function HrDashboard() {
                                                 placeholder="Driver ID"
                                                 value={selectedEmployee?.employeeID || ''}
                                                 onChange={(e) => setSelectedEmployee({...selectedEmployee, employeeID: e.target.value})}
-                                                required
+
                                              />
                                             <input
                                                 type="number"
                                                 placeholder="Vehicle Capacity"
                                                 value={selectedEmployee?.vehicleCapacity || ''}
                                                 onChange={(e) => setSelectedEmployee({...selectedEmployee, vehicleCapacity: e.target.value})}
-                                                required
                                             />
                                             </div>
                                         )}
@@ -782,21 +858,18 @@ export default function HrDashboard() {
                                             placeholder="Name" 
                                             value={editEmployee?.name || ''} 
                                             onChange={(e) => setEditEmployee({...editEmployee, name: e.target.value})} 
-                                            required
                                         />
                                         <input 
-                                            type="email" 
+                                            type="text" 
                                             placeholder="Email" 
                                             value={editEmployee?.email || ''} 
                                             onChange={(e) => setEditEmployee({...editEmployee, email: e.target.value})} 
-                                            required
                                         />
                                         <input 
                                             type="text" 
                                             placeholder="Phone" 
                                             value={editEmployee?.phone || ''} 
                                             onChange={(e) => setEditEmployee({...editEmployee, phone: e.target.value})} 
-                                            required
                                         />
                                         <select 
                                             value={editEmployee?.position || 'Unassigned'}
@@ -819,7 +892,6 @@ export default function HrDashboard() {
                                                 placeholder="Vehicle Capacity"
                                                 value={editEmployee?.vehicleCapacity || ''}
                                                 onChange={(e) => setEditEmployee({...editEmployee, vehicleCapacity: e.target.value})}
-                                                required
                                             />
                                         )}
                                     </div>

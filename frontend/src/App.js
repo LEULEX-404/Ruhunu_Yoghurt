@@ -9,6 +9,8 @@ import AttendencePage from './Pages/AttendencePage';
 import DriverPortal from './Pages/DriverPortal';
 import UserProfile from './Pages/UserProfile';
 import HomePage from './Pages/HomePage';
+import OrderDashboard from './Pages/OrderDashboard';
+
 
 axios.defaults.baseURL = 'http://localhost:8070'; 
 axios.defaults.withCredentials = true;
@@ -27,6 +29,8 @@ function Appwrapper() {
       <Route path="/deliveryDashboard" element ={<DeliveryDashboard/>} />
       <Route path="/attendence" element ={<AttendencePage/>} />
       <Route path="/driverPortal" element ={<DriverPortal/>} />
+      <Route path="/orderDashboard" element ={<OrderDashboard/>} />
+
     </Routes>
     </div>
   )

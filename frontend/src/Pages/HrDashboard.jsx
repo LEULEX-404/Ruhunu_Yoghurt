@@ -302,7 +302,10 @@ const validateUpdateForm = () =>{
     const handleAssignRole = async (e) =>{
         e.preventDefault();
 
-        if(validateAssignRole()){
+        const valid = await validateAssignRole();
+        if(valid){
+          return;
+        }
 
         try{
             const response = await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, 
@@ -319,7 +322,7 @@ const validateUpdateForm = () =>{
             console.error('Error assigning role:', error);
             toast.error("Failed to Assign Role");
         }
-      }
+  
     };
 
     const validateAssignRole = async () =>{
@@ -336,16 +339,13 @@ const validateUpdateForm = () =>{
             return false;
         }
 
-        if(selectedEmployee.vehicleCapacity === null){
-            toast.error("Enter Vehicle Capacity for Driver");
-            return false;
-        }
-        if(selectedEmployee.vehicleCapacity <= 0 || selectedEmployee.vehicleCapacity === undefined){
+        if(!selectedEmployee.vehicleCapacity || selectedEmployee.vehicleCapacity <= 0){
             toast.error("Enter a valid Vehicle Capacity");
             return false;
         }
-    }
         return true;
+    }
+    return true;
   }
 
     const handleSignOut = () =>{

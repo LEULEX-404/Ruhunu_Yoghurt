@@ -697,8 +697,22 @@ const validateUpdateForm = () =>{
                                     ? todaysAttendance.find((r) => r.employeeID === emp.employeeID)
                                     : null;
                                 
-                                  let status = record ? "Present" : "Absent";
-                                  let color = record ? "green" : "red";
+                                  let status = "Absent";
+                                  let color = "red";
+
+                                  if (record) {
+                                      const checkInTime = new Date(record.checkInTime);
+                                      const lateTime = new Date();
+                                      lateTime.setHours(9, 30, 0, 0);
+                                  
+                                      if (checkInTime <= lateTime) {
+                                          status = "Present";
+                                          color = "green";
+                                      } else {
+                                          status = "Late";
+                                          color = "orange";
+                                      }
+                              } 
                                 
                                   return (
                                     <tr key={emp._id}>
@@ -742,8 +756,22 @@ const validateUpdateForm = () =>{
                                     ? todaysAttendance.find((r) => r.employeeID === emp.employeeID)
                                     : null;
                                 
-                                  let status = record ? "Present" : "Absent";
-                                  let color = record ? "green" : "red";
+                                  let status = "Absent";
+                                  let color = "red";
+
+                                  if (record) {
+                                      const checkInTime = new Date(record.checkInTime);
+                                      const lateTime = new Date();
+                                      lateTime.setHours(9, 30, 0, 0);
+                                  
+                                      if (checkInTime <= lateTime) {
+                                          status = "Present";
+                                          color = "green";
+                                      } else {
+                                          status = "Late";
+                                          color = "orange";
+                                      }
+                              } 
                                 
                                   return (
                                     <tr key={emp._id}>

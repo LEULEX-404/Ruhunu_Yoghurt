@@ -32,13 +32,13 @@ export default function LoginPage() {
             toast.success(`Logged in as ${data.user.role}. Please choose your dashboard.`);
         }
         else if (data.user.role === "Staff") {
-          toast.success("✅ Welcome Staff! Redirecting to Attendance...");
+          toast.success("Welcome Staff! Redirecting to Attendance...");
           setTimeout(() => {
             window.location.href = "/attendence";
           }, 1500);
         } 
         else if (data.user.role === "customer") {
-          toast.success("✅ Welcome back! Redirecting to your profile...");
+          toast.success("Welcome back! Redirecting to your profile...");
         setTimeout(() => {
           window.location.href = "/userProfile";
         }, 1500);

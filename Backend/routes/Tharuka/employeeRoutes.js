@@ -4,10 +4,10 @@ import { createEmployee, getEmployees, updateEmployee, deleteEmployee, getSearch
 const router= express.Router();
 
 router.post("/add",createEmployee);
+router.get("/search",getSearchEmployee);
 router.get("/",getEmployees);
 router.get("/:id",getEmployeeById);
 router.put("/update/:id",updateEmployee);
 router.delete("/delete/:id",deleteEmployee);
-router.get("/search",getSearchEmployee);
 
 export default router;

@@ -48,11 +48,11 @@ export const getEmployeeById = async (req, res) => {
 export const updateEmployee = async (req, res) => {
     try{
         const { id } = req.params;
-        const { name, email, position, phone, vehicleCapacity } = req.body;
+        const { EmployeeID, name, email, position, phone, vehicleCapacity } = req.body;
 
         const updatEmployee = await Employee.findByIdAndUpdate(
             id,
-            { name, email, position, phone },
+            { EmployeeID, name, email, position, phone },
             { new: true }
         );
 
@@ -62,27 +62,40 @@ export const updateEmployee = async (req, res) => {
 
         if (position === "Driver") {
           const existingDriver = await Driver.findOne({ driverID: updatEmployee._id });
+
           if (!existingDriver) {
+
             const newDriver = new Driver({
               driverID: updatEmployee._id,
-              employeeID: updatEmployee.employeeID,
+              employeeID: updatEmployee.EmployeeID,
               name: updatEmployee.name,
               email: updatEmployee.email,
               phone: updatEmployee.phone,
               vehicleCapacity: Number(vehicleCapacity)
             });
+
+
             await newDriver.save();
+
           }else {
+
+            existingDriver.employeeID = updatEmployee.employeeID;
             existingDriver.name = updatEmployee.name;
             existingDriver.email = updatEmployee.email;
             existingDriver.phone = updatEmployee.phone;
             existingDriver.vehicleCapacity = Number(vehicleCapacity);
+
             await existingDriver.save();
           }
+
         } else {
+
           await Driver.findOneAndDelete({ employeeID: updatEmployee.employeeID });
+
         }
-        res.status(200).json({ message: 'Employee updated successfully', employee: updatEmployee });
+
+        res.status(200).json({ message: 'Employee updated successfully', employee: updatEmployee,employeeID: EmployeeID });
+
     }catch(error){
         res.status(500).json({ message: 'Error updating employee', error: error.message });
     }
@@ -115,8 +128,10 @@ export function isAdmin(req){
 };
 
 export const getSearchEmployee =async (req, res) =>{
-    try{
+
         const search = req.query.search || "";
+
+        console.log('search',search);
 
         let query = { };
 
@@ -127,7 +142,7 @@ export const getSearchEmployee =async (req, res) =>{
                 {position: {$regex: search, $options: "i"}}
             ]
         };
-
+    try{
         const employees = await Employee.find(query).select(
             "employeeID name email position phone"
         );

@@ -4,7 +4,7 @@ import { Toaster, toast } from "sonner";
 import { confirmAlert } from 'react-confirm-alert';
 import "react-toastify/dist/ReactToastify.css";
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { FiUserX, FiHome, FiLogOut, FiMoon,FiSun ,FiBarChart2, FiCheckSquare, FiUserCheck, FiUserPlus } from 'react-icons/fi';
+import { FiUserX, FiHome, FiLogOut, FiMoon,FiSun ,FiBarChart2, FiCheckSquare, FiUserCheck, FiUserPlus, FiClock, FiRefreshCw } from 'react-icons/fi';
 import '../Css/HrDashboard.css';
 
 export default function HrDashboard() {
@@ -12,6 +12,10 @@ export default function HrDashboard() {
 
     const [employees, setEmployees] = useState([]);
     const [employeeSearch,setEmployeeSearch] = useState("");
+
+    const [todaysAttendance, setTodaysAttendance] = useState([]);
+    const [showEarlyLeave, setShowEarlyLeave] = useState(false);
+
 
     const [view, setView] = useState('dashboard');
     const [darkMode, setDarkMode] = useState(false);
@@ -63,6 +67,23 @@ export default function HrDashboard() {
         }
     };
 
+    
+
+    const fetchAttendance = async () => {
+        try {
+          const res = await axios.get("http://localhost:8070/api/attendance/today/attendence", {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+          });
+          setTodaysAttendance(res.data || []);
+        } catch (error) {
+          console.error("Error fetching attendance:", error);
+          toast.error("Failed to load attendance");
+          setTodaysAttendance([]);
+        }
+      };
+      
+
+
     const openAssignModal = (employee) =>{
         setSelectedEmployee(employee);
         setIsModalOpen(true);
@@ -91,6 +112,13 @@ export default function HrDashboard() {
         fetchEmployees();
         fetchEmployee();
     }, []);
+
+    useEffect(() => {
+        if (view === "attendence") {
+          fetchAttendance();
+        }
+      }, [view]);
+      
 
     useEffect(() =>{
         const delay = setTimeout(() =>{
@@ -178,7 +206,7 @@ export default function HrDashboard() {
 
         try{
             const response = await axios.put(`http://localhost:8070/api/employees/update/${editEmployee._id}`, 
-                { name: editEmployee.name, email: editEmployee.email, position: editEmployee.position, phone: editEmployee.phone, vehicleCapacity: editEmployee.vehicleCapacity || 0 });
+                {employeeID: editEmployee.employeeID, name: editEmployee.name, email: editEmployee.email, position: editEmployee.position, phone: editEmployee.phone, vehicleCapacity: editEmployee.vehicleCapacity || 0 });
 
             console.log('Employee updated:', response.data);
             toast.success("Employee Updated Successfully");
@@ -542,10 +570,152 @@ export default function HrDashboard() {
 
 
                     {view === "attendence" && (
-                        <div className="content-card">
-                            <h2>Attendance Tracking Section</h2>
+                      <div className="content-card">
+                        <div className='attendence-header'>
+                            <h2>ATTENDENCE TRACKING SECTION</h2>
                         </div>
+                    
+                        <button onClick={() => fetchAttendance()} className="refresh-btn">
+                        <FiRefreshCw/> Refresh
+                        </button>
+
+
+                        <button
+                          className="early-leave-btn"
+                          onClick={() => setShowEarlyLeave(true)}
+                        >
+                          <FiClock /> View Early Leave Requests
+                        </button>
+                    
+{/* ================= EMPLOYEE TABLE ================= */}
+<div className="driver-table">
+  <h3>ASSIGNED EMPLOYEE</h3>
+</div>
+<table className="attendance-table">
+  <thead>
+    <tr>
+      <th>Employee ID</th>
+      <th>Name</th>
+      <th>Position</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {employees
+      .filter((emp) =>
+        view === "unassigned"
+          ? emp.position === "Unassigned"
+          : emp.position !== "Unassigned" && emp.position !== "Driver"
+      )
+      .sort((a, b) => {
+        const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
+        const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
+        return numA - numB;
+      })
+      .map((emp) => {
+        const record = Array.isArray(todaysAttendance)
+          ? todaysAttendance.find((r) => r.employeeID === emp.employeeID)
+          : null;
+
+        let status = record ? "Present" : "Absent";
+        let color = record ? "green" : "red";
+
+        return (
+          <tr key={emp._id}>
+            <td>{emp.employeeID}</td>
+            <td>{emp.name}</td>
+            <td>{emp.position}</td>
+            <td style={{ color, fontWeight: "bold" }}>{status}</td>
+          </tr>
+        );
+      })}
+  </tbody>
+</table>
+
+<div className="driver-table">
+  <h3>DRIVER</h3>
+</div>
+
+{/* ================= DRIVER TABLE ================= */}
+<table className="attendance-table">
+  <thead>
+    <tr>
+      <th>Driver ID</th>
+      <th>Name</th>
+      <th>Position</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {employees
+      .filter((emp) =>
+        view === "unassigned"
+          ? emp.position === "Unassigned"
+          : emp.position !== "Unassigned" && emp.position === "Driver"
+      )
+      .sort((a, b) => {
+        const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
+        const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
+        return numA - numB;
+      })
+      .map((emp) => {
+        const record = Array.isArray(todaysAttendance)
+          ? todaysAttendance.find((r) => r.employeeID === emp.employeeID)
+          : null;
+
+        let status = record ? "Present" : "Absent";
+        let color = record ? "green" : "red";
+
+        return (
+          <tr key={emp._id}>
+            <td>{emp.employeeID}</td>
+            <td>{emp.name}</td>
+            <td>{emp.position}</td>
+            <td style={{ color, fontWeight: "bold" }}>{status}</td>
+          </tr>
+        );
+      })}
+  </tbody>
+</table>
+                        
+ 
+                        
+                        {showEarlyLeave && (
+                          <div className="leave-modal-overlay">
+                            <div className="leave-modal-content">
+                              <h3>Early Leave Requests</h3>
+                              <button className="leave-close-btn" onClick={() => setShowEarlyLeave(false)}>
+                                ✖
+                              </button>
+                        
+                              {Array.isArray(todaysAttendance) &&
+                              todaysAttendance.filter((r) => r.earlyLeave).length === 0 ? (
+                                <p>No early leave requests today</p>
+                              ) : (
+                                <ul>
+                                  {Array.isArray(todaysAttendance) &&
+                                    todaysAttendance
+                                      .filter((r) => r.earlyLeave)
+                                      .map((r) => (
+                                        <li key={r._id}>
+                                          <b>{r.employeeID}</b> ({r.earlyLeave.reason})
+                                          <span>
+                                            {" "}
+                                            at{" "}
+                                            {new Date(r.earlyLeave.submittedAt).toLocaleTimeString()}
+                                          </span>
+                                        </li>
+                                      ))}
+                                </ul>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     )}
+
+
+
 
                     {view === "reports" && (
                         <div className="content-card">

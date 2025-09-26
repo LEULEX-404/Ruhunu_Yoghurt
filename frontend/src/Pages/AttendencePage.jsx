@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Toaster, toast } from "sonner";
 import axios from 'axios';
 import '../Css/Attendence.css';
 
@@ -34,21 +35,25 @@ export default function AttendencePage() {
     const handleCheckIn = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:8070/api/attendance/checkin', {}, {
+            const res = await axios.post('http://localhost:8070/api/attendance/checkin', {}, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setStatus("checked-in");
-            alert('Checked in successfully!');
+            toast.success(res.data.message);
         }
         catch (error) {
             console.error('Error during check-in:', error);
-            alert('Check-in failed. Please try again.');
+            if (error.response && error.response.data && error.response.data.message) {
+            toast.error(error.response.data.message);
+        } else {
+            toast.error('Check-in failed. Please try again.');
+        }
         }
     };
 
     const handleEarlyLeave = async () => {
         if (!earlyLeaveReason) {
-            alert('Please provide a reason for early leave.');
+            toast.warning('Please provide a reason for early leave.');
             return;
         }
         try {
@@ -58,22 +63,23 @@ export default function AttendencePage() {
                 { headers: { Authorization: `Bearer ${token}` },
             });
             setStatus("Early Leave");
-            alert('Early leave recorded successfully!');
+            toast.success('Early leave recorded successfully!');
             setEarlyLeaveReason('');
         }
         catch (error) {
             console.error('Error during early leave:', error);
-            alert('Early leave failed. Please try again.');
+            toast.error('Early leave failed. Please try again.');
         }
     };
 
     return (
         <div className="attendance-container">
+          <Toaster position="bottom-center" richColors />
         <div className="attendance-card">
           <h2>Attendance Portal</h2>
             
   
-          {!status && <button onClick={handleCheckIn}>✅ Check In</button>}
+          {!status && <button onClick={handleCheckIn} >✅ Check In</button>}
   
           {!status && (
               <button 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Toaster,toast } from "sonner";
 import axios from 'axios';
 import "../Css/DriverPortal.css";
 
@@ -11,9 +12,9 @@ export default function DriverPortal() {
   const [activeSection, setActiveSection] = useState("profile");
 
   const [showModal, setShowModal] = useState(false);
-const [editName, setEditName] = useState("");
-const [editEmail, setEditEmail] = useState("");
-const [editPhone, setEditPhone] = useState("");
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editPhone, setEditPhone] = useState("");
 
 
 
@@ -74,8 +75,50 @@ catch(err){
 }
 };
 
+const validateProfile = () => {
+    if (!editName.trim()) {
+      toast.error("Name is required");
+      return false;
+    }
+
+  const nameRegex = /^[A-Za-z\s]+$/;
+
+    if (!nameRegex.test(editName)) {
+      toast.error("Name can only contain letters");
+    return false;
+    }
+
+    if (!editEmail.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(editEmail)) {
+      toast.error("Enter a valid email address");
+      return false;
+    }
+
+    if (!editPhone.trim()) {
+      toast.error("Phone number is required");
+      return false;
+    }
+
+    const phoneRegex = /^0+[0-9]{9}$/;
+    if (!phoneRegex.test(editPhone)) {
+      toast.error("Enter a valid 10-digit phone number");
+      return false;
+    }
+
+    return true;
+  };
+
 const handleUpdateProfile = async () => {
      try {
+
+      if (!validateProfile()) {
+        return;
+      }
       const storedDriver = JSON.parse(localStorage.getItem("user"));
       await axios.put(`http://localhost:8070/api/driver/${storedDriver.id}`, {
         name: editName,
@@ -102,6 +145,7 @@ const handleUpdateProfile = async () => {
 
   return (
     <div className="portal-container">
+      <Toaster position="bottom-center"richColors/>
       <div className="driversidebar">
         <h2 className="logo">Driver Portal</h2>
         <nav>

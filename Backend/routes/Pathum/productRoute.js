@@ -6,7 +6,7 @@ import { authMiddleware } from '../../middleware/auth.js';
 const productRouter = express.Router();
 
 productRouter.post("/", authMiddleware, saveProduct);
-productRouter.get("/", getProduct);
+productRouter.get("/", authMiddleware, getProduct);
 productRouter.put("/:productId", authMiddleware, updateProduct)
 productRouter.delete("/:productId", authMiddleware, deleteProduct)
 productRouter.post("/add-rating", addRating)

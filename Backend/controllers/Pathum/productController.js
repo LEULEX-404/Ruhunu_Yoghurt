@@ -29,7 +29,7 @@ export async function getProduct(req, res) {
         const { rating, sort } = req.query;
         const query = {};
 
-        // ✅ if not admin, only return available products
+        //✅ if not admin, only return available products
         if (!isAdmin(req)) {
             query.isAvailable = true;
         }

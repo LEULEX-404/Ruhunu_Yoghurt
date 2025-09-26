@@ -14,6 +14,8 @@ export default function ProductOverViewPage() {
     const [userRating, setUserRating] = useState(0)
     const navigate = useNavigate()
 
+    const user = JSON.parse(localStorage.getItem('user'));
+    const id = user?.id; // backend _id stored as id
     useEffect(() => {
         axios.get('http://localhost:8070/api/products/' + productId)
             .then((response) => {
@@ -26,7 +28,7 @@ export default function ProductOverViewPage() {
             })
     }, [productId])
 
-    const ratingSubmit = async (ratingValue) => {
+    const ratingSubmit = async (ratingValue) => {    
         try {
             const response = await axios.post('http://localhost:8070/api/products/add-rating', {
                 productId: productId,
@@ -137,10 +139,10 @@ export default function ProductOverViewPage() {
                                     className="add-to-cart-button"
                                     onClick={() => {
                                         console.log("Old Cart")
-                                        console.log(getCart());
-                                        addToCart(product, 1)
+                                        console.log(getCart(id));
+                                        addToCart(id, product, 1)
                                         console.log("New Cart")
-                                        console.log(getCart())
+                                        console.log(getCart(id))
                                     }}>
                                     Add to Cart
                                 </button>
@@ -149,16 +151,13 @@ export default function ProductOverViewPage() {
                                     onClick={() => {
                                         navigate("/payment", {
                                             state: {
-                                                cart: [
-                                                    {
-                                                        productId: product.productId,
-                                                        name: product.name,
-                                                        image: product.image || (product.images ? product.images[0] : ""),
-                                                        price: product.price,
-                                                        labelledPrice: product.labelledPrice,
-                                                        qty: 1
-                                                    }
-                                                ]
+                                                product : {
+                                                    productId : product.productId,
+                                                    name : product.name,
+                                                    price : product.price,
+                                                    labelledPrice : product.labelledPrice,
+                                                    qty : 1
+                                                }
                                             }
                                         })
                                     }}>

@@ -1,56 +1,62 @@
-export function getCart(){
-    let cart = localStorage.getItem("cart")
+// cart.js
 
-    if(cart == null){
-        cart = []
-        localStorage.setItem("cart", JSON.stringify(cart))
-    }else {
-        cart = JSON.parse(cart)
+// Get cart for a specific user
+export function getCart(id) {
+    if (!id) return []; // fallback if no user
+    let cart = localStorage.getItem(`cart_${id}`);
+    if (!cart) {
+        cart = [];
+        localStorage.setItem(`cart_${id}`, JSON.stringify(cart));
+    } else {
+        cart = JSON.parse(cart);
     }
-    return cart
+    return cart;
 }
 
-export function removeFromCart(productId){
-    let cart = getCart()
-    const newCart = cart.filter((item) => {
-        return item.productId != productId
-    })
-    localStorage.setItem("cart", JSON.stringify(newCart))
+// Save cart for a specific user
+export function setCart(id, cart) {
+    if (!id) return;
+    localStorage.setItem(`cart_${id}`, JSON.stringify(cart));
 }
 
-export function addToCart(product, qty){
-    let cart = getCart()
-    let index = cart.findIndex((item) => {
-        return item.productId == product.productId
-    })
+// Add a product to the user's cart
+export function addToCart(id, product, qty) {
+    if (!id) return;
+    let cart = getCart(id);
 
-    if(index == -1){
-        cart[cart.length] = {
-            productId : product.productId,
-            name : product.name,
-            image : product.image || (product.images ? product.images[0] : ""),
-            price : product.price,
-            labelledPrice : product.labelledPrice,
-            qty : qty
-        }
-    }else {
-        const newQty = cart[index].qty + qty
-        if(newQty <= 0){
-            removeFromCart(product.productId)
-            return
+    let index = cart.findIndex(item => item.productId === product.productId);
+
+    if (index === -1) {
+        cart.push({
+            productId: product.productId,
+            name: product.name,
+            image: product.image || (product.images ? product.images[0] : ""),
+            price: product.price,
+            labelledPrice: product.labelledPrice,
+            qty: qty
+        });
+    } else {
+        const newQty = cart[index].qty + qty;
+        if (newQty <= 0) {
+            cart.splice(index, 1);
         } else {
-            cart[index].qty = newQty
+            cart[index].qty = newQty;
         }
     }
-    localStorage.setItem("cart", JSON.stringify(cart))
+
+    setCart(id, cart);
 }
 
-export function getTotal(){
-    let cart = getCart()
-    let total = 0
+// Remove a product from the user's cart
+export function removeFromCart(id, productId) {
+    if (!id) return;
+    let cart = getCart(id);
+    const newCart = cart.filter(item => item.productId !== productId);
+    setCart(id, newCart);
+}
 
-    for(let i = 0; i < cart.length; i++){
-        total += cart[i].qty * cart[i].price
-    }
-    return total
+// Get total price of the user's cart
+export function getTotal(id) {
+    let cart = getCart(id);
+    return cart.reduce((sum, item) => sum + item.qty * item.price, 0);
 }

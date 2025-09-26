@@ -13,11 +13,16 @@ export default function ProductPage() {
 
     const fetchProducts = async () => {
         try {
+            const token = localStorage.getItem("token")
             const query = new URLSearchParams(filters).toString();
-            const response = await axios.get(`http://localhost:8070/api/products?${query}`);
+            const response = await axios.get(`http://localhost:8070/api/products?${query}`, {
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
             setProducts(response.data);
         } catch (error) {
-            console.error(error);
+            console.error(error.response?.data);
             toast.error("Error fetching products");
         }
     };

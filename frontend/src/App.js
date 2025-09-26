@@ -12,6 +12,7 @@ import ProductPage from './Pages/customer/productsPage';
 import ProductOverViewPage from './Pages/customer/productOverview'
 import CartPage from './Pages/customer/cart';
 import { Toaster } from 'react-hot-toast';
+import PaymentPage from './Pages/customer/payment';
 
 axios.defaults.baseURL = 'http://localhost:8070'; 
 axios.defaults.withCredentials = true;
@@ -32,6 +33,7 @@ function Appwrapper() {
       <Route path='/products' element = {<ProductPage/>}/>
       <Route path='/overview/:id' element={<ProductOverViewPage/>}/>
       <Route path='/cart' element={<CartPage/>}/>
+      <Route path='/payment' element={<PaymentPage/>}/>
     </Routes>
     </div>
   )

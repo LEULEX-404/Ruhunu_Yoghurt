@@ -324,7 +324,7 @@ export default function DeliveryDashboard()
       }
 
       return true;
-    };
+    }; 
 
     const toggleDarkMode = () =>{
         setDarkMode(!darkMode);
@@ -359,7 +359,7 @@ export default function DeliveryDashboard()
                       className="manager-avatar"
                     />
                     <div>
-                      <h4 className="manager-name"><p>{manager?.position}</p></h4>
+                      <h4 className="manager-name"><p>{manager?.position}</p></h4> {/*safe way access not crash*/}
                       <p className="manager-role">{manager?.name}</p>
                       <p className="manager-role">{manager?.employeeID}</p>
                       <p className="manager-role">{manager?.email}</p>
@@ -407,7 +407,6 @@ export default function DeliveryDashboard()
                   value={deliverySearch}
                   onChange={(e) => {
                       setDeliverySearch(e.target.value);
-                      searchDeliveriesAndDrivers(e.target.value);
                     }}
                   className="search-input"
                 />

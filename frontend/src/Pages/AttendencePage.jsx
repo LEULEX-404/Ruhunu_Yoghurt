@@ -72,6 +72,15 @@ export default function AttendencePage() {
         }
     };
 
+    const handleSignOut = () =>{
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            toast.success("Signed out successfully!");
+            setTimeout(() => {
+            window.location.href = "/login";
+      }, 1500);
+    }
+
     return (
         <div className="attendance-container">
           <Toaster position="bottom-center" richColors />
@@ -84,10 +93,7 @@ export default function AttendencePage() {
           {!status && (
               <button 
                 className="attendence-logout-button" 
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  window.location.href = "/";
-                }}
+                onClick={handleSignOut}
               >
                 🚪 Logout
               </button>

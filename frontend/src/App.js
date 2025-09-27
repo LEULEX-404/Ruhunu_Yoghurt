@@ -10,6 +10,7 @@ import DriverPortal from './Pages/DriverPortal';
 import UserProfile from './Pages/UserProfile';
 import HomePage from './Pages/HomePage';
 import OrderDashboard from './Pages/OrderDashboard';
+import CartPage from './Pages/customer/cart';
 
 
 axios.defaults.baseURL = 'http://localhost:8070'; 
@@ -21,7 +22,7 @@ function Appwrapper() {
     <div>
     <Routes>
 
-      <Route path="/" element={<Navigate to="/login" replace/>} />
+      <Route path="/" element={<Navigate to="/home" replace/>} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/home" element={<HomePage />} />
       <Route path="/userProfile" element={<UserProfile/>}/>
@@ -30,6 +31,7 @@ function Appwrapper() {
       <Route path="/attendence" element ={<AttendencePage/>} />
       <Route path="/driverPortal" element ={<DriverPortal/>} />
       <Route path="/orderDashboard" element ={<OrderDashboard/>} />
+      <Route path="/cart" element ={<CartPage/>} />
 
     </Routes>
     </div>

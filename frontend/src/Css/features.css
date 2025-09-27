@@ -1,0 +1,125 @@
+/* Section */
+.features-section {
+  background: linear-gradient(135deg, #e6f7ff, #cceeff);
+  padding: 70px 20px;
+  text-align: center;
+  position: relative;
+}
+
+/* Title */
+.features-title {
+  font-size: 2.2rem;
+  color: #002f5f;
+  margin-bottom: 10px;
+}
+
+.features-subtext {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 50px;
+}
+
+/* Timeline Container */
+.features-timeline {
+  position: relative;
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Vertical Line */
+.features-timeline::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #0077cc;
+  border-radius: 2px;
+  transform: translateX(-50%);
+}
+
+/* Timeline Item */
+.features-item {
+  position: relative;
+  width: 50%;
+  padding: 20px;
+}
+
+.features-item.left {
+  left: 0;
+  text-align: right;
+}
+
+.features-item.right {
+  left: 50%;
+  text-align: left;
+}
+
+/* Card Content */
+.features-content {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(0, 90, 150, 0.2);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.features-content:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 90, 150, 0.3);
+}
+
+/* Circle Icon */
+.features-icon {
+  width: 60px;
+  height: 60px;
+  background: #0077cc;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  position: absolute;
+  top: -30px;
+  left: calc(50% - 30px);
+  border: 3px solid #fff;
+  box-shadow: 0 5px 15px rgba(0, 90, 150, 0.3);
+}
+
+/* Headings & Text */
+.features-content h3 {
+  margin-top: 40px;
+  font-size: 1.3rem;
+  color: #004080;
+}
+.features-content p {
+  margin-top: 8px;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .features-timeline::before {
+    left: 20px;
+  }
+  .features-item {
+    width: 100%;
+    padding-left: 50px;
+    text-align: left !important;
+  }
+  .features-item.right {
+    left: 0;
+  }
+  .features-icon {
+    left: 0;
+    transform: translateX(0);
+  }
+}

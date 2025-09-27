@@ -219,7 +219,7 @@ export default function HrDashboard() {
 
         try{
             const response = await axios.put(`http://localhost:8070/api/employees/update/${editEmployee._id}`, 
-                {employeeID: editEmployee.employeeID, name: editEmployee.name, email: editEmployee.email, position: editEmployee.position, phone: editEmployee.phone, vehicleCapacity: editEmployee.vehicleCapacity || 0 });
+                {employeeID: editEmployee.employeeID, name: editEmployee.name, email: editEmployee.email, position: editEmployee.position, phone: editEmployee.phone });
 
             console.log('Employee updated:', response.data);
             toast.success("Employee Updated Successfully");
@@ -256,18 +256,6 @@ const validateUpdateForm = () =>{
             return false;
         }
 
-               
-        
-      if(editEmployee.position === 'Driver'){
-
-        if(editEmployee.vehicleCapacity === null){
-            toast.error("Enter Vehicle Capacity for Driver");
-        }
-        if(editEmployee.vehicleCapacity <= 0 || editEmployee.vehicleCapacity === undefined){
-            toast.error("Enter a valid Vehicle Capacity");
-            return false;
-        }
-      }
         return true;
 
   };
@@ -303,14 +291,14 @@ const validateUpdateForm = () =>{
         e.preventDefault();
 
         const valid = await validateAssignRole();
-        if(valid){
+        if(!valid){
           return;
         }
 
         try{
             const response = await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, 
               { position: selectedEmployee.position, 
-                EmployeeID: selectedEmployee.employeeID, 
+                employeeID: selectedEmployee.employeeID, 
                 vehicleCapacity: selectedEmployee.vehicleCapacity || 0 
               });
             console.log('Role assigned:', response.data);
@@ -329,10 +317,10 @@ const validateUpdateForm = () =>{
 
     if(selectedEmployee.position === 'Driver'){
 
-      if(selectedEmployee.employeeID.trim() === ''){
-            toast.error("All fields are required");
-            return false;
-        }
+      if(!selectedEmployee.employeeID || selectedEmployee.employeeID.trim() === ''){
+          toast.error("Driver ID is required");
+          return false;
+      }
 
       if(!/^(EM|D)[0-9][0-9]+$/.test(selectedEmployee.employeeID)){
             toast.error("Enter a valid Employee ID");
@@ -351,7 +339,7 @@ const validateUpdateForm = () =>{
     const handleSignOut = () =>{
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        toast.warning("Signed out successfully!");
+        toast.success("Signed out successfully!");
         setTimeout(() => {
         window.location.href = "/login";
   }, 1500);
@@ -530,7 +518,13 @@ const validateUpdateForm = () =>{
                                 </thead>
 
                                 <tbody>
-                                    {employees.filter(emp => view === 'unassigned' ? emp.position === 'Unassigned' : emp.position !== 'Unassigned').map((emp) => (
+                                    {employees.filter(emp => view === 'unassigned' ? emp.position === 'Unassigned' : emp.position !== 'Unassigned')
+                                    .sort((a, b) => {
+                                      const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
+                                      const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
+                                      return numA - numB;
+                                    })
+                                    .map((emp) => (
                                         <tr key = {emp._id}>
                                             <td>{emp.employeeID}</td>
                                             <td>{emp.name}</td>
@@ -836,7 +830,7 @@ const validateUpdateForm = () =>{
                                 <h2>Assign Role to {selectedEmployee.name}</h2>
                                     <form onSubmit = {handleAssignRole}>
                                         <div className = 'form-group'>
-                                            <lable>Select Role</lable>
+                                            <label>Select Role</label>
                                             <select value={selectedEmployee?.position || 'Unassigned'} onChange={(e) => setSelectedEmployee({...selectedEmployee, position: e.target.value})} required>
                                                 <option value = 'Unassigned'>Unassigned</option>
                                                 <option value = 'Product Manager'>Product Manager</option>
@@ -910,18 +904,9 @@ const validateUpdateForm = () =>{
                                             <option value="Delivery Manager">Delivery Manager</option>
                                             <option value="Order Manager">Order Manager</option>
                                             <option value="HR Manager">HR Manager</option>
-                                            <option value="Driver">Driver</option>
                                             <option value="Staff">Staff</option>
                                         </select>
 
-                                        {editEmployee?.position === "Driver" && (
-                                            <input
-                                                type="number"
-                                                placeholder="Vehicle Capacity"
-                                                value={editEmployee?.vehicleCapacity || ''}
-                                                onChange={(e) => setEditEmployee({...editEmployee, vehicleCapacity: e.target.value})}
-                                            />
-                                        )}
                                     </div>
                                     <div className="modal-buttons">
                                         <button type="submit" className="submit-btn">Update</button>

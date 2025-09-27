@@ -8,7 +8,7 @@ const attendenceSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        default: () => new Date().setHours(0, 0, 0, 0)
+        default: () => new Date(new Date().setHours(0, 0, 0, 0))
     },
     checkInTime: {
         type: Date,

@@ -5,7 +5,7 @@ const key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZi
 
 const supabase = createClient(url, key)
 
-export default function mediaUpload(file){
+export default function MediaUpload(file){
 
     const mediaUploadPromise = new Promise((resolve, reject) => {
         if(file == null){

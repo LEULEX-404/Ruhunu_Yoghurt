@@ -24,22 +24,44 @@ export async function saveProduct(req, res){
     })
 }
 
-export async function getProduct(req, res){
+export async function getProduct(req, res) {
     try {
-        if (isAdmin(req)) {
-            const products = await Product.find()
-            res.json(products)
-        }else{
-            const products = await Product.find({isAvailable : true})
-            res.json(products)
+        const { rating, sort } = req.query;
+        const query = {};
+
+        //✅ if not admin, only return available products
+        if (!isAdmin(req)) {
+            query.isAvailable = true;
         }
+
+        // ⭐ rating filter
+        if (rating) {
+            if (rating === "1-3") {
+                query.rating = { $gte: 1, $lte: 3 }; // between 1 and 3
+            } else if (rating === "3plus") {
+                query.rating = { $gt: 3 }; // above 3
+            }
+        }
+
+        // 💰 sorting
+        let sortOption = {};
+        if (sort === "price_asc") {
+            sortOption.price = 1; // low to high
+        } else if (sort === "price_desc") {
+            sortOption.price = -1; // high to low
+        }
+
+        const products = await Product.find(query).sort(sortOption);
+        res.json(products);
+
     } catch (err) {
-        res.json({
-            message : "Failed to get products",
-            error : err
-        })
+        res.status(500).json({
+            message: "Failed to get products",
+            error: err.message
+        });
     }
 }
+
 
 export async function updateProduct(req, res){
     if(!isAdmin(req)){
@@ -125,46 +147,66 @@ export async function getProductById(req, res){
     }
 }
 
-export async function addRating(req, res){
-    if(req.user == null){
-        res.status(403).json({
-            message : "Login First"
-        })
-        return
-    }
+export async function addRating(req, res) {
+    try {
+        const { productId, newRating } = req.body;
 
-    try{
-        const {productId, newRating} = req.body;
-
-        if(newRating < 1 || newRating > 5){
-            res.status(400).json({
-                message : "Rating must be between 1 and 5"
-            })
+        // validate rating value
+        if (newRating < 1 || newRating > 5) {
+            return res.status(400).json({
+                message: "Rating must be between 1 and 5",
+            });
         }
 
-        const product = await Product.findById(productId)
+        // find by your custom productId instead of MongoDB _id
+        const product = await Product.findOne({ productId });
 
-        if(!product){
-            res.status(404).json({
-                message : "Product not found"
-            })
+        if (!product) {
+            return res.status(404).json({
+                message: "Product not found",
+            });
         }
 
-        product.rating = (product.rating * product.numRatings + newRating) / (product.numRatings + 1)
+        // calculate new average rating
+        const newTotalRating = (product.rating * product.numRatings) + newRating;
+        const newNumRatings = product.numRatings + 1;
+        const newAverageRating = newTotalRating / newNumRatings;
 
-        product.numRatings += 1;
+        // update product fields
+        product.rating = newAverageRating;
+        product.numRatings = newNumRatings;
 
         await product.save();
 
-        res.json({
-            message : "Rating added", 
+        return res.json({
+            message: "Rating added successfully",
             rating: product.rating,
-            numRatings : product.numRatings
+            numRatings: product.numRatings,
+        });
+    } catch (error) {
+        console.error("Error adding rating:", error.message);
+        return res.status(500).json({
+            message: "Error adding rating",
+            error: error.message,
+        });
+    }
+}
+
+export async function searchProducts(req, res){
+    const searchQuery = req.params.query
+    try {
+        const products = await Product.find({
+            $or : [
+                {productName : {$regex : searchQuery, $options : "i"}}, //i for case insensitive
+                {altNames : {$elemMatch : {$regex : searchQuery, $options : "i"}}},
+            ],
+            isAvailable : true
         })
-    } catch (error){
+        res.json(products)
+    } catch(err) {
         res.status(500).json({
-            message : "Error adding rating",
-            error : error.message
+            message : "Internal server error.",
+            error : err
         })
     }
 }

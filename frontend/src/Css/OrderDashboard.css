@@ -1,0 +1,145 @@
+.order-dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  transition: background 0.3s, color 0.3s;
+}
+
+
+.order-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100vw; 
+  overflow: hidden;
+}
+
+
+.order-sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #6366f1 0%, #4338ca 100%);
+  color: white;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 14px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+.order-sidebar-header h2 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 20px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.order-sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+
+.order-sidebar-menu li {
+  height: 45px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 500;
+  color: #e0e7ff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.order-sidebar-menu li:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(5px);
+}
+
+.order-sidebar-menu li.active {
+  background: #ffffff;
+  color: #4338ca;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(255,255,255,0.3);
+}
+
+
+.order-sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-manager-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  color: white;
+  transition: background 0.3s ease;
+}
+
+.order-manager-card:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.order-manager-avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.4);
+}
+
+.order-manager-name {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.order-manager-role {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+
+.signout-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+
+.signout-btn {
+  background: linear-gradient(135deg, #e63946, #d62839);
+  color: white;
+}
+
+.signout-btn:hover {
+  background: linear-gradient(135deg, #ff5c6c, #e63946);
+  box-shadow: 0 0 12px rgba(230,57,70,0.6);
+}

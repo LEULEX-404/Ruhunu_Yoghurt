@@ -19,8 +19,21 @@ export const getTodaysAttendence = async (req, res) => {
 
 export const checkIn = async (req, res) => {
     try {
+
+        const now = new Date();
+
         const today = new Date();
         today.setHours(0, 0, 0, 0);
+
+        const startTime = new Date(today);
+        startTime.setHours(7, 0, 0, 0);
+
+        const endTime = new Date(today);
+        endTime.setHours(11, 0, 0, 0);
+
+        if (now < startTime || now > endTime) {
+            return res.status(400).json({ message: 'Check-in is allowed only between 7:00 AM and 11:00 AM' });
+        }
 
         const existing = await Attendence.findOne({
             employeeID: req.user.employeeID,
@@ -69,3 +82,30 @@ export const earlyLeave = async (req, res) => {
     }
     
 };
+
+export const getAllTodaysAttendance = async (req, res) => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        
+        const records = await Attendence.find({
+          date: {
+            $gte: today,
+            $lt: tomorrow
+          }
+        });
+
+        console.log(records);
+        
+      res.json(records);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error fetching today's attendance",
+        error: error.message
+      });
+    }
+  };
+  
+  

@@ -144,3 +144,21 @@
 .product-card {
     animation: fadeIn 0.5s ease-in-out;
 }
+
+.product-card.expiring-soon {
+    border: 2px solid #ff4444 !important;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden; /* Ensures border-radius works properly */
+}
+
+/* Optional: Add a subtle animation to draw attention */
+.product-card.expiring-soon {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+}

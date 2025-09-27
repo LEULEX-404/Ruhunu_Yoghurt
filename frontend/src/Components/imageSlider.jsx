@@ -1,5 +1,5 @@
 import { useState } from "react"
-import '../Css/ImageSlider.css'
+import '../Css/imageSlider.css'
 
 export default function ImageSlider(props){
     const images = props.images

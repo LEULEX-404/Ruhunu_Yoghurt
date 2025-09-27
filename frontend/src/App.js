@@ -26,7 +26,10 @@ function Appwrapper() {
     <div>
        <Toaster position='top-right'/>
     <Routes>
-      <Route path="/" element={<Navigate to="/login" replace/>} />
+
+
+      <Route path="/" element={<Navigate to="/home" replace/>} />
+
       <Route path="/login" element={<LoginPage />} />
       <Route path="/home" element={<HomePage />} />
       <Route path="/userProfile" element={<UserProfile/>}/>
@@ -35,11 +38,11 @@ function Appwrapper() {
       <Route path="/attendence" element ={<AttendencePage/>} />
       <Route path="/driverPortal" element ={<DriverPortal/>} />
       <Route path="/orderDashboard" element ={<OrderDashboard/>} />
+
       <Route path='/products' element = {<ProductPage/>}/>
       <Route path='/overview/:id' element={<ProductOverViewPage/>}/>
       <Route path='/cart' element={<CartPage/>}/>
       <Route path='/payment' element={<PaymentPage/>}/>
-
 
     </Routes>
     </div>

@@ -11,7 +11,7 @@ import cors from 'cors';
 import productRouter from './routes/Pathum/productRoute.js';
 import promoCodeRouter from './routes/Lasiru/promocoderoutes.js';
 import cartRoutes from './routes/Lasiru/cartRoutes.js'
-import paymentRouter from './routes/Pathum/payment.js';
+import paymentRouter from './routes/Lasiru/paymentRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -30,7 +30,7 @@ app.use('/api/products', productRouter);
 app.use('/api/promocode', promoCodeRouter)
 app.use('/api/cart', cartRoutes)
 app.use('/api/products', productRouter)
-app.use('/api/payments', paymentRouter)
+app.use('/api/payment', paymentRouter)
 
 
 const PORT = process.env.PORT || 8070;

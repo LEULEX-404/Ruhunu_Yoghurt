@@ -32,82 +32,74 @@ export default function CartPage() {
     };
 
     return (
-        <div className="cart-page-contaienr">
-            {/* Desktop Summary */}
-            <div className="cart-summary-desktop">
-                <p className="cart-total-text">Total:</p>
-                <span className="cart-total-amount">
-                    {getTotal(id).toFixed(2)}
-                </span>
-                <Link 
-                    to="/checkout" 
-                    state={{ cart: cart }} 
-                    className="checkout-button"
-                >
-                    Checkout
-                </Link>
-            </div>
+        <div className="cart-page-container">
 
-            {/* Cart Items */}
-            {cart.map((item) => (
-                <div key={item.productId} className="cart-item-card">
-                    <img src={item.image} className="item-image" />
-                    <div className="item-details">
-                        <h1 className="item-name">{item.name}</h1>
-                        <h1 className="item-id">{item.productId}</h1>
-                        {item.labelledPrice > item.price ? (
-                            <div className="item-price-info">
-                                <span className="original-price">{item.labelledPrice.toFixed(2)}</span>
-                                <span className="current-price">{item.price.toFixed(2)}</span>
+            <div className="cart-main-content">
+                {/* Cart Items */}
+                <div className="cart-items-list">
+                    {cart.length === 0 ? (
+                        <p className="empty-cart-message">Your cart is empty</p>
+                    ) : (
+                        cart.map((item) => (
+                            <div key={item.productId} className="cart-item-card">
+                                <img src={item.image} alt={item.name} className="item-image" />
+                                <div className="item-details">
+                                    <h2 className="item-name">{item.name}</h2>
+                                    <span className="item-id">ID: {item.productId}</span>
+                                    {item.labelledPrice > item.price ? (
+                                        <div className="item-price-info">
+                                            <span className="original-price">${item.labelledPrice.toFixed(2)}</span>
+                                            <span className="current-price">${item.price.toFixed(2)}</span>
+                                        </div>
+                                    ) : (
+                                        <span className="single-price">${item.price.toFixed(2)}</span>
+                                    )}
+                                </div>
+
+                                <div className="quantity-control">
+                                    <button
+                                        className="quantity-button minus"
+                                        onClick={() => handleAdd(item, -1)}
+                                    >
+                                        <BiMinus />
+                                    </button>
+                                    <span className="item-quantity">{item.qty}</span>
+                                    <button
+                                        className="quantity-button plus"
+                                        onClick={() => handleAdd(item, 1)}
+                                    >
+                                        <BiPlus />
+                                    </button>
+                                </div>
+
+                                <div className="item-subtotal-container">
+                                    <span className="item-subtotal">${(item.price * item.qty).toFixed(2)}</span>
+                                </div>
+
+                                <button
+                                    className="remove-item-button"
+                                    onClick={() => handleRemove(item.productId)}
+                                >
+                                    <BiTrash />
+                                </button>
                             </div>
-                        ) : (
-                            <span className="single-price">{item.price.toFixed(2)}</span>
-                        )}
-                    </div>
-
-                    <div className="quantity-control">
-                        <button
-                            className="quantity-button minus"
-                            onClick={() => handleAdd(item, -1)}
-                        >
-                            <BiMinus />
-                        </button>
-                        <h1 className="item-quantity">{item.qty}</h1>
-                        <button
-                            className="quantity-button plus"
-                            onClick={() => handleAdd(item, 1)}
-                        >
-                            <BiPlus />
-                        </button>
-                    </div>
-
-                    <div className="item-subtotal-container">
-                        <span className="item-subtotal">
-                            {(item.price * item.qty).toFixed(2)}
-                        </span>
-                    </div>
-
-                    <button
-                        className="remove-item-button"
-                        onClick={() => handleRemove(item.productId)}
-                    >
-                        <BiTrash />
-                    </button>
+                        ))
+                    )}
                 </div>
-            ))}
 
-            {/* Mobile Summary */}
-            <div className="cart-summary-mobile">
-                <p className="cart-total-text">Total:</p>
-                <span className="cart-total-amount">{getTotal(id).toFixed(2)}</span>
-                <Link 
-                    to="/checkout" 
-                    state={{ cart: cart }} 
-                    className="checkout-button"
-                >
-                    Checkout
-                </Link>
+                {/* Desktop Summary */}
+                {cart.length > 0 && (
+                    <div className="cart-summary-desktop">
+                        <p className="cart-total-text">Total:</p>
+                        <span className="cart-total-amount">${getTotal(id).toFixed(2)}</span>
+                        <Link to="/checkout" state={{ cart: cart }} className="checkout-button">
+                            Checkout
+                        </Link>
+                    </div>
+                )}
             </div>
+
         </div>
     );
+
 }

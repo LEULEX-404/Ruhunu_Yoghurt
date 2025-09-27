@@ -1,0 +1,51 @@
+/* ================================
+   Search Product Page Styles
+   ================================ */
+
+.product-search-page {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.search-product {
+  width: 100%;
+  max-width: 600px;
+  display: block;
+  margin: 0 auto 2rem auto;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-product:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.product-search-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.search-message {
+  font-size: 1.2rem;
+  color: #555;
+  text-align: center;
+  margin-top: 2rem;
+  grid-column: 1 / -1; /* spans full width inside grid */
+}
+
+.loading-message {
+  font-size: 1rem;
+  color: #007bff;
+  text-align: center;
+  margin-top: 2rem;
+  grid-column: 1 / -1;
+}

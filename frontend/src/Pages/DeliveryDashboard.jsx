@@ -294,39 +294,37 @@ export default function DeliveryDashboard()
       const minStartTime = new Date(now.getTime() + 60 * 60 * 1000);
 
       if(!startTime || !endTime){
-        toast.warning("Please select start and end time.");
+        toast.error("Please select start and end time.");
         return false;
       }
 
       if(startHour < 8 || startHour > 11){
-        toast.warning("Start time must be between 8 AM and 11 AM.");
+        toast.error("Start time must be between 8 AM and 11 AM.");
         return false;
       }
 
       if(start < now){
-        toast.warning("Start time cannot be in the past.");
+        toast.error("Start time cannot be in the past.");
         return false;
       }
 
       if(start < minStartTime){
-        toast.warning("Start time must be at least 1 hour from now.");
+        toast.error("Start time must be at least 1 hour from now.");
         return false;
       }
 
       if(end <= start){
-        toast.warning("End time must be later than start time.");
+        toast.error("End time must be later than start time.");
         return false;
       }
-
-
-
+      
       if(endHour < 14 || (endHour === 17 && endMinute > 0) || endHour > 17){
-          toast.warning("End time must be between 2 PM and 5 PM.");
+          toast.error("End time must be between 2 PM and 5 PM.");
           return false;
       }
 
       return true;
-    };
+    }; 
 
     const toggleDarkMode = () =>{
         setDarkMode(!darkMode);
@@ -341,7 +339,7 @@ export default function DeliveryDashboard()
     const handleSignout = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      toast.warning("SignOut Successfully!");
+      toast.success("SignOut Successfully!");
       setTimeout(()=>{
         window.location.href = "/login";
       },1500);
@@ -361,7 +359,7 @@ export default function DeliveryDashboard()
                       className="manager-avatar"
                     />
                     <div>
-                      <h4 className="manager-name"><p>{manager?.position}</p></h4>
+                      <h4 className="manager-name"><p>{manager?.position}</p></h4> {/*safe way access not crash*/}
                       <p className="manager-role">{manager?.name}</p>
                       <p className="manager-role">{manager?.employeeID}</p>
                       <p className="manager-role">{manager?.email}</p>
@@ -409,7 +407,6 @@ export default function DeliveryDashboard()
                   value={deliverySearch}
                   onChange={(e) => {
                       setDeliverySearch(e.target.value);
-                      searchDeliveriesAndDrivers(e.target.value);
                     }}
                   className="search-input"
                 />

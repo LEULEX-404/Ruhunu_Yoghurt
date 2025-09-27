@@ -48,11 +48,11 @@ export const getEmployeeById = async (req, res) => {
 export const updateEmployee = async (req, res) => {
     try{
         const { id } = req.params;
-        const { EmployeeID, name, email, position, phone, vehicleCapacity } = req.body;
+        const { employeeID, name, email, position, phone, vehicleCapacity } = req.body;
 
         const updatEmployee = await Employee.findByIdAndUpdate(
             id,
-            { EmployeeID, name, email, position, phone },
+            { employeeID, name, email, position, phone },
             { new: true }
         );
 
@@ -67,7 +67,7 @@ export const updateEmployee = async (req, res) => {
 
             const newDriver = new Driver({
               driverID: updatEmployee._id,
-              employeeID: updatEmployee.EmployeeID,
+              employeeID: updatEmployee.employeeID,
               name: updatEmployee.name,
               email: updatEmployee.email,
               phone: updatEmployee.phone,
@@ -94,7 +94,7 @@ export const updateEmployee = async (req, res) => {
 
         }
 
-        res.status(200).json({ message: 'Employee updated successfully', employee: updatEmployee,employeeID: EmployeeID });
+        res.status(200).json({ message: 'Employee updated successfully', employee: updatEmployee,employeeID: updatEmployee.employeeID });
 
     }catch(error){
         res.status(500).json({ message: 'Error updating employee', error: error.message });

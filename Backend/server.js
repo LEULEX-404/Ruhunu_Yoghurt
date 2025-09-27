@@ -9,6 +9,8 @@ import userRoutes from './routes/Tharuka/userRoutes.js';
 import driverRoutes from './routes/Imasha/driverRoutes.js';
 import cors from 'cors';
 import productRouter from './routes/Pathum/productRoute.js';
+import promoCodeRouter from './routes/Lasiru/promocoderoutes.js';
+import cartRoutes from './routes/Lasiru/cartRoutes.js'
 
 dotenv.config();
 connectDB();
@@ -23,7 +25,9 @@ app.use('/api/deliveries',deliveryRoutes);
 app.use('/api/attendance', attendenceRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/driver',driverRoutes);
-app.use('/api/products', productRouter)
+app.use('/api/products', productRouter);
+app.use('/api/promocode', promoCodeRouter)
+app.use('/api/cart', cartRoutes)
 
 
 const PORT = process.env.PORT || 8070;

@@ -10,6 +10,7 @@ import DriverPortal from './Pages/DriverPortal';
 import UserProfile from './Pages/UserProfile';
 import HomePage from './Pages/HomePage';
 import OrderDashboard from './Pages/OrderDashboard';
+import CartPreview from "./Components/CartPreview";
 
 
 axios.defaults.baseURL = 'http://localhost:8070'; 
@@ -30,6 +31,7 @@ function Appwrapper() {
       <Route path="/attendence" element ={<AttendencePage/>} />
       <Route path="/driverPortal" element ={<DriverPortal/>} />
       <Route path="/orderDashboard" element ={<OrderDashboard/>} />
+      <Route path="/cart/preview" element ={<CartPreview/>} />
 
     </Routes>
     </div>

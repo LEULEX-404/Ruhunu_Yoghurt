@@ -143,3 +143,608 @@
   background: linear-gradient(135deg, #ff5c6c, #e63946);
   box-shadow: 0 0 12px rgba(230,57,70,0.6);
 }
+
+
+/* -------------------------
+   Promo UI additions (append only)
+   ------------------------- */
+
+/* -------------------------
+   Side-by-side layout for promo form (left) and list (right)
+   Append only — does NOT change existing rules
+   ------------------------- */
+
+/* Use grid so topbar spans full width and content sits in two columns on wide screens */
+.promo-section {
+  display: grid;
+  grid-template-columns: 1fr; /* mobile: single column */
+  gap: 18px;
+}
+
+/* keep topbar spanning full width */
+.promo-topbar {
+  grid-column: 1 / -1;
+  align-items: center;
+}
+
+/* content areas (will place side-by-side on wider screens) */
+.promo-add-area {
+  width: 100%;
+}
+
+.promo-list-area {
+  width: 100%;
+  overflow: auto;
+}
+
+/* Two-column layout for desktop/tablet */
+@media (min-width: 900px) {
+  /* Left: form (1fr) Right: list (1.3fr) — tweak ratios as needed */
+  .promo-section {
+    grid-template-columns: 1fr 1.3fr;
+    align-items: start;
+  }
+
+  /* Ensure the topbar remains across both columns */
+  .promo-topbar { grid-column: 1 / -1; }
+
+  /* Add-area sits in column 1, list-area in column 2 (default grid flow achieves this),
+     but enforce for clarity: */
+  .promo-add-area { grid-column: 1 / 2; }
+  .promo-list-area { grid-column: 2 / 3; }
+
+  /* Make the promo-list scrollable if it's tall */
+  .promo-list-area { max-height: calc(100vh - 240px); overflow: auto; padding-left: 8px; }
+}
+
+/* Small visual tweak so the table and form have consistent spacing in two-column mode */
+@media (min-width: 1100px) {
+  .promo-add-area { padding-right: 12px; }
+  .promo-list-area { padding-left: 12px; }
+}
+
+/* Ensure responsive mobile fallback remains stacked and readable */
+@media (max-width: 899px) {
+  .promo-section { grid-template-columns: 1fr; }
+  .promo-add-area, .promo-list-area { width: 100%; }
+  .promo-list-area { max-height: none; overflow: visible; padding-left: 0; }
+}
+
+
+/* -------------------------
+   AddPromocode Modal Overlay
+   ------------------------- */
+.add-promo-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 6, 23, 0.45);
+  z-index: 1200;
+  padding: 18px;
+  animation: modalFade 180ms ease;
+}
+
+/* Modal card container */
+.add-promo-modal {
+  width: 100%;
+  max-width: 640px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 18px 50px rgba(2, 6, 23, 0.25);
+  transform-origin: center;
+  animation: modalPop 220ms cubic-bezier(.22,.9,.35,1);
+}
+
+/* Form wrapper */
+.add-promo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Heading */
+.add-promo-form h2 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Labels */
+.add-promo-form label {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Inputs & selects */
+.add-promo-form input[type="text"],
+.add-promo-form input[type="number"],
+.add-promo-form input[type="date"],
+.add-promo-form select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e6e9ee;
+  background: #fff;
+  outline: none;
+  transition: box-shadow .12s ease, border-color .12s ease, transform .06s ease;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+/* Focus state */
+.add-promo-form input:focus,
+.add-promo-form select:focus {
+  border-color: #4338ca;
+  box-shadow: 0 8px 20px rgba(67,56,202,0.06);
+  transform: translateY(-1px);
+}
+
+/* Buttons */
+.add-promo-form button[type="submit"],
+.add-promo-form button[type="button"] {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Primary (submit) */
+.add-promo-form button[type="submit"] {
+  background: linear-gradient(90deg, #6366f1, #4338ca);
+  color: #fff;
+}
+
+/* Cancel */
+.add-promo-form button[type="button"] {
+  background: transparent;
+  border: 1px solid #e6e9ee;
+  color: #0f172a;
+}
+
+/* Buttons row */
+.add-promo-form .btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* Success / error message */
+.add-promo-form .message {
+  margin-top: 8px;
+  font-weight: 700;
+  color: #0f172a;
+  background: rgba(15,23,42,0.03);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Small screen tweaks */
+@media (max-width: 640px) {
+  .add-promo-modal {
+    padding: 14px;
+    border-radius: 10px;
+  }
+  .add-promo-form h2 { font-size: 18px; }
+  .add-promo-form button[type="submit"], 
+  .add-promo-form button[type="button"] {
+    flex: 1;
+    width: 100%;
+  }
+  .add-promo-form .btn-row { flex-direction: column; }
+}
+
+/* Animations (reuse same as update) */
+@keyframes modalFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modalPop {
+  from { transform: translateY(8px) scale(0.99); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+
+
+/* Promo topbar */
+.promo-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 2px;
+}
+
+.promo-topbar h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Promo actions container */
+.promo-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Generic button used in promo area (keeps it separate so your signout btn unaffected) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  background: rgba(67,56,202,0.08);
+  color: var(--primary, #4338ca);
+  font-weight: 600;
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(67,56,202,0.08);
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #6366f1, #4338ca);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+}
+
+/* Add form area */
+.promo-add-area {
+  max-width: 720px;
+}
+
+/* Form styling specifically for promo to avoid conflicting with earlier global form rules */
+.promo-form {
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.promo-form label {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+.promo-form input,
+.promo-form select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e6e9ee;
+  background: #fff;
+  outline: none;
+  transition: box-shadow .12s ease, border-color .12s ease;
+}
+
+.promo-form input:focus,
+.promo-form select:focus {
+  border-color: #4338ca;
+  box-shadow: 0 8px 20px rgba(67,56,202,0.06);
+}
+
+.promo-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* Inline message for form success/error */
+.promo-form .message {
+  margin-top: 8px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Promo table title */
+.promo-table-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+/* Promo table (already partially styled in your CSS) */
+.promo-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.05);
+}
+
+.promo-table th,
+.promo-table td {
+  padding: 12px 14px;
+  border-top: 1px solid #f4f6f8;
+  text-align: left;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.promo-table thead th {
+  background: linear-gradient(90deg, #6366f1, #4338ca);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.promo-table tbody tr:hover {
+  background: #fbfdff;
+}
+
+/* Button row inside table */
+.btn-row {
+  display: flex;
+  gap: 6px;
+}
+
+/* Small action buttons */
+.btn-small {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(238,242,255,0.9);
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 600;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.btn-small:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(67,56,202,0.08);
+}
+
+/* Danger style */
+.btn-small.danger {
+  background: #fff5f6;
+  color: #b91c1c;
+}
+
+
+
+/* Modal overlay (if not already present) */
+.promo-update-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2,6,23,0.45);
+  z-index: 1200;
+  padding: 18px;
+  animation: modalFade 180ms ease;
+}
+
+/* Modal card container */
+.promo-update-modal {
+  width: 100%;
+  max-width: 640px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 18px 50px rgba(2,6,23,0.25);
+  transform-origin: center;
+  animation: modalPop 220ms cubic-bezier(.22,.9,.35,1);
+}
+
+/* Update form wrapper inside modal */
+.update-promo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Heading */
+.update-promo h2 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Labels */
+.update-promo label {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Inputs & selects */
+.update-promo input[type="text"],
+.update-promo input[type="number"],
+.update-promo input[type="date"],
+.update-promo select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e6e9ee;
+  background: #fff;
+  outline: none;
+  transition: box-shadow .12s ease, border-color .12s ease, transform .06s ease;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+/* Focus state */
+.update-promo input:focus,
+.update-promo select:focus {
+  border-color: #4338ca;
+  box-shadow: 0 8px 20px rgba(67,56,202,0.06);
+  transform: translateY(-1px);
+}
+
+/* Buttons (primary & cancel) */
+.update-promo button[type="submit"],
+.update-promo button[type="button"] {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.update-promo button[type="submit"] {
+  background: linear-gradient(90deg, #6366f1, #4338ca);
+  color: #fff;
+  margin-right: 8px;
+}
+
+.update-promo button[type="button"] {
+  background: transparent;
+  border: 1px solid #e6e9ee;
+  color: #0f172a;
+}
+
+/* Buttons container (so both buttons align nicely) */
+.update-promo .btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* Message (success / error) */
+.update-promo .message {
+  margin-top: 8px;
+  font-weight: 700;
+  color: #0f172a;
+  background: rgba(15,23,42,0.03);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Small-screen adjustments */
+@media (max-width: 640px) {
+  .promo-update-modal {
+    padding: 14px;
+    border-radius: 10px;
+  }
+  .update-promo h2 { font-size: 18px; }
+  .update-promo button[type="submit"], .update-promo button[type="button"] {
+    flex: 1;
+    width: 100%;
+  }
+  .update-promo .btn-row { flex-direction: column; }
+}
+
+/* Animations */
+@keyframes modalFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modalPop {
+  from { transform: translateY(8px) scale(0.99); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Modal card */
+.promo-update-modal {
+  width: 100%;
+  max-width: 640px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 18px 50px rgba(2,6,23,0.25);
+}
+
+/* Responsive tweaks: keeps layout tidy on smaller screens */
+@media (max-width: 900px) {
+  .promo-add-area { max-width: 100%; }
+  .promo-topbar { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
+@media (max-width: 520px) {
+  .promo-list-area table thead { display: none; }
+  .promo-list-area table tbody td { display: block; width: 100%; }
+  .promo-list-area table tbody tr { display: block; margin-bottom: 12px; border-radius: 10px; box-shadow: 0 8px 20px rgba(2,6,23,0.05); overflow: hidden; }
+}
+
+
+/* === Promo List Card === */
+.promo-list-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 28px rgba(2,6,23,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: fadeIn 0.3s ease;
+}
+
+.promo-list-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.promo-list-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.promo-list-header .promo-icon {
+  font-size: 22px;
+  color: #4338ca;
+}
+
+/* Table wrapper (scroll on small screens) */
+.promo-table-wrapper {
+  overflow-x: auto;
+  border-radius: 10px;
+}
+
+/* Empty state */
+.empty-message {
+  text-align: center;
+  padding: 20px;
+  font-size: 15px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Code cell styling */
+.code-cell {
+  font-weight: 700;
+  color: #4338ca;
+  letter-spacing: 0.5px;
+}
+
+/* Smooth fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

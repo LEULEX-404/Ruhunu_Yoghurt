@@ -73,7 +73,7 @@ export default function LoginPage() {
       } else if (data.user.role === "customer") {
         toast.success("Welcome back! Redirecting to your profile...");
         setTimeout(() => {
-          window.location.href = "/userProfile";
+          window.location.href = "/cart/preview";
         }, 1500);
       } else {
         toast.error("❌ Unauthorized role. Please contact admin.");

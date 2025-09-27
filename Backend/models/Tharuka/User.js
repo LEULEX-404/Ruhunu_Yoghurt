@@ -19,6 +19,9 @@ address:{
     type: String,
     default: ''
 },
+phone:{
+    type:String,
+},
 role: {
     type: String,
     default: 'customer',

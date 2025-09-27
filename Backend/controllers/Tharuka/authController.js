@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 export const registerUser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, address, phone, password } = req.body;
     try{
         let user = await User.findOne({ email});
         if(user) 
@@ -16,6 +16,8 @@ export const registerUser = async (req, res) => {
         user = new User({
             name,
             email,
+            address,
+            phone,
             password: hashedPassword
         });
         await user.save();

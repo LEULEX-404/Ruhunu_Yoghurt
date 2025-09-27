@@ -2,111 +2,168 @@ import { useState } from "react";
 import { login } from "../api/auth.js";
 import { Toaster, toast } from "sonner";
 import RegisterPage from "../Components/Register.js";
-import '../Css/Login.css';
+import image from "../images/login.jpg";
+import "../Css/Login.css";
 
 export default function LoginPage() {
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
 
-    const[form, setForm] = useState({
-        email: "",
-        password: ""
-    });
+  const [showRegister, setShowRegister] = useState(false);
+  const [showChoice, setShowChoice] = useState(false);
+  const [user, setUser] = useState(null);
 
-    const [showRegister, setShowRegister] = useState(false);
-    const [showChoice, setShowChoice] = useState(false);
-    const [user, setUser] = useState(null);
+  // eye toggle
+  const [showPassword, setShowPassword] = useState(false);
 
+  // === Validation Function ===
+  const validateForm = () => {
+    if (!form.email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      toast.error("Enter a valid email address");
+      return false;
+    }
+    if (!form.password.trim()) {
+      toast.error("Password is required");
+      return false;
+    }
+    if (form.password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return false;
+    }
+    return true;
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
     try {
-        const response = await login(form);
-        console.log("Login response:", response);
+      const response = await login(form);
+      console.log("Login response:", response);
 
-        const { data } = response;
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user))
+      const { data } = response;
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-        if (data.user.role === "HR Manager" || data.user.role === "Delivery Manager"|| data.user.role === "Order Manager" || data.user.role === "Product Manager" || data.user.role === "Stock Manager" || data.user.role === "Driver") {
-            setShowChoice(true);
-            setUser(data.user);
-            toast.success(`Logged in as ${data.user.role}. Please choose your dashboard.`);
-        }
-        else if (data.user.role === "Staff") {
-          toast.success("Welcome Staff! Redirecting to Attendance...");
-          setTimeout(() => {
-            window.location.href = "/attendence";
-          }, 1500);
-        } 
-        else if (data.user.role === "customer") {
-          toast.success("Welcome back! Redirecting to your profile...");
+      if (
+        data.user.role === "HR Manager" ||
+        data.user.role === "Delivery Manager" ||
+        data.user.role === "Order Manager" ||
+        data.user.role === "Product Manager" ||
+        data.user.role === "Stock Manager" ||
+        data.user.role === "Driver"
+      ) {
+        setShowChoice(true);
+        setUser(data.user);
+        toast.success(
+          `Logged in as ${data.user.role}. Please choose your dashboard.`
+        );
+      } else if (data.user.role === "Staff") {
+        toast.success("Welcome Staff! Redirecting to Attendance...");
+        setTimeout(() => {
+          window.location.href = "/attendence";
+        }, 1500);
+      } else if (data.user.role === "customer") {
+        toast.success("Welcome back! Redirecting to your profile...");
         setTimeout(() => {
           window.location.href = "/userProfile";
         }, 1500);
-        }
-        else {
-          toast.error("❌ Unauthorized role. Please contact admin.");
-        }
-        
-    }catch (error) {
+      } else {
+        toast.error("❌ Unauthorized role. Please contact admin.");
+      }
+    } catch (error) {
       toast.error(error.response?.data?.message || "❌ Login failed!");
     }
-    };
+  };
 
-    return (
-        <div className="login-container">
-           <Toaster position="top-right" richColors />
-      <div className="login-card">
-        <div className="avatar">
-          <span>🙍‍♂️</span>
+  return (
+    <div className="login-container">
+      <Toaster position="top-center" richColors />
+      <div className="login-wrapper">
+        {/* Left side image */}
+        <div className="login-image">
+          <img src={image} alt="Login Illustration" />
         </div>
-        <h2>Welcome Back</h2>
-        <p>Sign in to your account to continue</p>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            required
-          />
-          <div className="options">
-            <label>
-              <input type="checkbox" /> Remember me
-            </label>
-            <a href="Register.jsx">Forgot password?</a>
+
+        {/* Right side form */}
+        <div className="login-card">
+          <div className="avatar">
+            <span>🙍‍♂️</span>
           </div>
-          <button className="button"type="submit">Sign In</button>
-        </form>
-        <p className="signup">
-          Don't have an account? {" "}
-          <button className="link-button" type ="button" onClick={() => setShowRegister(true)}>
-            Sign Up
-          </button>
-        </p>
+          <h2>Welcome Back</h2>
+          <p>Sign in to your account to continue</p>
+          <form onSubmit={handleSubmit}>
+            <input className="form-input"
+              type="text"
+              placeholder="Email Address"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+
+
+            <div className="password-wrapper">
+              <input className="form-input"
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={form.password}
+                onChange={(e) =>
+                  setForm({ ...form, password: e.target.value })
+                }
+              />
+              <i
+                className={`fas ${
+                  showPassword ? "fa-eye-slash" : "fa-eye"
+                } eye-icon`}
+                onClick={() => setShowPassword(!showPassword)}
+              ></i>
+            </div>
+
+            <div className="options">
+              <label>
+                <input type="checkbox" /> Remember me
+              </label>
+              <a href="#">Forgot password?</a>
+            </div>
+            <button className="button" type="submit">
+              Sign In
+            </button>
+          </form>
+          <p className="signup">
+            Don't have an account?{" "}
+            <button
+              className="link-button"
+              type="button"
+              onClick={() => setShowRegister(true)}
+            >
+              Sign Up
+            </button>
+          </p>
+        </div>
       </div>
 
+      {/* Register Modal */}
       {showRegister && (
-         <div className="modal-overlay">
-         <div className="modal-content">
-           <button
-             className="modal-close"
-             onClick={() => setShowRegister(false)}
-           >
-             ✖
-           </button>
-           <RegisterPage />
-         </div>
-       </div>
-     )}
+        <div className="register-modal-overlay">
+          <div className="register-modal-content">
+            <button
+              className="register-modal-close"
+              onClick={() => setShowRegister(false)}
+            >
+              ✖
+            </button>
+            <RegisterPage />
+          </div>
+        </div>
+      )}
 
-      {/* ✅ Manager Choice Modal */}
+      {/* Choice Modal */}
       {showChoice && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -142,7 +199,6 @@ export default function LoginPage() {
           </div>
         </div>
       )}
-
     </div>
-    );
+  );
 }

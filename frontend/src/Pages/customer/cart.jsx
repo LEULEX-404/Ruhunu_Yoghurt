@@ -1,105 +1,118 @@
 import { useState, useEffect } from "react";
-import { addToCart, getCart, getTotal, removeFromCart } from "../../api/cart";
 import { Link, useNavigate } from "react-router-dom";
 import { BiMinus, BiPlus, BiTrash } from "react-icons/bi";
-import '../../Css/cart.css'
+import '../../Css/cart.css';
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function CartPage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user'));
+  const token = localStorage.getItem("token");
+  const customerId = user?.id;
 
-    // Get logged-in user from localStorage
-    const user = JSON.parse(localStorage.getItem('user'));
-    const id = user?.id;  // <-- backend _id stored as id
+  const [cart, setCart] = useState([]);
 
-    // Redirect to login if no user found
-    useEffect(() => {
-        if (!id) {
-            navigate("/login");
-        }
-    }, [id, navigate]);
+  useEffect(() => {
+    if (!customerId) navigate("/login");
+  }, [customerId, navigate]);
 
-    const [cart, setCart] = useState(getCart(id));
+  const fetchCart = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8070/api/cart/${customerId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCart(res.data.items || []);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to fetch cart");
+    }
+  };
 
-    // Handlers for adding/removing items
-    const handleAdd = (item, qty) => {
-        addToCart(id, item, qty);
-        setCart(getCart(id));
-    };
+  useEffect(() => {
+    if (customerId) fetchCart();
+  }, [customerId]);
 
-    const handleRemove = (productId) => {
-        removeFromCart(id, productId);
-        setCart(getCart(id));
-    };
+  const handleAdd = async (item, qty) => {
+    try {
+      await axios.post("http://localhost:8070/api/cart/add",
+        { 
+          customerId, 
+          productId: item.productId._id, 
+          quantity: qty, 
+          price: item.price, 
+          weight: item.weight || 0 
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      fetchCart();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update cart");
+    }
+  };
 
-    return (
-        <div className="cart-page-container">
+  const handleRemove = async (productId) => {
+    try {
+      await axios.post("http://localhost:8070/api/cart/remove",
+        { customerId, productId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      fetchCart();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to remove item");
+    }
+  };
 
-            <div className="cart-main-content">
-                {/* Cart Items */}
-                <div className="cart-items-list">
-                    {cart.length === 0 ? (
-                        <p className="empty-cart-message">Your cart is empty</p>
-                    ) : (
-                        cart.map((item) => (
-                            <div key={item.productId} className="cart-item-card">
-                                <img src={item.image} alt={item.name} className="item-image" />
-                                <div className="item-details">
-                                    <h2 className="item-name">{item.name}</h2>
-                                    <span className="item-id">ID: {item.productId}</span>
-                                    {item.labelledPrice > item.price ? (
-                                        <div className="item-price-info">
-                                            <span className="original-price">${item.labelledPrice.toFixed(2)}</span>
-                                            <span className="current-price">${item.price.toFixed(2)}</span>
-                                        </div>
-                                    ) : (
-                                        <span className="single-price">${item.price.toFixed(2)}</span>
-                                    )}
-                                </div>
+  const getTotal = () => cart.reduce((sum, item) => sum + item.subtotal, 0);
 
-                                <div className="quantity-control">
-                                    <button
-                                        className="quantity-button minus"
-                                        onClick={() => handleAdd(item, -1)}
-                                    >
-                                        <BiMinus />
-                                    </button>
-                                    <span className="item-quantity">{item.qty}</span>
-                                    <button
-                                        className="quantity-button plus"
-                                        onClick={() => handleAdd(item, 1)}
-                                    >
-                                        <BiPlus />
-                                    </button>
-                                </div>
+  if (!cart) return <div className="loading-state">Loading cart...</div>;
 
-                                <div className="item-subtotal-container">
-                                    <span className="item-subtotal">${(item.price * item.qty).toFixed(2)}</span>
-                                </div>
+  return (
+    <div className="cart-page-container">
+      <div className="cart-main-content">
+        <div className="cart-items-list">
+          {cart.length === 0 ? (
+            <p className="empty-cart-message">Your cart is empty</p>
+          ) : cart.map(item => (
+            <div key={item.productId._id} className="cart-item-card">
+              <img src={item.productId.images[0]} alt={item.productId.name} className="item-image" />
+              <div className="item-details">
+                <h2 className="item-name">{item.productId.name}</h2>
+                <span className="item-id">ID: {item.productId.productId}</span>
+                <span className="single-price">${item.price.toFixed(2)}</span>
+              </div>
 
-                                <button
-                                    className="remove-item-button"
-                                    onClick={() => handleRemove(item.productId)}
-                                >
-                                    <BiTrash />
-                                </button>
-                            </div>
-                        ))
-                    )}
-                </div>
+              <div className="quantity-control">
+                <button className="quantity-button minus" onClick={() => handleAdd(item, -1)}>
+                  <BiMinus />
+                </button>
+                <span className="item-quantity">{item.quantity}</span>
+                <button className="quantity-button plus" onClick={() => handleAdd(item, 1)}>
+                  <BiPlus />
+                </button>
+              </div>
 
-                {/* Desktop Summary */}
-                {cart.length > 0 && (
-                    <div className="cart-summary-desktop">
-                        <p className="cart-total-text">Total:</p>
-                        <span className="cart-total-amount">${getTotal(id).toFixed(2)}</span>
-                        <Link to="/checkout" state={{ cart: cart }} className="checkout-button">
-                            Checkout
-                        </Link>
-                    </div>
-                )}
+              <div className="item-subtotal-container">
+                <span className="item-subtotal">${item.subtotal.toFixed(2)}</span>
+              </div>
+
+              <button className="remove-item-button" onClick={() => handleRemove(item.productId._id)}>
+                <BiTrash />
+              </button>
             </div>
-
+          ))}
         </div>
-    );
 
+        {cart.length > 0 && (
+          <div className="cart-summary-desktop">
+            <p className="cart-total-text">Total:</p>
+            <span className="cart-total-amount">${getTotal().toFixed(2)}</span>
+            <Link to="/checkout" state={{ cart }} className="checkout-button">Checkout</Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

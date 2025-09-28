@@ -13,6 +13,8 @@ import promoCodeRouter from './routes/Lasiru/promocoderoutes.js';
 import cartRoutes from './routes/Lasiru/cartRoutes.js'
 import paymentRouter from './routes/Lasiru/paymentRoutes.js';
 import orderRoutes from './routes/Lasiru/orderRoutes.js';
+import cartRouter from './routes/Pathum/cartRoute.js';
+
 
 dotenv.config();
 connectDB();
@@ -33,6 +35,10 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/products', productRouter);
 app.use('/api/payment', paymentRouter);
 app.use("/api/orders", orderRoutes);
+app.use('/api/cart', cartRoutes)
+app.use('/api/products', productRouter)
+app.use('/api/payments', paymentRouter)
+app.use('/api/cart', cartRouter)
 
 
 const PORT = process.env.PORT || 8070;

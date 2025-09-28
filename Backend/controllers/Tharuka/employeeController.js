@@ -116,11 +116,11 @@ export const deleteEmployee = async (req, res) => {
 };
 
 export function isAdmin(req){
-    if(req.employee == null){
+    if(req.user == null){
         return false;
     }
     
-    if(req.employee.position == "Product Manager" || req.employee.position == "Stock Manager") {
+    if(req.user.role == "Product Manager" || req.user.role == "Stock Manager") {
         return true;
     }
     

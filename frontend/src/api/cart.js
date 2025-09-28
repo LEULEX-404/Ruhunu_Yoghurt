@@ -1,5 +1,7 @@
 // cart.js
 
+import toast from "react-hot-toast";
+
 // Get cart for a specific user
 export function getCart(id) {
     if (!id) return []; // fallback if no user
@@ -35,10 +37,12 @@ export function addToCart(id, product, qty) {
             labelledPrice: product.labelledPrice,
             qty: qty
         });
+        toast.success(`${product.name} added to cart!`)
     } else {
         const newQty = cart[index].qty + qty;
         if (newQty <= 0) {
             cart.splice(index, 1);
+            toast.success("Quantity Updated")
         } else {
             cart[index].qty = newQty;
         }

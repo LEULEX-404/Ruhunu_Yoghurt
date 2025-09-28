@@ -66,7 +66,7 @@ export const createDelivery = async (req,res) =>{
 
 export const getPendingOrders = async (req, res) =>{
     try{
-        const pendingOrders = await Order.find({ status: "pending"}).select ("orderNumber customerName items total address productWeight");
+        const pendingOrders = await Order.find({ status: "approved"}).select ("orderNumber customerName phone items total address productWeight ");
 
         res.status(200).json(pendingOrders);
     }
@@ -130,7 +130,7 @@ export const getSearchOrder = async (req, res) =>{
     try{
         const search = req.query.search || "";
 
-        let query = { status: "pending"};
+        let query = { status: "approved"};
 
         if(search){
             query.$or = [
@@ -141,7 +141,7 @@ export const getSearchOrder = async (req, res) =>{
         };
 
             const pendingOrders = await Order.find(query).select(
-            "orderNumber customerName items total address productWeight"
+            "orderNumber customerName phone items total address productWeight "
             );
  
         res.json(pendingOrders);

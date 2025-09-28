@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 function UpdatePromocode({ editingPromo, fetchPromocodes, cancelEdit }) {
   const [code, setCode] = useState("");
@@ -18,8 +19,46 @@ function UpdatePromocode({ editingPromo, fetchPromocodes, cancelEdit }) {
     }
   }, [editingPromo]);
 
+   const validateForm = () => {
+      if (!code.trim() || code.length < 3) {
+        toast.error("Code must be at least 3 characters long.");
+        return false;
+      }
+      if (!discountValue || Number(discountValue) <= 0) {
+        toast.error("Discount value must be greater than 0.");
+        return false;
+      }
+      if (discountType === 'percentage' && (Number(discountValue) <= 0 || Number(discountValue) > 50)) {
+           toast.error("Percentage discount must be between 1 and 50.");
+           return false;
+      }
+      if (discountType === 'fixed' && (Number(discountValue) <= 0 || Number(discountValue) > 1500)) {
+        toast.error("Fixed discount must be between 1 and 1500.");
+        return false;
+      }
+      if (!expiryDate) {
+        toast.error("Please select an expiry date.");
+        return false;
+      }
+      const today = new Date();
+      const selectedDate = new Date(expiryDate);
+      today.setHours(0, 0, 0, 0);
+      if (selectedDate < today) {
+        toast.error("Expiry date cannot be in the past.");
+        return false;
+      }
+      if (!usageLimit || Number(usageLimit) < 1) {
+        toast.error("Usage limit must be at least 1.");
+        return false;
+      }
+      return true;
+    };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     const promoData = { code, discountType, discountValue: Number(discountValue), expiryDate, usageLimit: Number(usageLimit) };
 
     try {

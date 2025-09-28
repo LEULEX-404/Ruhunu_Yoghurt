@@ -1,9 +1,25 @@
 import Order from "../../models/Lasiru/order.js";
 
-// Get all orders
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const { q, status } = req.query;
+
+    const query = {};
+
+    if (status) {
+      const statuses = status.split(",").map(s => s.trim().toLowerCase());
+      query.status = { $in: statuses.map(s => new RegExp(`^${s}$`, "i")) };
+    }
+
+    if (q) {
+      const regex = new RegExp(q.trim(), "i");
+      query.$or = [
+        { customerName: regex },
+        { orderNumber: regex }
+      ];
+    }
+
+    const orders = await Order.find(query).sort({ createdAt: -1 });
     res.status(200).json(orders);
   } catch (err) {
     console.error("Error fetching orders:", err);
@@ -26,8 +42,7 @@ export const approveOrder = async (req, res) => {
       res.status(500).json({ error: "Failed to approve order" });
     }
   };
-  
-  // Cancel order
+
   export const cancelOrder = async (req, res) => {
     try {
       const order = await Order.findById(req.params.id);

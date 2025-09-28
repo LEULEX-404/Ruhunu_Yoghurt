@@ -172,7 +172,7 @@ export const searchDeliveriesAndDrivers = async (req,res) =>{
             deliveryconditon.push({
                 productWeight: Number(search)
             });
-        }
+        } 
 
         deliveries = await Delivery.find({
             status: "pending",
@@ -191,7 +191,7 @@ export const searchDeliveriesAndDrivers = async (req,res) =>{
         drivers = await Promise.all(rawDrivers.map(async (driver) => {
             const assigned = await AssignedDelivery.find({
                 driver: driver.driverID,
-                status: { $in: ["assigned", "sceduled"] }
+                status:"assigned",
             });
 
             const totalWeight = assigned.reduce(
@@ -213,7 +213,7 @@ export const searchDeliveriesAndDrivers = async (req,res) =>{
         drivers = await Promise.all(rawDrivers.map(async (driver) => {
             const assigned = await AssignedDelivery.find({
                 driver: driver.driverID,
-                status: { $in: ["assigned", "sceduled"] }
+                status:"assigned"
             });
             const totalWeight = assigned.reduce(
                 (sum,ad) => sum + (ad.totalWeight || 0),

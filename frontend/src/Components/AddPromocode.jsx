@@ -76,6 +76,7 @@ function AddPromocodeModal({ fetchPromocodes, onClose }) {
   return (
     <div className="promo-update-modal-overlay">
       <div className="promo-update-modal">
+        <button className="close-btn" onClick={onClose}>×</button>
         <form className="update-promo" onSubmit={handleSubmit}>
           <h2>Add Promocode</h2>
 
@@ -84,14 +85,12 @@ function AddPromocodeModal({ fetchPromocodes, onClose }) {
             type="text"
             value={code}
             onChange={(e) => setCode(e.target.value)}
+            placeholder="e.g. SUMMER23"
             required
           />
 
           <label>Discount Type</label>
-          <select
-            value={discountType}
-            onChange={(e) => setDiscountType(e.target.value)}
-          >
+          <select value={discountType} onChange={(e) => setDiscountType(e.target.value)}>
             <option value="percentage">Percentage</option>
             <option value="fixed">Fixed</option>
           </select>
@@ -101,6 +100,7 @@ function AddPromocodeModal({ fetchPromocodes, onClose }) {
             type="number"
             value={discountValue}
             onChange={(e) => setDiscountValue(e.target.value)}
+            placeholder="e.g. 10"
             required
           />
 
@@ -117,13 +117,12 @@ function AddPromocodeModal({ fetchPromocodes, onClose }) {
             type="number"
             value={usageLimit}
             onChange={(e) => setUsageLimit(e.target.value)}
+            placeholder="e.g. 100"
           />
 
           <div className="btn-row">
-            <button type="submit">Add Promocode</button>
-            <button type="button" onClick={onClose}>
-              Cancel
-            </button>
+            <button type="submit" className="btn-primary">Add Promocode</button>
+            <button type="button" className="btn" onClick={onClose}>Cancel</button>
           </div>
         </form>
       </div>

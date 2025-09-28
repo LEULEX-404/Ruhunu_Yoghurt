@@ -1,154 +1,130 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "../Css/CartPreview.css";
 
 const API_BASE = "http://localhost:8070";
 
-function CartPreview() {
+function CartPreview({ appliedCoupon }) {
+
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardcvv, setCardCvv] = useState("");
+
   const [cart, setCart] = useState(null);
-  const [loading, setLoading] = useState(false);
+  
   const [err, setErr] = useState("");
-  const [showModal, setShowModal] = useState(false);
+
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [showPayModal, setShowPayModal] = useState(false);
+
+  const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState({ pay: false, cod: false });
 
   const fetchCart = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
-    if (!user?.id) {
-      setErr("User not logged in");
-      return;
-    }
-    setErr("");
-    setLoading(true);
-    setCart(null);
+    if (!user?.id) return setErr("User not logged in");
+    setErr(""); setLoading(true); setCart(null);
+
     try {
       const res = await fetch(`${API_BASE}/api/cart/preview/${user.id}`);
-      if (!res.ok) {
-        const json = await res.json().catch(() => ({}));
-        throw new Error(json.error || `Server returned ${res.status}`);
-      }
+      if (!res.ok) throw new Error("Failed to fetch cart");
       const json = await res.json();
       setCart(json);
-      setShowModal(true);
+      setShowPreviewModal(true);
     } catch (e) {
       console.error(e);
-      setErr(e.message || "Unable to fetch cart");
-    } finally {
-      setLoading(false);
-    }
+      setErr("Unable to fetch cart");
+    } finally { setLoading(false); }
   };
-
-const handlePayNow = () => {
-  if (!cart) return;
-
-  const paymentData = {
-    cartId: cart.id,
-    amount: cart.total,
-    discountApplied: cart.discountApplied,
-    promocode: cart.promocode,
-  };
-
-  sessionStorage.setItem("paymentData", JSON.stringify(paymentData));
-
-  window.location.href = "/payment";
-};
-
 
   const handleCOD = async () => {
-    if (!cart) return;
-    if (!window.confirm("Place order as Cash on Delivery?")) return;
+    if (!cart?.items?.length) return alert("Cart is empty");
     setActionLoading(prev => ({ ...prev, cod: true }));
     try {
-      const res = await fetch(`${API_BASE}/api/cart/${cart.id}/cod`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const user = JSON.parse(localStorage.getItem("user"));
+      const products = cart.items.map(it => ({
+        productInfo: { productId: it._id || it.productId, labelledPrice: it.price, name: it.name, price: it.price, weight: it.weight },
+        quantity: it.quantity
+      }));
+      await axios.post(`${API_BASE}/api/payment/cod/${user.id}`, { products, total: cart.total });
+      alert("COD Order placed successfully.");
+      setShowPreviewModal(false);
+    } catch (err) { console.error(err); alert("COD Order failed!"); }
+    finally { setActionLoading(prev => ({ ...prev, cod: false })); }
+  };
+
+  const openPayModal = () => { setShowPreviewModal(false); setShowPayModal(true); };
+
+  const handlePayNow = async () => {
+    if (!cart?.items?.length) return alert("Cart is empty");
+    setActionLoading(prev => ({ ...prev, pay: true }));
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const products = cart.items.map(it => ({
+        productInfo: { productId: it._id || it.productId, labelledPrice: it.price, name: it.name, price: it.price, weight: it.weight },
+        quantity: it.quantity
+      }));
+      await axios.post(`${API_BASE}/api/payment/paynow/${user.id}`, {
+        cardNumber, cardcvv, products, total: cart.total, coupon: appliedCoupon || null
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || json.message || "COD failed");
-      alert(json.message || "Order placed (COD)");
-      setShowModal(false);
-    } catch (e) {
-      console.error(e);
-      alert(e.message || "COD error");
-    } finally {
-      setActionLoading(prev => ({ ...prev, cod: false }));
-    }
+      alert("Payment success! Order created.");
+      setShowPayModal(false);
+    } catch (err) { console.error(err.response?.data || err); alert("Payment failed!"); }
+    finally { setActionLoading(prev => ({ ...prev, pay: false })); }
   };
 
   return (
     <div className="cart-preview-page">
       <h2>Cart Preview</h2>
-      <button onClick={fetchCart} disabled={loading}>
-        {loading ? "Loading..." : "Preview My Cart"}
-      </button>
-
+      <button onClick={fetchCart} disabled={loading}>{loading ? "Loading..." : "Preview My Cart"}</button>
       {err && <div className="error">{err}</div>}
 
-      {showModal && cart && (
-        <div className="cp-modal-backdrop" onClick={() => setShowModal(false)}>
-          <div className="cp-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="cp-header">
-              <h3>Cart Preview</h3>
-              <button className="close" onClick={() => setShowModal(false)}>✕</button>
-            </div>
+      {showPreviewModal && cart && (
+        <div className="modal-backdrop" onClick={() => setShowPreviewModal(false)}>
+          <div className="modal preview-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Cart Preview</h3>
+            <button className="close" onClick={() => setShowPreviewModal(false)}>✕</button>
 
-            <div className="cp-body">
-              <div className="row"><strong>Customer:</strong> {cart.customer}</div>
-
-              <div className="items">
-                {(!cart.items || cart.items.length === 0) ? (
-                  <div className="empty">Cart is empty</div>
-                ) : (
-                  cart.items.map((it, idx) => (
-                    <div className="item" key={idx}>
-                      <div>
-                        <div className="iname">{it.name}</div>
-                        <div className="imeta">
-                          Qty: {it.quantity} × Rs.{it.price} | Weight: {it.weight}g
-                        </div>
-                      </div>
-                      <div className="isub">Rs.{it.subtotal}</div>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {cart.discountApplied && (
-                <div className="discount">
-                  Discount Applied: -Rs.{cart.discountApplied.discount} (
-                  {cart.discountApplied.type === "percentage"
-                    ? cart.discountApplied.value + "%"
-                    : "Fixed"}
-                  )
-                </div>
+            <div className="modal-content">
+              {cart.items.length === 0 ? (
+                <p>Your cart is empty</p>
+              ) : (
+                cart.items.map((it, idx) => (
+                  <div key={idx} className="item-row">
+                    <span>{it.name} ({it.quantity} × Rs.{it.price})</span>
+                    <span>Rs.{it.subtotal}</span>
+                  </div>
+                ))
               )}
-
-              {cart.promoMessage && (
-                <div className="promo invalid">{cart.promoMessage}</div>
-              )}
-
               <div className="total-row">
-                <div><strong>Total</strong></div>
-                <div className="total-amount">Rs. {cart.total ?? 0}</div>
+                <strong>Total:</strong> Rs.{cart.total}
               </div>
-
-              {cart.promocode && <div className="promo">Promocode: {cart.promocode}</div>}
             </div>
 
-            <div className="cp-actions">
-              <button className="btn ghost" onClick={() => setShowModal(false)}>Close</button>
-              <button
-                className="btn"
-                onClick={handleCOD}
-                disabled={actionLoading.cod}
-              >
-                {actionLoading.cod ? "Placing..." : "COD"}
-              </button>
-              <button
-                className="btn primary"
-                onClick={handlePayNow}
-                disabled={actionLoading.pay}
-              >
-                {actionLoading.pay ? "Processing..." : "Pay Now"}
-              </button>
+            <div className="modal-actions">
+              <button onClick={handleCOD} disabled={actionLoading.cod}>{actionLoading.cod ? "Placing..." : "COD"}</button>
+              <button onClick={openPayModal}>Pay Now</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPayModal && (
+        <div className="modal-backdrop" onClick={() => setShowPayModal(false)}>
+          <div className="modal pay-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Pay Now</h3>
+            <button className="close" onClick={() => setShowPayModal(false)}>✕</button>
+
+            <div className="modal-content">
+              <input type="text" placeholder="Card Number" value={cardNumber} onChange={e => setCardNumber(e.target.value)} />
+              <input type="password" placeholder="CVV" value={cardcvv} onChange={e => setCardCvv(e.target.value)} />
+              <div className="total-row">
+                <strong>Total:</strong> Rs.{cart?.total ?? 0}
+              </div>
+            </div>
+
+            <div className="modal-actions">
+              <button onClick={() => setShowPayModal(false)}>Cancel</button>
+              <button onClick={handlePayNow} disabled={actionLoading.pay}>{actionLoading.pay ? "Processing..." : "Pay Now"}</button>
             </div>
           </div>
         </div>

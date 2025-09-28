@@ -14,7 +14,7 @@ export default function MediaUpload(file){
         }
 
         const timeStamp = new Date().getTime()
-        const newName = timeStamp+file.name
+        const newName = `${timeStamp}_${file.name}`;
 
         supabase.storage.from("images").upload(newName, file, {
             upsert : false,
@@ -23,7 +23,7 @@ export default function MediaUpload(file){
             const publicUrl = supabase.storage.from("images").getPublicUrl(newName).data.publicUrl
             resolve(publicUrl)
         }).catch((e) => {
-            reject("Error occured in supabase connection")
+            reject(`Supabase upload error: ${e.message || e}`)
         })
     })
 

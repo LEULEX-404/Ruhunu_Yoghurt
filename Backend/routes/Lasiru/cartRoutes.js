@@ -1,13 +1,11 @@
 // routes/cartRoutes.js
 import express from "express";
-import { getCartById, payNow, codOrder } from "../../controllers/Lasiru/CartController.js";
+import { getCartByUser } from "../../controllers/Lasiru/CartController.js";
 
 const router = express.Router();
 
-router.get("/preview/:id", getCartById);
+// ✅ now fetch cart with userId instead of cartId
+router.get("/preview/:userId", getCartByUser);
 
-router.post("/:id/pay", payNow);
-
-router.post("/:id/cod", codOrder);
 
 export default router;

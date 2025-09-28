@@ -15,7 +15,9 @@ import ProductPage from './Pages/customer/productsPage';
 import ProductOverViewPage from './Pages/customer/productOverview'
 import CartPage from './Pages/customer/cart';
 import { Toaster } from 'react-hot-toast';
-import PaymentPage from './Pages/customer/payment';
+
+//import PaymentPage from './Pages/customer/payment';
+import PaymentPage from './Pages/PaymentPage';
 import AdminPage from './Pages/adminPage';
 import SearchProductPage from './Pages/customer/searchProduct';
 

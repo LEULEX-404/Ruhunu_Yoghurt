@@ -11,15 +11,16 @@ export default function AddProductPage(){
     const [altNames, setAltNames] = useState('')
     const [description, setDescription] = useState('')
     const [images, setImages] = useState([])
-    const [labelledPrice, setLabelledPrice] = useState(0)
-    const [price, setPrice] = useState(0)
+    const [labelledPrice, setLabelledPrice] = useState('')
+    const [price, setPrice] = useState('')
     const [expDate, setExpDate] = useState('')
-    const [weight, setWeight] = useState(0)
+    const [weight, setWeight] = useState('')
     const [unit, setUnit] = useState('kg')
     const [isAvailable, setIsAvailable] = useState(true)
     const navigate = useNavigate()
 
     async function AddProduct(e) {
+        e.preventDefault();
         const token = localStorage.getItem("token")
 
         if(token == null){
@@ -34,7 +35,7 @@ export default function AddProductPage(){
 
         const promisesArray = []
         for (let i = 0; i < images.length; i++) {
-            promisesArray = MediaUpload(images[i])
+            promisesArray.push(MediaUpload(images[i]))
         }
 
         try {
@@ -49,17 +50,17 @@ export default function AddProductPage(){
                 altNames : altNamesArray,
                 description : description,
                 images : imageUrls,
-                labelledPrice : labelledPrice,
-                price : price,
+                labelledPrice : Number(labelledPrice),
+                price : Number(price),
                 expDate : expDate,
-                weight : weight,
+                weight : Number(weight),
                 unit : unit,
                 isAvailable : isAvailable
             }
 
             await axios.post(`http://localhost:8070/api/products`, product, {
                 headers : {
-                    "Authorization" : "Bearer" + token
+                    "Authorization" : "Bearer " + token
                 }
             }).then((res) => {
                 toast.success("Product added successfully")
@@ -119,7 +120,7 @@ export default function AddProductPage(){
                     className="form-input" 
                     value={labelledPrice} 
                     onChange={(e) =>
-                        setLabelledPrice(e.target.value)}
+                        setLabelledPrice(Number(e.target.value))}
                     required 
                 />
                 <input
@@ -128,7 +129,7 @@ export default function AddProductPage(){
                     className="form-input" 
                     value={price} 
                     onChange={(e) =>
-                        setPrice(e.target.value)} 
+                        setPrice(Number(e.target.value))} 
                 />
                 <input
                     type="date" 
@@ -145,7 +146,7 @@ export default function AddProductPage(){
                     className="form-input" 
                     value={weight}
                     onChange={(e) =>
-                        setWeight(e.target.value)} 
+                        setWeight(Number(e.target.value))} 
                     required 
                 />
                 <select

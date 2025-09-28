@@ -1,4 +1,4 @@
-.dashboard-container {
+.HR-dashboard-container {
   display: flex;
   min-height: 100vh;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -6,7 +6,7 @@
 }
 
 
-.wrapper {
+.HR-wrapper {
   display: flex;
   height: 100vh;
   width: 100vw; 
@@ -15,7 +15,7 @@
 
 
 .HR-sidebar {
-  width: 260px;
+  width: 300px;
   background: linear-gradient(180deg, #6366f1 0%, #4338ca 100%);
   color: white;
   -webkit-backdrop-filter: blur(10px);
@@ -44,7 +44,6 @@
 .HR-sidebar-menu {
   list-style: none;
   padding: 0;
-  margin-top: 15px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -112,6 +111,7 @@
 .HR-manager-name {
   font-size: 14px;
   font-weight: bold;
+  color: white;
 }
 
 .HR-manager-role {
@@ -185,11 +185,11 @@
   letter-spacing: 0.5px;
 }
 
-.dashboard-view h2{
+.HR-dashboard-view h2{
   text-align: center;
   margin-bottom: 32px;
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 700px;
   color: #4e73df;
   letter-spacing: 0.5px;
 }
@@ -202,40 +202,36 @@
   margin-top: 20px;
 }
 
-.HR-stat-card {
+.stat-card {
   background: #fff;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-  border-left: 10px solid #007bff;
   transition: transform 0.2s ease-in-out;
 }
 
-.stats-row span{
+.stat-card span{
   font-size: 26px;
-  font-weight: 600;
+  font-weight: 1000;
 }
 
-.HR-stat-card:hover {
+.stat-card:hover {
   transform: translateY(-5px);
 }
 
-.HR-stat-card h3 {
-  font-size: 16px;
+.stat-card h3 {
+  font-size: 20px;
   font-weight: 600;
-  color: #555;
+  color: #ffffff;
 }
 
-.HR-stat-card p {
+.stat-card p {
   font-size: 28px;
   font-weight: bold;
   margin-top: 10px;
   color: #007bff;
 }
 
-.stat-card h3{
-  font-size: 20px;
-}
 
 .stat-blue { border-left-color: #007bff; color: #007bff; }
 .stat-green { border-left-color: #28a745; color: #28a745; }
@@ -536,20 +532,20 @@
 }
 
 /* Form layout */
-.add-form {
+.HR-add-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.form-group {
+.HR-form-group {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
 /* Inputs */
-.add-form input {
+.HR-add-form input {
   padding: 12px 15px;
   border-radius: 10px;
   border: 1px solid #ddd;
@@ -558,7 +554,7 @@
   background: #f9f9fb;
 }
 
-.add-form input:focus {
+.HR-add-form input:focus {
   border-color: #4e73df;
   background: #fff;
   box-shadow: 0 0 8px rgba(78, 115, 223, 0.2);
@@ -591,7 +587,7 @@
     padding: 20px;
   }
 
-  .add-form input {
+  .HR-add-form input {
     font-size: 13px;
     padding: 10px 12px;
   }
@@ -647,7 +643,7 @@
 }
 
 /* Form inputs inside modal */
-.modal-content .form-group {
+.modal-content .HR-form-group {
   display: flex;
   flex-direction: column;
   gap: 12px;

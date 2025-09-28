@@ -210,3 +210,28 @@ export async function searchProducts(req, res){
         })
     }
 }
+
+export async function getDashboardStats(req, res) {
+    try {
+        const availableCount = await Product.countDocuments({ isAvailable: true });
+        const unavailableCount = await Product.countDocuments({ isAvailable: false });
+
+        const today = new Date();
+        const nextWeek = new Date();
+        nextWeek.setDate(today.getDate() + 7);
+
+        const expiringProducts = await Product.find(
+            { expDate: { $gte: today, $lte: nextWeek } },
+            { productId: 1, _id: 0 }
+        );
+
+        res.json({
+            availableCount,
+            unavailableCount,
+            expiringProducts
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }    
+}

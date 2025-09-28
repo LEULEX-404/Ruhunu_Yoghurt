@@ -73,7 +73,7 @@ export default function LoginPage() {
       } else if (data.user.role === "customer") {
         toast.success("Welcome back! Redirecting to your profile...");
         setTimeout(() => {
-          window.location.href = "/userProfile";
+          window.location.href = "/products";
         }, 1500);
       } else {
         toast.error("❌ Unauthorized role. Please contact admin.");
@@ -177,7 +177,7 @@ export default function LoginPage() {
                     : user.role === "Delivery Manager"
                     ? (window.location.href = "/deliveryDashboard")
                     : user.role === "Product Manager"
-                    ? (window.location.href = "/productDashboard")
+                    ? (window.location.href = "/admin/")
                     : user.role === "Order Manager"
                     ? (window.location.href = "/orderDashboard")
                     : user.role === "Stock Manager"

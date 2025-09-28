@@ -346,9 +346,9 @@ const validateUpdateForm = () =>{
 
     return(
 
-        <div className = {`dashboard-container ${darkMode ? 'dark':''}`}>
+        <div className = {`HR-dashboard-container ${darkMode ? 'dark':''}`}>
             <Toaster position="bottom-center" richColors />
-            <div className="wrapper">
+            <div className="HR-wrapper">
                 <aside className="HR-sidebar">
                     <div className="HR-sidebar-header">
                         <h2>Human & Resource Management</h2>
@@ -427,7 +427,7 @@ const validateUpdateForm = () =>{
                     
 
                     {view === 'dashboard' && (
-                        <div className='dashboard-view'>
+                        <div className='HR-dashboard-view'>
                           <h2>Welcome to the HR Dashboard</h2>
                                             
                           <div className="HR-stats-container">
@@ -469,8 +469,8 @@ const validateUpdateForm = () =>{
                             <div className = 'add-employee-form'>
                                 <h2>ADD NEW EMPLOYEE</h2>
 
-                                <form onSubmit = { handleAddEmployee } className = 'add-form'>
-                                    <div className = 'form-group'>
+                                <form onSubmit = { handleAddEmployee } className = 'HR-add-form'>
+                                    <div className = 'HR-form-group'>
                                         <input type = 'text' placeholder='Employee ID' value={newEmployee.employeeID} onChange={(e) => setNewEmployee({...newEmployee, employeeID: e.target.value})}/>
 
                                         <input type = 'text' placeholder='Name' value={newEmployee.name} onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}/>
@@ -828,7 +828,7 @@ const validateUpdateForm = () =>{
                             <div className = 'modal-content'>
                                 <h2>Assign Role to {selectedEmployee.name}</h2>
                                     <form onSubmit = {handleAssignRole}>
-                                        <div className = 'form-group'>
+                                        <div className = 'HR-form-group'>
                                             <label>Select Role</label>
                                             <select value={selectedEmployee?.position || 'Unassigned'} onChange={(e) => setSelectedEmployee({...selectedEmployee, position: e.target.value})} required>
                                                 <option value = 'Unassigned'>Unassigned</option>
@@ -873,7 +873,7 @@ const validateUpdateForm = () =>{
                             <div className="modal-content">
                                 <h2>Edit Profile: {editEmployee?.name}</h2>
                                 <form onSubmit={handleUpdateEmployee}>
-                                    <div className="form-group">
+                                    <div className="HR-form-group">
                                         <input 
                                             type="text" 
                                             placeholder="Name" 

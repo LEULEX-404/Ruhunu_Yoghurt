@@ -324,7 +324,7 @@ export default function DeliveryDashboard()
       }
 
       return true;
-    };
+    }; 
 
     const toggleDarkMode = () =>{
         setDarkMode(!darkMode);
@@ -359,7 +359,7 @@ export default function DeliveryDashboard()
                       className="manager-avatar"
                     />
                     <div>
-                      <h4 className="manager-name"><p>{manager?.position}</p></h4>
+                      <h4 className="manager-name"><p>{manager?.position}</p></h4> {/*safe way access not crash*/}
                       <p className="manager-role">{manager?.name}</p>
                       <p className="manager-role">{manager?.employeeID}</p>
                       <p className="manager-role">{manager?.email}</p>
@@ -407,7 +407,6 @@ export default function DeliveryDashboard()
                   value={deliverySearch}
                   onChange={(e) => {
                       setDeliverySearch(e.target.value);
-                      searchDeliveriesAndDrivers(e.target.value);
                     }}
                   className="search-input"
                 />
@@ -450,6 +449,7 @@ export default function DeliveryDashboard()
                             <p>{order.customerName}</p>
                             <p>Total Rs.{order.total}</p>
                             <p>Address: {order.address}</p>
+                            <p>Phone: {order.phone}</p>
                             <p>Weight: {order.productWeight} kg</p>
                           </div>
 
@@ -478,7 +478,7 @@ export default function DeliveryDashboard()
             {deliveries.map(del => (
           <div
             key={del._id}
-            className={`card ${selectDeliveries.some(d => d._id === del._id) ? "selected" : ""}`}
+            className={`delvery-card ${selectDeliveries.some(d => d._id === del._id) ? "selected" : ""}`}
             onClick={() => handleSelectDelivery(del)}
             >
             <p><b>{del.orderID}</b></p>
@@ -509,7 +509,7 @@ export default function DeliveryDashboard()
           .map(driver => (
         <div
           key={driver._id}
-          className={`card ${selectDriver?._id === driver._id ? "selected" : ""}`}
+          className={`delvery-card ${selectDriver?._id === driver._id ? "selected" : ""}`}
           onClick={() => handleSelectDriver(driver)}
           >
           <p><b>{driver.name}</b></p>

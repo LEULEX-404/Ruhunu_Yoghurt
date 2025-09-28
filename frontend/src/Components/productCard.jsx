@@ -5,10 +5,9 @@ import { FaStar } from "react-icons/fa"
 export default function ProductCard({ product }) {
 
     const isExpiringSoon = () => {
-        if(!product.expDate){
+        if (!product.expDate) {
             return false
         }
-
 
         const expDate = new Date(product.expDate)
         const today = new Date()
@@ -24,7 +23,15 @@ export default function ProductCard({ product }) {
                 <img
                     src={product.images?.[0] || "https://via.placeholder.com/300"}
                     alt={product.name}
-                    className="product-card-image" />
+                    className="product-card-image"
+                />
+                {
+                    isExpiringSoon() && (
+                        <span className="product-card-expire-badge">
+                            Expire within 7 days
+                        </span>
+                    )
+                }
             </div>
 
             <div className="product-card-info">
@@ -34,44 +41,50 @@ export default function ProductCard({ product }) {
                     </h2>
                     <p className="product-card-description">
                         {
-                            product.description.length > 60 ?
-                            product.description.slice(0, 57) + "..." :
-                            product.description
+                            product.description.length > 60
+                                ? product.description.slice(0, 57) + "..."
+                                : product.description
                         }
                     </p>
                 </div>
 
                 <div className="product-card-price-stock">
                     <div>
-                        {product.labelledPrice > product.price && (
-                            <span className="product-card-labelled-price">
+                        {product.price > 0 ? (
+                            <>
+                                {product.labelledPrice > product.price && (
+                                    <span className="product-card-labelled-price">
+                                        {product.labelledPrice}
+                                    </span>
+                                )}
+                                <span className="product-card-price">
+                                    {product.price}
+                                </span>
+                            </>
+                        ) : (
+                            <span className="product-card-price">
                                 {product.labelledPrice}
                             </span>
                         )}
-                        <span className="product-card-price">
-                            {product.price}
-                        </span>
                     </div>
                     <span
                         className={`product-card-stock ${product.isAvailable ? "InStock" : "Out-of-stock"}`}>
-                            {product.isAvailable ? "In Stock" : "Out of Stock"}
+                        {product.isAvailable ? "In Stock" : "Out of Stock"}
                     </span>
                 </div>
 
                 <div className="product-card-rating">
-                    <FaStar className="product-card-rating"/>
+                    <FaStar className="product-card-rating" />
                     <span>
                         {product.rating.toFixed(1)} ({product.numRatings} ratings)
                     </span>
                 </div>
 
                 <button
-                    disabled = {!product.isAvailable}
-                    className={`product-card-button ${
-                        product.isAvailable ? "available" : "unavailable"
-                    }`}>
-                        {product.isAvailable ? "Buy Now" : "Unavailable"}
-                    </button>
+                    disabled={!product.isAvailable}
+                    className={`product-card-button ${product.isAvailable ? "available" : "unavailable"}`}>
+                    {product.isAvailable ? "Buy Now" : "Unavailable"}
+                </button>
             </div>
         </Link>
     )

@@ -53,6 +53,31 @@ export default function ProductOverViewPage() {
         await ratingSubmit(ratingValue);
     };
 
+    const handleAddToCart = async () => {
+    try {
+        const token = localStorage.getItem('token'); // assuming JWT stored
+        const response = await axios.post(
+            "http://localhost:8070/api/cart/add",
+            {
+                customerId: id,
+                productId: product._id,
+                quantity: 1,
+                price: product.price,
+                weight: product.weight // optional if you store weight
+            },
+            {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+        );
+        toast.success(`${product.name} added to cart!`);
+        console.log("Cart after add:", response.data);
+    } catch (err) {
+        console.log(err);
+        toast.error("Failed to add to cart");
+    }
+};
+
+
     return (
         <>
             {!product ? (
@@ -137,13 +162,9 @@ export default function ProductOverViewPage() {
                             <div className="product-actions">
                                 <button
                                     className="add-to-cart-button"
-                                    onClick={() => {
-                                        console.log("Old Cart")
-                                        console.log(getCart(id));
-                                        addToCart(id, product, 1)
-                                        console.log("New Cart")
-                                        console.log(getCart(id))
-                                    }}>
+                                    onClick={
+                                        handleAddToCart
+                                    }>
                                     Add to Cart
                                 </button>
                                 <button

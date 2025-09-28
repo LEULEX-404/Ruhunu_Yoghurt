@@ -144,6 +144,82 @@
   background: #f9fafb;
 }
 
+/* Dashboard Container */
+.manage-order-dashboard-view {
+  padding: 20px;
+}
+
+.manage-order-dashboard-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+  color: #1e293b;
+}
+
+/* Row Layout */
+.manage-order-stats-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Stat Box Style */
+.manage-order-stat-box {
+  flex: 1;
+  min-width: 220px;
+  padding: 25px;
+  border-radius: 15px;
+  color: #fff;
+  text-align: center;
+  font-family: "Segoe UI", sans-serif;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.manage-order-stat-box:hover {
+  transform: translateY(-6px);
+}
+
+.manage-order-stat-box h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.manage-order-stat-box span {
+  font-size: 32px;
+  font-weight: bold;
+  display: block;
+}
+
+.manage-order-stat-box p {
+  font-size: 13px;
+  margin-top: 8px;
+  opacity: 0.9;
+}
+
+/* Gradient Backgrounds like HR Dashboard */
+.box-blue {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.box-green {
+  background: linear-gradient(135deg, #22c55e, #15803d);
+}
+
+.box-yellow {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.box-purple {
+  background: linear-gradient(135deg, #a855f7, #7e22ce);
+}
+
+
+
+
 /* =========================
    Promocode Section Layout
 ========================= */
@@ -462,5 +538,186 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+  }
+}
+
+/* =========================
+   Orders Section
+========================= */
+.order-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.order-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 2px;
+  margin-bottom: 12px;
+}
+
+.order-topbar h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.order-cards-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.manage-order-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.manage-order-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.order-status {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  text-transform: capitalize;
+}
+
+.order-status.pending { background: #fbbf24; }
+.order-status.approved { background: #22c55e; }
+.order-status.ready-to-assign { background: #ef44ec; }
+.order-status.completed { background: #0ea5e9; }
+.order-status.cancelled { background: #e00909; }
+/* Removed invalid selector .status["pending"] */
+
+.order-details p,
+.order-items p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #334155;
+}
+
+.order-items strong {
+  display: block;
+  margin-top: 6px;
+  margin-bottom: 4px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .order-cards-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   Unique Approve / Cancel Buttons
+========================= */
+.order-actions-unique .ord-btn.approve {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.order-actions-unique .ord-btn.approve:hover {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(22, 163, 74, 0.4);
+}
+
+.order-actions-unique .ord-btn.cancel {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.order-actions-unique .ord-btn.cancel:hover {
+  background: linear-gradient(135deg, #b91c1c, #7f1d1d);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(185, 28, 28, 0.4);
+}
+
+/* Payment Cards */
+.manage-order-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.manage-order-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.order-status.completed {
+  background: #0ea5e9;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: capitalize;
+}
+
+.order-details p,
+.order-items p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #334155;
+}
+
+.order-items strong {
+  display: block;
+  margin-top: 6px;
+  margin-bottom: 4px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .order-cards-wrapper {
+    grid-template-columns: 1fr;
   }
 }

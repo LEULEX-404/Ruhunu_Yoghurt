@@ -13,10 +13,22 @@ function AddPromocodeModal({ fetchPromocodes, onClose }) {
       toast.error("Code must be at least 3 characters long.");
       return false;
     }
-    if (!discountValue || Number(discountValue) <= 0) {
-      toast.error("Discount value must be greater than 0.");
+    if (!discountValue || Number(discountValue) <= 0 ) {
+      toast.error("Discount value must be greater than 0 and less than 50.");
       return false;
     }
+
+
+    if (discountType === 'percentage' && (Number(discountValue) <= 0 || Number(discountValue) > 50)) {
+      toast.error("Percentage discount must be between 1 and 50.");
+      return false;
+    }
+
+    if (discountType === 'fixed' && (Number(discountValue) <= 0 || Number(discountValue) > 1500)) {
+      toast.error("Fixed discount must be between 1 and 1500.");
+      return false;
+    }
+
     if (!expiryDate) {
       toast.error("Please select an expiry date.");
       return false;
@@ -28,8 +40,8 @@ function AddPromocodeModal({ fetchPromocodes, onClose }) {
       toast.error("Expiry date cannot be in the past.");
       return false;
     }
-    if (!usageLimit || Number(usageLimit) < 1) {
-      toast.error("Usage limit must be at least 1.");
+    if (!usageLimit || Number(usageLimit) < 1 || Number(usageLimit) > 100) {
+      toast.error("Usage limit must be more than 1 and less than 100");
       return false;
     }
     return true;
@@ -86,7 +98,6 @@ function AddPromocodeModal({ fetchPromocodes, onClose }) {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="e.g. SUMMER23"
-            required
           />
 
           <label>Discount Type</label>
@@ -101,7 +112,6 @@ function AddPromocodeModal({ fetchPromocodes, onClose }) {
             value={discountValue}
             onChange={(e) => setDiscountValue(e.target.value)}
             placeholder="e.g. 10"
-            required
           />
 
           <label>Expiry Date</label>
@@ -109,7 +119,6 @@ function AddPromocodeModal({ fetchPromocodes, onClose }) {
             type="date"
             value={expiryDate}
             onChange={(e) => setExpiryDate(e.target.value)}
-            required
           />
 
           <label>Usage Limit</label>

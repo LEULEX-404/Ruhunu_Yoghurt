@@ -10,7 +10,7 @@ import DriverPortal from './Pages/DriverPortal';
 import UserProfile from './Pages/UserProfile';
 import HomePage from './Pages/HomePage';
 import OrderDashboard from './Pages/OrderDashboard';
-import CartPreview from "./Components/CartPreview";
+import CartPreview from './Components/CartPreview';
 import ProductPage from './Pages/customer/productsPage';
 import ProductOverViewPage from './Pages/customer/productOverview'
 import CartPage from './Pages/customer/cart';
@@ -47,6 +47,7 @@ function Appwrapper() {
       <Route path='/products' element = {<ProductPage/>}/>
       <Route path='/overview/:id' element={<ProductOverViewPage/>}/>
       <Route path='/cart' element={<CartPage/>}/>
+      <Route path='/cart/preview' element={<CartPage/>}/>
       <Route path='/payment' element={<PaymentPage/>}/>
 
       <Route path='/search' element={<SearchProductPage/>}/>

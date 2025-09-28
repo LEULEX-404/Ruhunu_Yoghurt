@@ -284,8 +284,7 @@ const validateUpdateForm = () =>{
           ]
         });
       };
-    
-      
+
 
     const handleAssignRole = async (e) =>{
         e.preventDefault();

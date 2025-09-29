@@ -1,8 +1,8 @@
 import './App.css';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Routes, Link, useLocation, Navigate } from 'react-router-dom';
-import { Toaster } from "react-hot-toast";
 
+import { Toaster } from "react-hot-toast";
 
 import HrDashboard from './Pages/HrDashboard';
 import DeliveryDashboard from './Pages/DeliveryDashboard';
@@ -12,6 +12,17 @@ import DriverPortal from './Pages/DriverPortal';
 import UserProfile from './Pages/UserProfile';
 import HomePage from './Pages/HomePage';
 import OrderDashboard from './Pages/OrderDashboard';
+import CartPreview from './Components/CartPreview';
+import ProductPage from './Pages/customer/productsPage';
+import ProductOverViewPage from './Pages/customer/productOverview'
+import CartPage from './Pages/customer/cart';
+import { Toaster } from 'react-hot-toast';
+
+//import PaymentPage from './Pages/customer/payment';
+import PaymentPage from './Pages/PaymentPage';
+import AdminPage from './Pages/adminPage';
+import SearchProductPage from './Pages/customer/searchProduct';
+
 
 import AddSupplierPage from './Pages/admin/addSupplier';
 import AddRawMaterialPage from './Pages/admin/addRawmaterial';
@@ -34,6 +45,14 @@ function Appwrapper() {
 
   return(
     <div>
+
+       <Toaster position='top-right'/>
+    <Routes>
+
+
+      <Route path="/" element={<Navigate to="/home" replace/>} />
+
+
     <Routes>
 
       <Route path="/" element={<Navigate to="/login" replace/>} />
@@ -44,6 +63,18 @@ function Appwrapper() {
       <Route path="/deliveryDashboard" element ={<DeliveryDashboard/>} />
       <Route path="/attendence" element ={<AttendencePage/>} />
       <Route path="/driverPortal" element ={<DriverPortal/>} />
+      <Route path="/orderDashboard" element ={<OrderDashboard/>} />
+      <Route path="/cart/preview" element ={<CartPreview/>} />
+
+      <Route path='/products' element = {<ProductPage/>}/>
+      <Route path='/overview/:id' element={<ProductOverViewPage/>}/>
+      <Route path='/cart' element={<CartPage/>}/>
+      <Route path='/cart/preview' element={<CartPage/>}/>
+      <Route path='/payment' element={<PaymentPage/>}/>
+
+      <Route path='/search' element={<SearchProductPage/>}/>
+      <Route path='/admin/*' element={<AdminPage/>}/>
+    </Routes>
       <Route path="/orderDashboard" element={<OrderDashboard />} />
       <Route path="/addSupplier" element={<AddSupplierPage/>} />
       <Route path="/addRawmaterial" element={<AddRawMaterialPage/>}/>
@@ -72,7 +103,6 @@ function Appwrapper() {
           },
         }}
       />
-    
     </div>
   )
 }

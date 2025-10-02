@@ -81,6 +81,8 @@ function Appwrapper() {
         <Route path="/addrawmaterialform" element={<AddRawMaterialForm />} />
         <Route path="/rawmaterialhistory" element={<RawMaterialWithHistory />} />
         <Route path="/addproductform" element={<AddRemoveProductForm />} />
+        <Route path="/rawmaterialTable" element={<RawMaterialTable />} />
+
 
         {/* Customer */}
         <Route path="/products" element={<ProductPage />} />

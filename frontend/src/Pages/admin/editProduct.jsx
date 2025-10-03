@@ -7,6 +7,11 @@ import "../../Css/editProduct.css"
 
 export default function EditProductPage() {
 
+     function formDateForInput(dateString){
+        if(!dateString) return "";
+        return new Date(dateString).toISOString().split("T")[0]
+    }
+
     const location = useLocation()
     const [productId, setProductId] = useState(location.state.productId)
     const [name, setName] = useState(location.state.name)
@@ -15,7 +20,7 @@ export default function EditProductPage() {
     const [images, setImages] = useState([])
     const [labelledPrice, setLabelledPrice] = useState(location.state.labelledPrice)
     const [price, setPrice] = useState(location.state.price)
-    const [expDate, setExpDate] = useState(location.state.expDate)
+    const [expDate, setExpDate] = useState(formDateForInput(location.state.expDate))
     const [weight, setWeight] = useState(location.state.weight)
     const [unit, setUnit] = useState(location.state.unit)
     const [isAvailable, setIsAvailable] = useState(location.state.isAvailable)
@@ -26,6 +31,22 @@ export default function EditProductPage() {
 
         if (token == null) {
             toast.error("Please login first")
+            return
+        }
+
+        if(Number(weight) <= 0 || Number(weight) > 20){
+            toast.error("Product weight must be greater than 0 and less than 20kg")
+            return
+        }
+
+        const today = new Date()
+        const selectedDate = new Date(expDate)
+        if(
+            selectedDate.getFullYear() === today.getFullYear() &&
+            selectedDate.getMonth() === today.getMonth() && 
+            selectedDate.getDate() === today.getDate()
+        ){
+            toast.error("Already Expired!")
             return
         }
 
@@ -54,13 +75,13 @@ export default function EditProductPage() {
                 images: imageUrls,
                 labelledPrice: labelledPrice,
                 price: price,
-                expDate: expDate,
+                expDate: new Date(expDate).toISOString(),
                 weight: weight,
                 unit: unit,
                 isAvailable: isAvailable
             }
 
-            axios.put(`http://localhost:8070/api/products` + productId, product, {
+            axios.put(`http://localhost:8070/api/products/` + productId, product, {
                 headers: {
                     "Authorization": "Bearer " + token
                 }
@@ -116,6 +137,7 @@ export default function EditProductPage() {
             />
             <input
                 type="file"
+                multiple
                 placeholder="Images"
                 className="form-input file-input"
                 onChange={(e) => {
@@ -188,7 +210,7 @@ export default function EditProductPage() {
                 </select>
             </div>
             <div className="form-actions">
-                <Link to="/admin/products" className="">Cancel</Link>
+                <Link to="/admin/products" className="cancel-btn">Cancel</Link>
                 <button
                     className="btn submit-btn"
                     onClick={updateProduct}>

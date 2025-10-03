@@ -67,7 +67,7 @@ export default function AddSupplierPage() {
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         <input type="text" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} required />
         <input type="text" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} required />
-        <input type="date" placeholder="Schedule" value={schedule} onChange={(e) => setSchedule(e.target.value)} required />
+        
 
         <div className="button-container">
           <Link to="/admin/suppliers" className="btn btn-cancel">Cancel</Link>

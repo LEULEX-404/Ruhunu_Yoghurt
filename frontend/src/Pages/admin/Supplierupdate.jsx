@@ -24,18 +24,21 @@ export default function UpdateSupplierPage() {
   }, [id]);
 
   function handleChange(e) {
-    setSupplier({ ...supplier, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    // Prevent editing the ID
+    if (name === "SID") return;
+    setSupplier({ ...supplier, [name]: value });
   }
 
   // Validation function
   function validateSupplier() {
-    if (!supplier.supplierId.trim()) return "Supplier ID is required";
-    if (!supplier.name.trim()) return "Name is required";
-    if (!supplier.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
+    if (!supplier?.SID?.trim()) return "Supplier ID is required";
+    if (!supplier?.name?.trim()) return "Name is required";
+    if (!supplier?.email?.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
       return "Invalid email format";
-    if (!supplier.phone.match(/^\d{10}$/))
+    if (!supplier?.phone?.match(/^\d{10}$/))
       return "Phone must be 10 digits";
-    if (!supplier.address.trim()) return "Address is required";
+    if (!supplier?.address?.trim()) return "Address is required";
     return null;
   }
 
@@ -71,11 +74,37 @@ export default function UpdateSupplierPage() {
       <form onSubmit={updateSupplier} className="add-form">
         <h2>Update Supplier</h2>
 
-        <input type="text" name="supplierId" value={supplier.supplierId} onChange={handleChange} required />
-        <input type="text" name="name" value={supplier.name} onChange={handleChange} required />
-        <input type="email" name="email" value={supplier.email} onChange={handleChange} required />
-        <input type="text" name="phone" value={supplier.phone} onChange={handleChange} required />
-        <input type="text" name="address" value={supplier.address} onChange={handleChange} required />
+        {/* Read-only Supplier ID */}
+        <input type="text" name="SID" value={supplier.SID} readOnly />
+
+        <input
+          type="text"
+          name="name"
+          value={supplier.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          value={supplier.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="phone"
+          value={supplier.phone}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="address"
+          value={supplier.address}
+          onChange={handleChange}
+          required
+        />
 
         <div className="button-container">
           <Link to="/admin/suppliers" className="btn btn-cancel">Cancel</Link>

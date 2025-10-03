@@ -32,7 +32,7 @@ const RawmaterialsSchema = new mongoose.Schema({
         type: Boolean,
         default: true       
     }
-});
+},{ timestamps: true });
 
 
 export default mongoose.model("Rawmaterial", RawmaterialsSchema);

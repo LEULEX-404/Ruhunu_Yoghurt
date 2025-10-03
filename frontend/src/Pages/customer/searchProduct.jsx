@@ -26,7 +26,7 @@ export default function SearchProductPage(){
                     }
 
                     try{
-                        const response = await axios.get(`http://localhost:8070/api/products/search/` + e.target.value)
+                        const response = await axios.get(`http://localhost:8070/api/products/search/${encodeURIComponent(e.target.value)}` )
                         setProducts(response.data)
                     }catch(error){
                         toast.error("error fetching products")

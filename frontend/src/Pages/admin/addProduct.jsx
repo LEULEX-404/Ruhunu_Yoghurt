@@ -33,6 +33,22 @@ export default function AddProductPage(){
             return
         }
 
+        if(weight <= 0 || weight > 20){
+            toast.error("Product weight must be greater than 0 and less than 20kg")
+            return
+        }
+
+        const today = new Date()
+        const selectedDate = new Date(expDate)
+        if(
+            selectedDate.getFullYear() === today.getFullYear() &&
+            selectedDate.getMonth() === today.getMonth() && 
+            selectedDate.getDate() === today.getDate()
+        ){
+            toast.error("Already Expired!")
+            return
+        }
+
         const promisesArray = []
         for (let i = 0; i < images.length; i++) {
             promisesArray.push(MediaUpload(images[i]))

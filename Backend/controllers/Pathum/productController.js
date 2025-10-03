@@ -29,26 +29,26 @@ export async function getProduct(req, res) {
         const { rating, sort } = req.query;
         const query = {};
 
-        //✅ if not admin, only return available products
-        if (!isAdmin(req)) {
-            query.isAvailable = true;
-        }
+        
+        // if (!isAdmin(req)) {
+        //     query.isAvailable = true;
+        // }
 
-        // ⭐ rating filter
+    
         if (rating) {
             if (rating === "1-3") {
-                query.rating = { $gte: 1, $lte: 3 }; // between 1 and 3
+                query.rating = { $gte: 1, $lte: 3 };
             } else if (rating === "3plus") {
-                query.rating = { $gt: 3 }; // above 3
+                query.rating = { $gt: 3 }; 
             }
         }
 
-        // 💰 sorting
+        
         let sortOption = {};
         if (sort === "price_asc") {
-            sortOption.price = 1; // low to high
+            sortOption.price = 1; 
         } else if (sort === "price_desc") {
-            sortOption.price = -1; // high to low
+            sortOption.price = -1; 
         }
 
         const products = await Product.find(query).sort(sortOption);
@@ -151,14 +151,14 @@ export async function addRating(req, res) {
     try {
         const { productId, newRating } = req.body;
 
-        // validate rating value
+        
         if (newRating < 1 || newRating > 5) {
             return res.status(400).json({
                 message: "Rating must be between 1 and 5",
             });
         }
 
-        // find by your custom productId instead of MongoDB _id
+        
         const product = await Product.findOne({ productId });
 
         if (!product) {
@@ -167,12 +167,12 @@ export async function addRating(req, res) {
             });
         }
 
-        // calculate new average rating
+        
         const newTotalRating = (product.rating * product.numRatings) + newRating;
         const newNumRatings = product.numRatings + 1;
         const newAverageRating = newTotalRating / newNumRatings;
 
-        // update product fields
+
         product.rating = newAverageRating;
         product.numRatings = newNumRatings;
 
@@ -194,14 +194,16 @@ export async function addRating(req, res) {
 
 export async function searchProducts(req, res){
     const searchQuery = req.params.query
+    console.log("Received search query:", searchQuery);
     try {
         const products = await Product.find({
             $or : [
-                {productName : {$regex : searchQuery, $options : "i"}}, //i for case insensitive
+                {name : {$regex : searchQuery, $options : "i"}},
                 {altNames : {$elemMatch : {$regex : searchQuery, $options : "i"}}},
             ],
             isAvailable : true
         })
+        console.log("Products found:", products);
         res.json(products)
     } catch(err) {
         res.status(500).json({

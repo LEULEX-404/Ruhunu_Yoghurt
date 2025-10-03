@@ -1,7 +1,3 @@
-/* ================================
-   Search Product Page Styles
-   ================================ */
-
 .product-search-page {
   padding: 2rem;
   background-color: #f9f9f9;
@@ -39,7 +35,7 @@
   color: #555;
   text-align: center;
   margin-top: 2rem;
-  grid-column: 1 / -1; /* spans full width inside grid */
+  grid-column: 1 / -1;
 }
 
 .loading-message {

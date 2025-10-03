@@ -1,4 +1,3 @@
-/* Main container for the entire slider component */
 .image-slider {
   display: flex;
   flex-direction: column;
@@ -10,14 +9,13 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Main image display area */
 .image-slider-main {
   width: 100%;
-  aspect-ratio: 16 / 9; /* Maintains a consistent aspect ratio */
+  
   overflow: hidden;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: flex; /* Ensures image is centered */
+  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -25,11 +23,10 @@
 .image-slider-main-image {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Prevents image from being cropped or distorted */
+  object-fit: contain;
   transition: opacity 0.4s ease-in-out;
 }
 
-/* Thumbnail gallery container */
 .image-slider-thumbnails {
   display: flex;
   flex-wrap: wrap;

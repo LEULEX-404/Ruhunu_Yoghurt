@@ -28,6 +28,11 @@ export default function HrDashboard() {
     
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    const [attendanceSummary, setAttendanceSummary] = useState({
+      present: 0,
+    });
+    
+
 
     const fetchEmployee = async () =>{
 
@@ -181,7 +186,7 @@ export default function HrDashboard() {
             return false;
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/;
 
         if (!emailRegex.test(newEmployee.email)) {
             toast.error("Please enter a valid email address");
@@ -244,7 +249,7 @@ const validateUpdateForm = () =>{
             return false;
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/;
 
         if (!emailRegex.test(editEmployee.email)) {
             toast.error("Please enter a valid email address");
@@ -344,10 +349,62 @@ const validateUpdateForm = () =>{
   }, 1500);
     };
 
+    const fetchAttendanceSummary = async () => {
+      try {
+        const response = await fetch('http://localhost:8070/api/attendance/summary', {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+    
+        const data = await response.json();
+        setAttendanceSummary(data);
+      } catch (error) {
+        console.error("Error fetching attendance summary:", error);
+      }
+    };
+
+
+    
+
+    useEffect(() => {
+      if (Array.isArray(todaysAttendance) && todaysAttendance.length > 0) {
+        let presentCount = 0;
+        let lateCount = 0;
+    
+        todaysAttendance.forEach((record) => {
+          if (record.checkInTime) {
+            const checkInTime = new Date(record.checkInTime);
+            const lateTime = new Date();
+            lateTime.setHours(12, 30, 0, 0);
+    
+            if (checkInTime <= lateTime) {
+              presentCount++;
+            } else {
+              lateCount++;
+            }
+          }
+        });
+    
+        setAttendanceSummary((prev) => ({
+          ...prev,
+          totalEmployees: employees.length,
+          present: presentCount,
+          late: lateCount,
+          absent: employees.length - (presentCount + lateCount),
+        }));
+      }
+    }, [todaysAttendance, employees]);
+    
+
+    
+
     return(
 
         <div className = {`HR-dashboard-container ${darkMode ? 'dark':''}`}>
-            <Toaster position="bottom-center" richColors />
+          <Toaster position="bottom-center" richColors />
             <div className="HR-wrapper">
                 <aside className="HR-sidebar">
                     <div className="HR-sidebar-header">
@@ -646,6 +703,9 @@ const validateUpdateForm = () =>{
                       <div className="content-card">
                         <div className='attendence-header'>
                             <h2>ATTENDENCE TRACKING SECTION</h2>
+                            <ul>
+                              <li>Present: {attendanceSummary.present}</li>
+                            </ul>
                         </div>
                     
                         <button onClick={() => fetchAttendance()} className="refresh-btn">
@@ -696,7 +756,7 @@ const validateUpdateForm = () =>{
                                   if (record) {
                                       const checkInTime = new Date(record.checkInTime);
                                       const lateTime = new Date();
-                                      lateTime.setHours(9, 30, 0, 0);
+                                      lateTime.setHours(12, 30, 0, 0);
                                   
                                       if (checkInTime <= lateTime) {
                                           status = "Present";

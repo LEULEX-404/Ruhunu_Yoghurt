@@ -337,7 +337,6 @@
   transition: all 0.3s ease;
 }
 
-/* Header */
 .content-card thead {
   background: linear-gradient(135deg, #4e73df, #224abe);
 }
@@ -352,7 +351,6 @@
   text-align: left;
 }
 
-/* Table body */
 .content-card td {
   padding: 12px 16px;
   font-size: 14px;
@@ -360,19 +358,16 @@
   border-top: 1px solid #f0f0f0;
 }
 
-/* Row zebra effect */
 .content-card tbody tr:nth-child(even) {
   background: #f9fafe;
 }
 
-/* Hover */
 .content-card tbody tr:hover {
   background: #eef2ff;
   transition: background 0.3s ease;
   cursor: pointer;
 }
 
-/* Rounded edges first and last column */
 .content-card td:first-child,
 .content-card th:first-child {
   border-top-left-radius: 12px;
@@ -383,7 +378,6 @@
   border-top-right-radius: 12px;
 }
 
-/* Action buttons inside table */
 .content-card .submit-btn,
 .content-card .update,
 .content-card .delete-btn {
@@ -425,8 +419,6 @@
   background: #c0392b;
 }
 
-
-/* Small badge style for statuses */
 .status {
   display: inline-block;
   padding: 4px 10px;
@@ -472,7 +464,7 @@
 }
 
 .search-bar {
-  padding: 10px 15px 10px 40px; /* extra left space for icon */
+  padding: 10px 15px 10px 40px;
   border-radius: 30px;
   border: 1px solid #ddd;
   width: 280px;
@@ -495,7 +487,6 @@
   transform: scale(1.02);
 }
 
-/* Search Icon */
 .search-container .search-icon {
   position: absolute;
   top: 50%;
@@ -506,12 +497,6 @@
   pointer-events: none;
 }
 
-
-
-
-
-
-/* Wrapper card */
 .contend-card {
   max-width: 600px;
   margin: 30px auto;
@@ -531,7 +516,6 @@
   letter-spacing: 0.5px;
 }
 
-/* Form layout */
 .HR-add-form {
   display: flex;
   flex-direction: column;
@@ -544,7 +528,6 @@
   gap: 12px;
 }
 
-/* Inputs */
 .HR-add-form input {
   padding: 12px 15px;
   border-radius: 10px;
@@ -561,7 +544,6 @@
   outline: none;
 }
 
-/* Submit button */
 .submit-btn {
   margin-top: 10px;
   padding: 12px 18px;
@@ -581,7 +563,6 @@
   transform: translateY(-2px);
 }
 
-/* Small responsive support */
 @media (max-width: 480px) {
   .contend-card {
     padding: 20px;
@@ -598,25 +579,19 @@
   }
 }
 
-
-
-
-
-/* Modal overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.45); /* dimmed background */
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-/* Modal card */
 .modal-content {
   background: #ffffff;
   border-radius: 14px;
@@ -627,13 +602,11 @@
   animation: slideDown 0.3s ease;
 }
 
-/* Slide-down animation */
 @keyframes slideDown {
   from { transform: translateY(-20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Modal heading */
 .modal-content h2 {
   font-size: 20px;
   font-weight: 700;
@@ -642,7 +615,6 @@
   text-align: center;
 }
 
-/* Form inputs inside modal */
 .modal-content .HR-form-group {
   display: flex;
   flex-direction: column;
@@ -668,7 +640,6 @@
   background: #fff;
 }
 
-/* Buttons */
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
@@ -709,7 +680,6 @@
   transform: translateY(-1px);
 }
 
-/* Responsive */
 @media (max-width: 480px) {
   .modal-content {
     padding: 20px;
@@ -804,7 +774,6 @@
   letter-spacing: 0.5px;
 }
 
-/* ===== Refresh Button (Neutral Modern) ===== */
 .refresh-btn {
   display: inline-flex;
   align-items: center;
@@ -827,7 +796,6 @@
   box-shadow: 0 6px 14px rgba(0,0,0,0.1);
 }
 
-/* ===== Early Leave Button (Vibrant Gradient) ===== */
 .early-leave-btn {
   display: inline-flex;
   align-items: center;
@@ -849,8 +817,6 @@
   box-shadow: 0 8px 18px rgba(0,0,0,0.18);
 }
 
-
-/* ===== Attendance Table ===== */
 .attendance-table {
   width: 100%;
   border-collapse: separate;
@@ -884,7 +850,6 @@
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* ===== Leave Modal ===== */
 .leave-modal-overlay {
   position: fixed;
   top: 0;
@@ -909,7 +874,6 @@
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* ===== Modal Close Button ===== */
 .leave-close-btn {
   background: transparent;
   border: none;
@@ -926,7 +890,6 @@
   color: #ff4d4f;
 }
 
-/* ===== Modal List ===== */
 .leave-modal-content ul {
   margin-top: 15px;
   list-style: none;
@@ -949,7 +912,6 @@
   background: #d0ebff;
 }
 
-/* ===== Animations ===== */
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
@@ -1014,7 +976,7 @@
 
 .HR-dashboard-container.dark .HR-stat-card {
   background: rgba(40, 40, 40, 0.9);
-  border-left-color: #4e73df; /* Keep left accent */
+  border-left-color: #4e73df;
   color: #eee;
 }
 

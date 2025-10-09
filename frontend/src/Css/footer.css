@@ -1,10 +1,9 @@
-/* Footer Styles */
 .footer {
-  background: #f9f9f9; /* White/light background */
-  color: #333; /* Dark text for contrast */
+  background: #f9f9f9;
+  color: #333;
   font-family: 'Poppins', sans-serif;
   padding-top: 40px;
-  box-shadow: 0 -3px 10px rgba(0,0,0,0.05); /* subtle shadow for separation */
+  box-shadow: 0 -3px 10px rgba(0,0,0,0.05);
 }
 
 .footer-container {
@@ -128,7 +127,6 @@
   color: #888;
 }
 
-/* Responsive */
 @media(max-width: 900px){
   .footer-container {
     flex-direction: column;

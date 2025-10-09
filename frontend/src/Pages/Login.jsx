@@ -15,16 +15,15 @@ export default function LoginPage() {
   const [showChoice, setShowChoice] = useState(false);
   const [user, setUser] = useState(null);
 
-  // eye toggle
   const [showPassword, setShowPassword] = useState(false);
 
-  // === Validation Function ===
   const validateForm = () => {
     if (!form.email.trim()) {
       toast.error("Email is required");
       return false;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(form.email)) {
       toast.error("Enter a valid email address");
       return false;
     }
@@ -87,12 +86,11 @@ export default function LoginPage() {
     <div className="login-container">
       <Toaster position="top-center" richColors />
       <div className="login-wrapper">
-        {/* Left side image */}
+
         <div className="login-image">
           <img src={image} alt="Login Illustration" />
         </div>
 
-        {/* Right side form */}
         <div className="login-card">
           <div className="avatar">
             <span>🙍‍♂️</span>
@@ -149,7 +147,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Register Modal */}
       {showRegister && (
         <div className="register-modal-overlay">
           <div className="register-modal-content">
@@ -164,7 +161,6 @@ export default function LoginPage() {
         </div>
       )}
 
-      {/* Manager Choice Modal */}
       {showChoice && (
         <div className="modal-overlay">
           <div className="modal-content">

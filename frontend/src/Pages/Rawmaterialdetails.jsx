@@ -81,7 +81,7 @@ export default function RawMaterialTable() {
               <th>MID</th>
               <th>Name</th>
               <th>Unit</th>
-              <th>Quantity</th>
+              <th>Current Stock</th>
               <th>Supplier</th>
               <th>Updated At</th>
               <th>Availability</th>

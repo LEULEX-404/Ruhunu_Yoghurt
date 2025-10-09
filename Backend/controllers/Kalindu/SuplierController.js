@@ -58,21 +58,3 @@ export const deleteSupplier = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-// Rate supplier
-export const rateSupplier = async (req, res) => {
-  try {
-    const { rating } = req.body;
-    const supplier = await Supplier.findById(req.params.id);
-
-    if (!supplier) return res.status(404).json({ message: "Supplier not found" });
-
-    // Update average rating
-    supplier.numRatings += 1;
-    supplier.rating = ((supplier.rating * (supplier.numRatings - 1)) + rating) / supplier.numRatings;
-
-    const updatedSupplier = await supplier.save();
-    res.json(updatedSupplier);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};

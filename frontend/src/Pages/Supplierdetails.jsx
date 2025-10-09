@@ -43,28 +43,6 @@ export default function SupplierTable() {
     navigate("/updateSupplier/" + supplier._id, { state: supplier });
   };
 
-  // Render stars for rating
-  const renderStars = (rating) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      if (rating >= i) stars.push(<FaStar key={i} color="gold" />);
-      else if (rating >= i - 0.5) stars.push(<FaStarHalfAlt key={i} color="gold" />);
-      else stars.push(<FaRegStar key={i} color="gold" />);
-    }
-    return stars;
-  };
-
-  // Rate supplier
-  const rateSupplier = async (id, rating) => {
-    try {
-      const res = await axios.post(`/api/suppliers/${id}/rate`, { rating });
-      toast.success("Supplier rated successfully!");
-      setSuppliers(suppliers.map(s => s._id === id ? res.data : s));
-    } catch (err) {
-      toast.error("Failed to rate supplier");
-    }
-  };
-
   if (isLoading) return <div className="supplier-loading">Loading suppliers...</div>;
 
   if (suppliers.length === 0) return (
@@ -87,11 +65,8 @@ export default function SupplierTable() {
               <th>Materials</th>
               <th>Address</th>
               <th>Phone</th>
-              <th>Schedule</th>
-              <th>Rating</th>
-              
               <th>Actions</th>
-              <th>Rate</th>
+             
             </tr>
           </thead>
           <tbody>
@@ -103,10 +78,6 @@ export default function SupplierTable() {
                 <td>{s.materials.join(", ")}</td>
                 <td>{s.address}</td>
                 <td>{s.phone}</td>
-                <td>{s.schedule || s.Shedule ? new Date(s.schedule || s.Shedule).toLocaleDateString() : ""}</td>
-
-                <td>{renderStars(s.rating)}</td>
-                
                 <td className="supplier-table-actions">
                   <button className="edit-btn" onClick={() => updateSupplier(s)}>
                     <FaEdit/>
@@ -115,17 +86,7 @@ export default function SupplierTable() {
                     <FaTrash/>
                   </button>
                 </td>
-                <td className="supplier-table-rate">
-                  {[1,2,3,4,5].map((star) => (
-                    <button 
-                      key={star} 
-                      onClick={() => rateSupplier(s._id, star)}
-                      style={{ background: "transparent", border: "none", cursor: "pointer" }}
-                    >
-                      <FaStar color="gold" />
-                    </button>
-                  ))}
-                </td>
+                
               </tr>
             ))}
           </tbody>

@@ -1,4 +1,4 @@
-.dashboard-container {
+.HR-dashboard-container {
   display: flex;
   min-height: 100vh;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -6,7 +6,7 @@
 }
 
 
-.wrapper {
+.HR-wrapper {
   display: flex;
   height: 100vh;
   width: 100vw; 
@@ -15,7 +15,7 @@
 
 
 .HR-sidebar {
-  width: 260px;
+  width: 300px;
   background: linear-gradient(180deg, #6366f1 0%, #4338ca 100%);
   color: white;
   -webkit-backdrop-filter: blur(10px);
@@ -44,7 +44,6 @@
 .HR-sidebar-menu {
   list-style: none;
   padding: 0;
-  margin-top: 15px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -112,6 +111,7 @@
 .HR-manager-name {
   font-size: 14px;
   font-weight: bold;
+  color: white;
 }
 
 .HR-manager-role {
@@ -185,11 +185,11 @@
   letter-spacing: 0.5px;
 }
 
-.dashboard-view h2{
+.HR-dashboard-view h2{
   text-align: center;
   margin-bottom: 32px;
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 700px;
   color: #4e73df;
   letter-spacing: 0.5px;
 }
@@ -202,40 +202,36 @@
   margin-top: 20px;
 }
 
-.HR-stat-card {
+.stat-card {
   background: #fff;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-  border-left: 10px solid #007bff;
   transition: transform 0.2s ease-in-out;
 }
 
-.stats-row span{
+.stat-card span{
   font-size: 26px;
-  font-weight: 600;
+  font-weight: 1000;
 }
 
-.HR-stat-card:hover {
+.stat-card:hover {
   transform: translateY(-5px);
 }
 
-.HR-stat-card h3 {
-  font-size: 16px;
+.stat-card h3 {
+  font-size: 20px;
   font-weight: 600;
-  color: #555;
+  color: #ffffff;
 }
 
-.HR-stat-card p {
+.stat-card p {
   font-size: 28px;
   font-weight: bold;
   margin-top: 10px;
   color: #007bff;
 }
 
-.stat-card h3{
-  font-size: 20px;
-}
 
 .stat-blue { border-left-color: #007bff; color: #007bff; }
 .stat-green { border-left-color: #28a745; color: #28a745; }
@@ -341,7 +337,6 @@
   transition: all 0.3s ease;
 }
 
-/* Header */
 .content-card thead {
   background: linear-gradient(135deg, #4e73df, #224abe);
 }
@@ -356,7 +351,6 @@
   text-align: left;
 }
 
-/* Table body */
 .content-card td {
   padding: 12px 16px;
   font-size: 14px;
@@ -364,19 +358,16 @@
   border-top: 1px solid #f0f0f0;
 }
 
-/* Row zebra effect */
 .content-card tbody tr:nth-child(even) {
   background: #f9fafe;
 }
 
-/* Hover */
 .content-card tbody tr:hover {
   background: #eef2ff;
   transition: background 0.3s ease;
   cursor: pointer;
 }
 
-/* Rounded edges first and last column */
 .content-card td:first-child,
 .content-card th:first-child {
   border-top-left-radius: 12px;
@@ -387,7 +378,6 @@
   border-top-right-radius: 12px;
 }
 
-/* Action buttons inside table */
 .content-card .submit-btn,
 .content-card .update,
 .content-card .delete-btn {
@@ -429,8 +419,6 @@
   background: #c0392b;
 }
 
-
-/* Small badge style for statuses */
 .status {
   display: inline-block;
   padding: 4px 10px;
@@ -476,7 +464,7 @@
 }
 
 .search-bar {
-  padding: 10px 15px 10px 40px; /* extra left space for icon */
+  padding: 10px 15px 10px 40px;
   border-radius: 30px;
   border: 1px solid #ddd;
   width: 280px;
@@ -499,7 +487,6 @@
   transform: scale(1.02);
 }
 
-/* Search Icon */
 .search-container .search-icon {
   position: absolute;
   top: 50%;
@@ -510,12 +497,6 @@
   pointer-events: none;
 }
 
-
-
-
-
-
-/* Wrapper card */
 .contend-card {
   max-width: 600px;
   margin: 30px auto;
@@ -535,21 +516,19 @@
   letter-spacing: 0.5px;
 }
 
-/* Form layout */
-.add-form {
+.HR-add-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.form-group {
+.HR-form-group {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* Inputs */
-.add-form input {
+.HR-add-form input {
   padding: 12px 15px;
   border-radius: 10px;
   border: 1px solid #ddd;
@@ -558,14 +537,13 @@
   background: #f9f9fb;
 }
 
-.add-form input:focus {
+.HR-add-form input:focus {
   border-color: #4e73df;
   background: #fff;
   box-shadow: 0 0 8px rgba(78, 115, 223, 0.2);
   outline: none;
 }
 
-/* Submit button */
 .submit-btn {
   margin-top: 10px;
   padding: 12px 18px;
@@ -585,13 +563,12 @@
   transform: translateY(-2px);
 }
 
-/* Small responsive support */
 @media (max-width: 480px) {
   .contend-card {
     padding: 20px;
   }
 
-  .add-form input {
+  .HR-add-form input {
     font-size: 13px;
     padding: 10px 12px;
   }
@@ -602,25 +579,19 @@
   }
 }
 
-
-
-
-
-/* Modal overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.45); /* dimmed background */
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-/* Modal card */
 .modal-content {
   background: #ffffff;
   border-radius: 14px;
@@ -631,13 +602,11 @@
   animation: slideDown 0.3s ease;
 }
 
-/* Slide-down animation */
 @keyframes slideDown {
   from { transform: translateY(-20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Modal heading */
 .modal-content h2 {
   font-size: 20px;
   font-weight: 700;
@@ -646,8 +615,7 @@
   text-align: center;
 }
 
-/* Form inputs inside modal */
-.modal-content .form-group {
+.modal-content .HR-form-group {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -672,7 +640,6 @@
   background: #fff;
 }
 
-/* Buttons */
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
@@ -713,7 +680,6 @@
   transform: translateY(-1px);
 }
 
-/* Responsive */
 @media (max-width: 480px) {
   .modal-content {
     padding: 20px;
@@ -808,7 +774,6 @@
   letter-spacing: 0.5px;
 }
 
-/* ===== Refresh Button (Neutral Modern) ===== */
 .refresh-btn {
   display: inline-flex;
   align-items: center;
@@ -831,7 +796,6 @@
   box-shadow: 0 6px 14px rgba(0,0,0,0.1);
 }
 
-/* ===== Early Leave Button (Vibrant Gradient) ===== */
 .early-leave-btn {
   display: inline-flex;
   align-items: center;
@@ -853,8 +817,6 @@
   box-shadow: 0 8px 18px rgba(0,0,0,0.18);
 }
 
-
-/* ===== Attendance Table ===== */
 .attendance-table {
   width: 100%;
   border-collapse: separate;
@@ -888,7 +850,6 @@
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* ===== Leave Modal ===== */
 .leave-modal-overlay {
   position: fixed;
   top: 0;
@@ -913,7 +874,6 @@
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* ===== Modal Close Button ===== */
 .leave-close-btn {
   background: transparent;
   border: none;
@@ -930,7 +890,6 @@
   color: #ff4d4f;
 }
 
-/* ===== Modal List ===== */
 .leave-modal-content ul {
   margin-top: 15px;
   list-style: none;
@@ -953,7 +912,6 @@
   background: #d0ebff;
 }
 
-/* ===== Animations ===== */
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
@@ -961,172 +919,172 @@
 
 
 
-.dashboard-container.dark {
+.HR-dashboard-container.dark {
   background: #121212;
   color: #eee !important;
 }
 
-.dashboard-container.dark h1,
-.dashboard-container.dark h2,
-.dashboard-container.dark h3,
-.dashboard-container.dark h4,
-.dashboard-container.dark h5,
-.dashboard-container.dark h6,
-.dashboard-container.dark p,
-.dashboard-container.dark span,
-.dashboard-container.dark label {
+.HR-dashboard-container.dark h1,
+.HR-dashboard-container.dark h2,
+.HR-dashboard-container.dark h3,
+.HR-dashboard-container.dark h4,
+.HR-dashboard-container.dark h5,
+.HR-dashboard-container.dark h6,
+.HR-dashboard-container.dark p,
+.HR-dashboard-container.dark span,
+.HR-dashboard-container.dark label {
   color: #eee !important;
 }
 
 
-.dashboard-container.dark .HR-sidebar {
+.HR-dashboard-container.dark .HR-sidebar {
   background: rgba(30,30,47,0.95);
   border-right: 1px solid rgba(255,255,255,0.05);
   color: #eee;
 }
 
-.dashboard-container.dark .HR-sidebar-menu li {
+.HR-dashboard-container.dark .HR-sidebar-menu li {
   color: #bbb;
   background: rgba(255,255,255,0.05);
 }
 
-.dashboard-container.dark .HR-sidebar-menu li:hover {
+.HR-dashboard-container.dark .HR-sidebar-menu li:hover {
   background: rgba(78,115,223,0.2);
   color: #fff;
 }
 
-.dashboard-container.dark .HR-sidebar-menu li.active {
+.HR-dashboard-container.dark .HR-sidebar-menu li.active {
   background: #4e73df;
   color: #fff;
 }
 
 
-.dashboard-container.dark .HR-main-content {
+.HR-dashboard-container.dark .HR-main-content {
   background: #1a1a1a;
   color: #eee;
 }
 
-.dashboard-container.dark .topbar{
+.HR-dashboard-container.dark .topbar{
   background: #3c3c3c;
   color: #eee;
 }
 
-.dashboard-container.dark .recent-activities{
+.HR-dashboard-container.dark .recent-activities{
   background: #3c3c3c;
   color: #eee;
 }
 
-.dashboard-container.dark .HR-stat-card {
+.HR-dashboard-container.dark .HR-stat-card {
   background: rgba(40, 40, 40, 0.9);
-  border-left-color: #4e73df; /* Keep left accent */
+  border-left-color: #4e73df;
   color: #eee;
 }
 
-.dashboard-container.dark .HR-stat-card h3 {
+.HR-dashboard-container.dark .HR-stat-card h3 {
   color: #ccc;
 }
 
-.dashboard-container.dark .HR-stat-card p {
+.HR-dashboard-container.dark .HR-stat-card p {
   color: #4e73df;
 }
 
-.dashboard-container.dark .stat-blue { color: #4e73df; }
-.dashboard-container.dark .stat-green { color: #28a745; }
-.dashboard-container.dark .stat-yellow { color: #ffc107; }
-.dashboard-container.dark .stat-purple { color: #6f42c1; }
+.HR-dashboard-container.dark .stat-blue { color: #4e73df; }
+.HR-dashboard-container.dark .stat-green { color: #28a745; }
+.HR-dashboard-container.dark .stat-yellow { color: #ffc107; }
+.HR-dashboard-container.dark .stat-purple { color: #6f42c1; }
 
 
 
-.dashboard-container.dark .content-card {
+.HR-dashboard-container.dark .content-card {
   background: rgba(30,30,47,0.95);
   border: 1px solid rgba(255,255,255,0.05);
   color: #eee;
 }
 
-.dashboard-container.dark table th {
+.HR-dashboard-container.dark table th {
   background: #222;
   color: #fff;
 }
 
-.dashboard-container.dark table td {
+.HR-dashboard-container.dark table td {
   border-top: 1px solid #444;
   color: #eee;
 }
 
-.dashboard-container.dark tr:nth-child(even) {
+.HR-dashboard-container.dark tr:nth-child(even) {
   background: #222;
 }
 
-.dashboard-container.dark tr:hover {
+.HR-dashboard-container.dark tr:hover {
   background: rgba(78,115,223,0.2);
 }
 
 
 
-.dashboard-container.dark input,
-.dashboard-container.dark select,
-.dashboard-container.dark textarea {
+.HR-dashboard-container.dark input,
+.HR-dashboard-container.dark select,
+.HR-dashboard-container.dark textarea {
   background: #222;
   border: 1px solid #444;
   color: #eee;
 }
 
-.dashboard-container.dark input:focus,
-.dashboard-container.dark select:focus,
-.dashboard-container.dark textarea:focus {
+.HR-dashboard-container.dark input:focus,
+.HR-dashboard-container.dark select:focus,
+.HR-dashboard-container.dark textarea:focus {
   border-color: #4e73df;
   box-shadow: 0 0 8px rgba(78,115,223,0.4);
   background: #333;
 }
 
-.dashboard-container.dark .submit-btn,
-.dashboard-container.dark .update,
-.dashboard-container.dark .delete-btn {
+.HR-dashboard-container.dark .submit-btn,
+.HR-dashboard-container.dark .update,
+.HR-dashboard-container.dark .delete-btn {
   color: #fff;
 }
 
-.dashboard-container.dark .submit-btn {
+.HR-dashboard-container.dark .submit-btn {
   background: #4e73df;
 }
 
-.dashboard-container.dark .update {
+.HR-dashboard-container.dark .update {
   background: #28a745;
 }
 
-.dashboard-container.dark .delete-btn {
+.HR-dashboard-container.dark .delete-btn {
   background: #e63946;
 }
 
 
 
 
-.dashboard-container.dark .modal-overlay {
+.HR-dashboard-container.dark .modal-overlay {
   background: rgba(0,0,0,0.6);
 }
 
-.dashboard-container.dark .modal-content {
+.HR-dashboard-container.dark .modal-content {
   background: rgba(30,30,47,0.95);
   color: #eee;
   border: 1px solid rgba(255,255,255,0.05);
 }
 
-.dashboard-container.dark .react-confirm-alert {
+.HR-dashboard-container.dark .react-confirm-alert {
   background: #222;
   color: #eee;
 }
 
-.dashboard-container.dark .react-confirm-alert h1 {
+.HR-dashboard-container.dark .react-confirm-alert h1 {
   color: #fff;
 }
 
-.dashboard-container.dark .react-confirm-alert p {
+.HR-dashboard-container.dark .react-confirm-alert p {
   color: #ccc;
 }
 
-.dashboard-container.dark .react-confirm-alert-button-group button:nth-child(1) {
+.HR-dashboard-container.dark .react-confirm-alert-button-group button:nth-child(1) {
   background-color: #4e73df;
 }
 
-.dashboard-container.dark .react-confirm-alert-button-group button:nth-child(2) {
+.HR-dashboard-container.dark .react-confirm-alert-button-group button:nth-child(2) {
   background-color: #e63946;
 }

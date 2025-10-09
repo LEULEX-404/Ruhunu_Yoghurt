@@ -9,7 +9,14 @@ import userRoutes from './routes/Tharuka/userRoutes.js';
 import driverRoutes from './routes/Imasha/driverRoutes.js';
 import cors from 'cors';
 import productRouter from './routes/Pathum/productRoute.js';
-import paymentRouter from './routes/Pathum/payment.js';
+import promoCodeRouter from './routes/Lasiru/promocoderoutes.js';
+import cartRoutes from './routes/Lasiru/cartRoutes.js'
+import paymentRouter from './routes/Lasiru/paymentRoutes.js';
+import orderRoutes from './routes/Lasiru/orderRoutes.js';
+import cartRouter from './routes/Pathum/cartRoute.js';
+import StockRouter from './routes/Kalindu/StockRoutes.js';
+import RawMaterialRoutes from "./routes/Kalindu/RawmaterialRoutes.js";
+import supplierRoutes from './routes/Kalindu/SuplierRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -24,9 +31,19 @@ app.use('/api/deliveries',deliveryRoutes);
 app.use('/api/attendance', attendenceRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/driver',driverRoutes);
+app.use('/api/products', productRouter);
+app.use('/api/promocode', promoCodeRouter);
+app.use('/api/cart', cartRoutes);
+app.use('/api/products', productRouter);
+app.use('/api/payment', paymentRouter);
+app.use("/api/orders", orderRoutes);
+app.use('/api/cart', cartRoutes)
 app.use('/api/products', productRouter)
 app.use('/api/payments', paymentRouter)
-
+app.use('/api/cart', cartRouter)
+app.use('/api/stock', StockRouter);
+app.use("/api/rawmaterials", RawMaterialRoutes);
+app.use('/api/suppliers', supplierRoutes);
 
 const PORT = process.env.PORT || 8070;
 

@@ -15,16 +15,15 @@ export default function LoginPage() {
   const [showChoice, setShowChoice] = useState(false);
   const [user, setUser] = useState(null);
 
-  // eye toggle
   const [showPassword, setShowPassword] = useState(false);
 
-  // === Validation Function ===
   const validateForm = () => {
     if (!form.email.trim()) {
       toast.error("Email is required");
       return false;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(form.email)) {
       toast.error("Enter a valid email address");
       return false;
     }
@@ -73,7 +72,7 @@ export default function LoginPage() {
       } else if (data.user.role === "customer") {
         toast.success("Welcome back! Redirecting to your profile...");
         setTimeout(() => {
-          window.location.href = "/userProfile";
+          window.location.href = "/products";
         }, 1500);
       } else {
         toast.error("❌ Unauthorized role. Please contact admin.");
@@ -87,12 +86,11 @@ export default function LoginPage() {
     <div className="login-container">
       <Toaster position="top-center" richColors />
       <div className="login-wrapper">
-        {/* Left side image */}
+
         <div className="login-image">
           <img src={image} alt="Login Illustration" />
         </div>
 
-        {/* Right side form */}
         <div className="login-card">
           <div className="avatar">
             <span>🙍‍♂️</span>
@@ -100,16 +98,17 @@ export default function LoginPage() {
           <h2>Welcome Back</h2>
           <p>Sign in to your account to continue</p>
           <form onSubmit={handleSubmit}>
-            <input className="form-input"
+            <input
+              className="form-input"
               type="text"
               placeholder="Email Address"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
 
-
             <div className="password-wrapper">
-              <input className="form-input"
+              <input
+                className="form-input"
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={form.password}
@@ -148,7 +147,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Register Modal */}
       {showRegister && (
         <div className="register-modal-overlay">
           <div className="register-modal-content">
@@ -163,7 +161,6 @@ export default function LoginPage() {
         </div>
       )}
 
-      {/* Choice Modal */}
       {showChoice && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -177,11 +174,11 @@ export default function LoginPage() {
                     : user.role === "Delivery Manager"
                     ? (window.location.href = "/deliveryDashboard")
                     : user.role === "Product Manager"
-                    ? (window.location.href = "/productDashboard")
+                    ? (window.location.href = "/admin/")
                     : user.role === "Order Manager"
                     ? (window.location.href = "/orderDashboard")
                     : user.role === "Stock Manager"
-                    ? (window.location.href = "/stockDashboard")
+                    ? (window.location.href = "/smdashboard")
                     : user.role === "Driver"
                     ? (window.location.href = "/driverPortal")
                     : alert("Login Error")

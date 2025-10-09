@@ -1,246 +1,210 @@
-/* --- Global Styles & Layout --- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 .cart-page-container {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f7f9fc;
-    position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem 3rem;
+  background-color: #f5f7fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* --- Cart Summary (Desktop) --- */
-
-.cart-summary-desktop {
-    display: none; /* Hidden by default on small screens */
-    position: sticky;
-    top: 2rem;
-    right: 1rem;
-    padding: 1.5rem;
-    border-radius: 1rem;
-    background-color: #ffffff;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    z-index: 50;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    width: 300px;
+.cart-main-content {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 2rem;
 }
 
-.cart-total-text {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #333;
+.cart-items-list {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.cart-total-amount {
-    color: #4CAF50; /* A pleasant green */
-    margin-left: 0.5rem;
+.empty-cart-message {
+  text-align: center;
+  font-size: 1.3rem;
+  color: #777;
+  padding: 2rem;
 }
-
-.checkout-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.checkout-button:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
-}
-
-/* --- Cart Item Card --- */
 
 .cart-item-card {
-    width: 95%;
-    max-width: 600px;
-    background-color: #ffffff;
-    border-radius: 1.5rem 0 0 1.5rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  gap: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .cart-item-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
 
 .item-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 1.5rem;
-    flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
 }
 
 .item-details {
-    flex-grow: 1;
-    text-align: center;
-    padding: 0.5rem 1rem;
+  flex: 1;
+  text-align: left;
 }
 
 .item-name {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
 }
 
 .item-id {
-    font-size: 0.8rem;
-    color: #999;
-    margin: 0.2rem 0;
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 0.25rem;
 }
 
 .item-price-info {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
-.labelled-price {
-    font-size: 1rem;
-    color: #999;
-    text-decoration: line-through;
+.original-price {
+  font-size: 0.95rem;
+  color: #999;
+  text-decoration: line-through;
 }
 
-.current-price, .single-price {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #E53935; /* A strong red for sales price */
+.current-price {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #E53935;
 }
 
 .single-price {
-    color: #333;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #333;
 }
 
 .quantity-control {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .quantity-button {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    border: none;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.2s ease;
 }
 
 .quantity-button.minus {
-    background-color: #FF7043; /* Orange */
+  background-color: #FF7043;
 }
 
 .quantity-button.plus {
-    background-color: #4CAF50; /* Green */
+  background-color: #4CAF50;
 }
 
 .quantity-button:hover {
-    filter: brightness(1.1);
+  filter: brightness(1.1);
 }
 
 .item-quantity {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #333;
+  font-weight: 700;
+  font-size: 1rem;
+  min-width: 36px;
+  text-align: center;
 }
 
 .item-subtotal-container {
-    margin-top: 1rem;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #333;
+  margin-left: auto;
 }
 
 .remove-item-button {
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: white;
-    border: 2px solid #E53935;
-    color: #E53935;
-    border-radius: 50%;
-    padding: 0.5rem;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  background: #fff;
+  border: 2px solid #E53935;
+  color: #E53935;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+  margin-left: 1rem;
 }
 
 .remove-item-button:hover {
-    background-color: #E53935;
-    color: white;
-    transform: translateY(-50%) scale(1.1);
+  background-color: #E53935;
+  color: #fff;
+  transform: scale(1.05);
 }
 
-/* --- Mobile Summary --- */
-.cart-summary-mobile {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #ffffff;
-    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 60;
+.cart-summary-desktop {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  gap: 1rem;
 }
 
-/* --- Media Queries for Desktop Layout --- */
-@media (min-width: 768px) {
-    .cart-summary-desktop {
-        display: flex;
-    }
-    
-    .cart-summary-mobile {
-        display: none;
-    }
+.cart-total-text {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #333;
+}
 
-    .cart-item-card {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.5rem 1rem;
-        gap: 1rem;
-    }
+.cart-total-amount {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #4CAF50;
+}
 
-    .item-details {
-        text-align: left;
-    }
+.checkout-button {
+  display: inline-block;
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
 
-    .item-price-info, .quantity-control, .item-subtotal-container {
-        justify-content: flex-start;
-    }
-
-    .remove-item-button {
-        position: static;
-        transform: none;
-    }
+.checkout-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
 }

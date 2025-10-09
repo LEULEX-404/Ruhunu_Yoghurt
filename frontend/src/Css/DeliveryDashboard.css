@@ -438,7 +438,7 @@ body {
   border-radius: 4px;
 }
 
-.card {
+.delvery-card {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(245, 245, 255, 0.92));
   backdrop-filter: blur(8px);
   padding: 16px 18px;
@@ -452,26 +452,26 @@ body {
   position: relative;
 }
 
-.card:hover {
+.delvery-card:hover {
   border-color: var(--primary-color);
   transform: translateY(-3px) scale(1.00);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
-.card.selected {
+.delvery-card.selected {
   border-color: var(--primary-color);
   background: linear-gradient(145deg, #eef2ff, #e0e7ff);
   box-shadow: 0 6px 18px rgba(79, 70, 229, 0.15);
 }
 
-.card h4 {
+.delvery-card h4 {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
   color: #1f2937;
 }
 
-.card p {
+.delvery-card p {
   margin: 4px 0 0;
   font-size: 0.9rem;
   color: #4b5563;
@@ -817,7 +817,7 @@ body.dark-mode .main-content {
 
 
 body.dark-mode .order-card,
-body.dark-mode .card,
+body.dark-mode .delvery-card,
 body.dark-mode .driver-card {
   background: rgba(255,255,255,0.1);
   color: #f3f4f6;
@@ -847,11 +847,11 @@ body.dark-mode .schedule-btn:hover {
   background: #16a34a;
 }
 
-body.dark-mode .card:hover {
+body.dark-mode .delvery-card:hover {
   border-color: var(--primary-color);
 }
 
-body.dark-mode .card.selected {
+body.dark-mode .delvery-card.selected {
   border-color: var(--primary-color);
   background: rgba(113, 15, 205, 0.1);
 }

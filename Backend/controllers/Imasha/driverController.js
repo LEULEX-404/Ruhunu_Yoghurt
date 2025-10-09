@@ -2,6 +2,7 @@ import Driver from '../../models/Tharuka/Driver.js';
 import AssignedDelivery from '../../models/Imasha/AssignDelivery.js';
 import Delivery from '../../models/Imasha/Delivery.js';
 import Employee from '../../models/Tharuka/Employee.js';
+import Order from '../../models/Lasiru/order.js';
 
 export const getDriverById = async (req, res) =>{
     try{
@@ -95,10 +96,11 @@ export const completeDelivery = async (req, res) => {
 
             await Order.findOneAndUpdate(
                 { orderNumber: delivery.orderID },
+
                 { status: "Completed" },
                 { new: true } 
             );
-
+            await Order.save();
          res.status(200).json({message: "Delivery marked as completed", delivery});
     }
     catch(error){

@@ -76,7 +76,7 @@ const handleUpdateUser = async (e) =>{
 
   return (
     <div className="profile-container">
-      {/* Profile Header */}
+      
       <div className="profile-header">
         <div className="profile-avatar">
           {user.name ? user.name.charAt(0).toUpperCase() : "?"}
@@ -98,7 +98,6 @@ const handleUpdateUser = async (e) =>{
         </div>
       </div>
 
-      {/* Stats Cards */}
       <div className="stats-cards">
         <div className="s-card">
           <h3>25</h3>
@@ -118,7 +117,6 @@ const handleUpdateUser = async (e) =>{
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="tabs">
         <button
           className={activeTab === "overview" ? "tab active" : "tab"}

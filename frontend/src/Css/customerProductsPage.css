@@ -1,59 +1,60 @@
-/* ================================
-   Customer Products Page Styles
-   ================================ */
 
 .product-page-container {
   display: flex;
-  gap: 2rem;
-  padding: 2rem;
+  flex-direction: column;
+  min-height: 100vh;
   background-color: #f9f9f9;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  min-height: 100vh;
   box-sizing: border-box;
 }
 
-/* -------------------------
-   Filter Section
-   ------------------------- */
-.filter-section {
-  flex: 1;
-  max-width: 250px;
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  height: fit-content;
+.product-page-container > header {
+  width: 100%;
   position: sticky;
-  top: 2rem;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.filter-section {
+  width: 100%;
+  background-color: #fff;
+  border-radius: 0;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .filter-section h3 {
-  margin-bottom: 1.5rem;
-  font-size: 1.2rem;
+  margin: 0;
+  font-size: 1rem;
   font-weight: 600;
   color: #333;
 }
 
 .filter-group {
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .filter-group label {
-  display: block;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 500;
-  margin-bottom: 0.5rem;
   color: #444;
 }
 
 .filter-group select {
-  width: 100%;
-  padding: 0.6rem;
+  padding: 0.5rem 0.7rem;
   font-size: 0.9rem;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 6px;
   outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .filter-group select:focus {
@@ -61,158 +62,18 @@
   box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
 }
 
-/* -------------------------
-   Product Grid
-   ------------------------- */
 .product-grid {
-  flex: 3;
+  flex: 1;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1.5rem;
-  align-items: start;
+  padding: 2rem;
 }
 
-/* -------------------------
-   No Products Message
-   ------------------------- */
 .product-grid p {
   grid-column: 1/-1;
   text-align: center;
   color: #666;
   font-size: 1rem;
   padding: 2rem 0;
-}
-
-/* -------------------------
-   Product Card Override (uniform height)
-   ------------------------- */
-.product-card {
-  display: flex;
-  flex-direction: column;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  text-decoration: none;
-  color: inherit;
-  height: 450px; /* fixed height to avoid stretching */
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-}
-
-/* Image section */
-.product-card-image-container {
-  width: 100%;
-  height: 180px;
-  overflow: hidden;
-  border-bottom: 1px solid #eee;
-}
-
-.product-card-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.product-card:hover .product-card-image {
-  transform: scale(1.05);
-}
-
-/* Details section */
-.product-card-info {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.product-card-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #333;
-}
-
-.product-card-description {
-  font-size: 0.85rem;
-  color: #666;
-  line-height: 1.3;
-  margin-bottom: 12px;
-  min-height: 36px;
-}
-
-/* Price and stock section */
-.product-card-price-stock {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-  margin-bottom: 12px;
-}
-
-.product-card-labelled-price {
-  font-size: 0.85rem;
-  color: #999;
-  text-decoration: line-through;
-  margin-right: 6px;
-}
-
-.product-card-price {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #333;
-}
-
-.product-card-stock {
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 3px 6px;
-  border-radius: 4px;
-}
-
-.InStock {
-  background-color: #e6f7e6;
-  color: #28a745;
-}
-
-.Out-of-stock {
-  background-color: #f7e6e6;
-  color: #dc3545;
-}
-
-/* Rating section */
-.product-card-rating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #ffc107;
-  margin-bottom: 12px;
-  font-size: 0.85rem;
-}
-
-/* Button section */
-.product-card-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 0 0 12px 12px;
-  background-color: #007bff;
-  color: white;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.product-card-button.unavailable {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.product-card-button:hover:not(.unavailable) {
-  background-color: #0056b3;
 }

@@ -460,6 +460,7 @@ export default function DeliveryDashboard()
                             <p>{order.customerName}</p>
                             <p>Total Rs.{order.total}</p>
                             <p>Address: {order.address}</p>
+                            <p>Phone: {order.phone}</p>
                             <p>Weight: {order.productWeight} kg</p>
                           </div>
 
@@ -488,7 +489,7 @@ export default function DeliveryDashboard()
             {deliveries.map(del => (
           <div
             key={del._id}
-            className={`card ${selectDeliveries.some(d => d._id === del._id) ? "selected" : ""}`}
+            className={`delvery-card ${selectDeliveries.some(d => d._id === del._id) ? "selected" : ""}`}
             onClick={() => handleSelectDelivery(del)}
             >
             <p><b>{del.orderID}</b></p>
@@ -519,7 +520,7 @@ export default function DeliveryDashboard()
           .map(driver => (
         <div
           key={driver._id}
-          className={`card ${selectDriver?._id === driver._id ? "selected" : ""}`}
+          className={`delvery-card ${selectDriver?._id === driver._id ? "selected" : ""}`}
           onClick={() => handleSelectDriver(driver)}
           >
           <p><b>{driver.name}</b></p>

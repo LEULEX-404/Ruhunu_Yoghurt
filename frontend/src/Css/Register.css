@@ -1,4 +1,3 @@
-/* === Container (centers everything) === */
 .register-container {
   display: flex;
   justify-content: center;
@@ -7,8 +6,6 @@
   padding: 20px;
   background: linear-gradient(135deg, #e6f7ff, #f0f8f5);
 }
-
-/* === Card Wrapper (2-column layout) === */
 .register-card {
   display: flex;
   background: #fff;
@@ -19,8 +16,6 @@
   width: 100%;
   animation: fadeIn 0.3s ease-in-out;
 }
-
-/* === Left Side Image === */
 .register-image {
   flex: 1;
   background: #f8fafc;
@@ -36,7 +31,6 @@
   border-radius: 12px;
 }
 
-/* === Right Side Form === */
 .register-form {
   flex: 1;
   display: flex;
@@ -46,7 +40,6 @@
   text-align: center;
 }
 
-/* === Title === */
 .form-title {
   font-size: 26px;
   font-weight: 700;
@@ -54,7 +47,6 @@
   margin-bottom: 15px;
 }
 
-/* === Inputs === */
 .form-input {
   width: 100%;
   padding: 12px 14px;
@@ -70,7 +62,6 @@
   box-shadow: 0 0 0 2px rgba(56, 178, 172, 0.25);
 }
 
-/* === Button === */
 .form-button {
   padding: 12px;
   background: linear-gradient(135deg, #38b2ac, #2f855a);
@@ -93,15 +84,13 @@
   transform: scale(0.97);
 }
 
-
-/* Wrapper for password + eye */
 .password-wrapper {
   position: relative;
   width: 100%;
 }
 
 .password-wrapper .form-input {
-  padding-right: 40px; /* leave space for eye */
+  padding-right: 40px;
 }
 
 .password-wrapper .eye-icon {

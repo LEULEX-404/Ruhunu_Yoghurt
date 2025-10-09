@@ -1,0 +1,105 @@
+
+/* Dashboard Container   */
+.admin-dashboard-container {
+  min-height: 100vh;
+  padding: 40px;
+  background: linear-gradient(135deg, #967777, #ebebeb);
+  color: #fff;
+  text-align: center;
+}
+
+
+/* Header Section        */
+.admin-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.admin-dashboard-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #00f5a0, #00d9f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* AddStock Button */
+.add-stock-btn {
+  padding: 12px 22px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 1rem;
+  text-decoration: none;
+  border: none;
+  background: linear-gradient(90deg, #00f5a0, #00d9f5);
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(0, 255, 255, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.add-stock-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(0, 255, 255, 0.7);
+}
+
+
+/* Search Bar */
+.admin-dashboard-search input {
+  width: 50%;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+  margin-bottom: 40px;
+  text-align: center;
+  background: #1e293b;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  transition: 0.3s;
+}
+
+.admin-dashboard-search input:focus {
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+}
+
+
+/* Dashboard Grid */
+.admin-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.admin-dashboard-card {
+  background: #0f172a;
+  border-radius: 20px;
+  padding: 40px 20px;
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.3s, background 0.3s;
+  box-shadow: 0 10px 25px rgba(0, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-dashboard-card:hover {
+  transform: translateY(-10px) scale(1.05);
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  color: #0f172a;
+}
+
+.admin-dashboard-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.admin-dashboard-card h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}

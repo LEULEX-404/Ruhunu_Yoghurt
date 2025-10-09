@@ -1,4 +1,3 @@
-/* General page container */
 .admin-product-container {
   padding: 24px;
   background-color: #f5f7fa;
@@ -6,7 +5,6 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* "Add Product" button styling */
 .add-product-link {
   display: inline-block;
   background-color: #007bff;
@@ -24,7 +22,6 @@
   background-color: #0056b3;
 }
 
-/* Product table container */
 .product-table-container {
   overflow-x: auto;
   border-radius: 12px;
@@ -32,14 +29,12 @@
   background-color: white;
 }
 
-/* Table styling */
 .product-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* Ensures even column distribution */
+  table-layout: fixed;
 }
 
-/* Table header */
 .product-table th {
   background-color: #e9ecef;
   color: #495057;
@@ -51,12 +46,11 @@
   border-bottom: 2px solid #dee2e6;
 }
 
-/* Table body rows */
 .product-table td {
   padding: 16px;
   border-bottom: 1px solid #dee2e6;
   vertical-align: middle;
-  word-wrap: break-word; /* Prevents long text from overflowing */
+  word-wrap: break-word;
   font-size: 0.9rem;
   color: #343a40;
 }
@@ -65,7 +59,7 @@
   background-color: #f8f9fa;
 }
 
-/* Image column styling */
+
 .product-table-image {
   width: 60px;
   height: 60px;
@@ -73,7 +67,7 @@
   border-radius: 6px;
 }
 
-/* Actions column buttons */
+
 .product-table-actions {
   display: flex;
   gap: 8px;
@@ -110,7 +104,7 @@
   background-color: #fff3cd;
 }
 
-/* Empty state or loading state */
+
 .loading, .no-products {
   text-align: center;
   padding: 40px;

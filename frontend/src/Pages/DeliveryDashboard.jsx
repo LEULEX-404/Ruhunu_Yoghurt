@@ -199,6 +199,7 @@ export default function DeliveryDashboard()
             toast.success("Delivery created Successfully.")
             driversDeliveries();
             pendingOrders();
+            fetchStats();
         })
         .catch((error) =>{
             toast.error("Delivery creation failed.")
@@ -224,6 +225,7 @@ export default function DeliveryDashboard()
     toast.success("Re-order successful!");
     driversDeliveries();
     pendingOrders();
+    fetchStats();
   } catch (err) {
     console.error(err);
     toast.error("Failed to re-order");
@@ -244,6 +246,7 @@ export default function DeliveryDashboard()
             setSelectDriver(null);
             deliveriesAssigned();
             driversDeliveries();
+            fetchStats();
         })
         .catch(err => {
         console.error(err);
@@ -275,6 +278,8 @@ export default function DeliveryDashboard()
         setStartTime("");
         setEndTime("");
         deliveriesAssigned();
+        driversDeliveries();
+        fetchStats();
       })
       .catch(err =>{
         console.error(err);
@@ -298,15 +303,16 @@ export default function DeliveryDashboard()
         return false;
       }
 
-      if(startHour < 8 || startHour > 11){
-        toast.error("Start time must be between 8 AM and 11 AM.");
-        return false;
-      }
-
       if(start < now){
         toast.error("Start time cannot be in the past.");
         return false;
       }
+
+      if(startHour < 8 || startHour > 14){
+        toast.error("Start time must be between 8 AM and 12 AM.");
+        return false;
+      }
+
 
       if(start < minStartTime){
         toast.error("Start time must be at least 1 hour from now.");
@@ -422,22 +428,27 @@ export default function DeliveryDashboard()
                 />
         )}
 
-        
-        
-        
-        <div className="stats-row">
-          <div className="stat-card blue">Pending Deliveries <br></br>
-            <span><strong>{stats?.totalDeliveries}</strong></span></div>
+          <div className="stats-row">
+            <div className="stat-card blue">Pending Deliveries <br></br>
+              <span><strong>{stats?.totalDeliveries}</strong></span>
+            </div>
 
-          <div className="stat-card orange">Scheduled Deliveries <br></br>
-            <span><strong>{stats?.pending}</strong></span></div>
+            <div className="stat-card orange">Scheduled Deliveries <br></br>
+              <span><strong>{stats?.pending}</strong></span>
+            </div>
 
-          <div className="stat-card green">Completed Deliveries<br></br>
-            <span><strong>{stats?.completed}</strong></span></div>
+            <div className="stat-card green">Completed Today<br></br>
+              <span><strong>{stats?.completedToday}</strong></span>
+            </div>
 
-          <div className="stat-card purple">Active Drivers <br></br>
-            <span><strong>{stats?.drivers}</strong></span></div>
-        </div>
+            <div className="stat-card red">Not Completed Today<br></br>
+              <span><strong>{stats?.pendingToday}</strong></span>
+            </div>
+
+            <div className="stat-card purple">Active Drivers <br></br>
+              <span><strong>{stats?.drivers}</strong></span>
+            </div>
+          </div>
 
         {activeSection === "createDelivery" && (
             <div>
@@ -636,14 +647,14 @@ export default function DeliveryDashboard()
             <div className="modal">
               <h2>Set Schedule Time</h2>
 
-              <label>Start Time:</label>
+              <label>Start Time: (8am - 11am)</label>
               <input 
                 type="datetime-local" 
                 value={startTime} 
                 onChange={(e) => setStartTime(e.target.value)} 
               />
 
-              <label>End Time:</label>
+              <label>End Time: (2pm - 5pm)</label>
               <input 
                 type="datetime-local" 
                 value={endTime} 

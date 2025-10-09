@@ -92,6 +92,13 @@ export const completeDelivery = async (req, res) => {
                     await driver.save();
                 }
             }
+
+            await Order.findOneAndUpdate(
+                { orderNumber: delivery.orderID },
+                { status: "Completed" },
+                { new: true } 
+            );
+
          res.status(200).json({message: "Delivery marked as completed", delivery});
     }
     catch(error){

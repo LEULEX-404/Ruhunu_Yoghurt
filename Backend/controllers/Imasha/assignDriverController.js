@@ -52,7 +52,10 @@ export const assignDelivery = async (req, res)=>{
                 {assignedDriver: driverId, status: "assigned"}
             );
 
-            const allAssignedDeliveries = await Delivery.find({assignedDriver: driverId})
+            const allAssignedDeliveries = await Delivery.find({
+                assignedDriver: driverId,
+                status:"assigned" 
+            })
 
             if(allAssignedDeliveries.length > 0){
                 const current = allAssignedDeliveries.reduce((max,d)=>
@@ -154,20 +157,36 @@ export const scheduleAssignedDelivery = async (req, res) =>{
 };
 
 export const getStats = async (req, res) => {
-    try{
-        const totalDeliveries = await Delivery.countDocuments({status:"pending"});
-        const pending = await AssignedDelivery.countDocuments({status: "sceduled"});
-        const completed = await AssignedDelivery.countDocuments({status: "completed"});
-        const drivers = await Driver.countDocuments({availability: true});
+  try {
+    const totalDeliveries = await Delivery.countDocuments({ status: "pending" });
+    const pending = await AssignedDelivery.countDocuments({ status: "sceduled" });
 
-        res.json({
-            totalDeliveries,
-            pending,
-            completed,
-            drivers
-        })
-    }
-    catch(err){
-        res.status(500).json({error:err.message});
-    }
-}
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const completedToday = await AssignedDelivery.countDocuments({
+      status: "completed",
+      endTime: { $gte: startOfDay, $lte: endOfDay }
+    });
+
+    const pendingToday = await AssignedDelivery.countDocuments({
+      status: { $ne: "completed" }, 
+      endTime: { $gte: startOfDay, $lte: endOfDay }
+    });
+
+    const drivers = await Driver.countDocuments({ availability: true });
+
+    res.json({
+      totalDeliveries,
+      pending,
+      completedToday,
+      pendingToday,
+      drivers
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

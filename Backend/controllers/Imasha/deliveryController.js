@@ -301,7 +301,7 @@ export const reorderDelivery = async (req, res) => {
       return res.status(404).json({ message: "Related order not found" });
     }
 
-    order.status = "pending";
+    order.status = "approved";
     await order.save();
 
     await Delivery.findByIdAndDelete(id);

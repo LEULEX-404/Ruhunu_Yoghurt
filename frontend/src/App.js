@@ -38,21 +38,10 @@ axios.defaults.withCredentials = true;
 
 function Appwrapper() {
   return (
-    <div>
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
-        }}
-      />
 
       <Routes>
         {/* Default redirects */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<HomePage />} />
 
         {/* Auth */}
@@ -92,7 +81,6 @@ function Appwrapper() {
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/search" element={<SearchProductPage />} />
       </Routes>
-    </div>
   );
 }
 

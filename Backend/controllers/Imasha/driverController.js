@@ -100,7 +100,6 @@ export const completeDelivery = async (req, res) => {
                 { status: "Completed" },
                 { new: true } 
             );
-            await Order.save();
          res.status(200).json({message: "Delivery marked as completed", delivery});
     }
     catch(error){

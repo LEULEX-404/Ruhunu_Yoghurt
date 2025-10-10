@@ -786,6 +786,113 @@ input:checked + .slider:before {
 }
 
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 6px 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination button.active {
+  background-color: #1e3a8a;
+}
+
+.pagination span {
+  padding: 6px 10px;
+}
+
+
+.delivery-report-wrapper {
+  padding: 20px;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.delivery-report-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.delivery-report-select {
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.delivery-report-preview {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.delivery-report-chart {
+  margin-bottom: 20px;
+}
+
+.delivery-report-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.delivery-report-table th,
+.delivery-report-table td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.delivery-report-table th {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+}
+
+.delivery-report-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.delivery-report-table tr:hover {
+  background-color: #e6f0ff;
+}
+
+.delivery-report-download {
+  margin-top: 15px;
+  padding: 10px 18px;
+  font-size: 16px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.delivery-report-download:hover {
+  background-color: #0056b3;
+}
+
+
 
 
 body.dark-mode {

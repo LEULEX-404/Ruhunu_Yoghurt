@@ -1,5 +1,8 @@
 import  {useState, useEffect} from "react";
 import axios from 'axios';
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar } from "recharts";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import {FiLogOut} from 'react-icons/fi';
 import {Toaster, toast} from 'sonner';
 import { Truck, UserCheck, Package, CheckCheck, BarChart3, MapPinned, PackageCheck} from "lucide-react";
@@ -21,18 +24,55 @@ export default function DeliveryDashboard()
     const [selectDeliveries, setSelectDeliveries] = useState([]);
     const [selectDriver, setSelectDriver] = useState(null);
 
+    const [nextDayConfirm, setNextDayConfirm] = useState(null);
+
     const [assignedDeliveries, setAssignedDeliveries] = useState([]);
     const [completedDeliveries, setCompletedDeliveries] = useState([]);
     const [assignedSearch, setAssignedSearch] = useState([]);
-
-    const [showModal, setShowModal] = useState(false);
-    const [sceduleDeliveryId, setSceduleDeliveryId] = useState(null);
-    const [startTime, setStartTime] = useState("");
-    const [endTime, setEndTime] = useState("");
+    const [completedSearch, setCompletedSearch] = useState("");
 
     const [stats, setStats] = useState([]);
 
+    const [reportType, setReportType] = useState("dailyCompleted");
+    const [reportData, setReportData] = useState([]);
+
     const [darkMode, setDarkMode] = useState(false);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 6;
+
+    const totalPages = Math.ceil(completedDeliveries.length / itemsPerPage);
+
+    const filteredCompletedDeliveries = completedDeliveries.filter(ad =>
+      ad.driver?.name.toLowerCase().includes(completedSearch.toLowerCase()) ||
+      ad.deliveries?.some(d => d.orderID.toLowerCase().includes(completedSearch.toLowerCase()))
+    );
+    
+    const sortedFilteredDeliveries = [...filteredCompletedDeliveries].sort(
+      (a, b) => new Date(b.endTime) - new Date(a.endTime)
+    );
+    
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentDeliveries = sortedFilteredDeliveries.slice(indexOfFirstItem, indexOfLastItem);
+    
+
+    const pageWindow = 5;
+
+    let startPage = Math.max(currentPage - Math.floor(pageWindow / 2), 1);
+    let endPage = startPage + pageWindow - 1;
+
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(endPage - pageWindow + 1, 1);
+    }
+
+    const pageNumbers = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
+
 
     const fetchManager = async () => {
       try{
@@ -207,17 +247,13 @@ export default function DeliveryDashboard()
         })
     }
 
-    const handleSelectDelivery = (delivery) =>{
-        if(selectDeliveries.some(d => d._id === delivery._id)){
-            setSelectDeliveries(selectDeliveries.filter(d => d._id !== delivery._id));
+    const handleSelectDelivery = (delivery) => {
+        if (selectDeliveries.some(d => d._id === delivery._id)) {
+          setSelectDeliveries([]);
+        } else {
+          setSelectDeliveries([delivery]);
         }
-        else{
-            setSelectDeliveries([...selectDeliveries, delivery])
-        } 
-    }
-    const handleSelectDriver = (driver) =>{
-        setSelectDriver(driver);
-    }
+    };
 
     const handleReorder = async (id) => {
   try {
@@ -232,105 +268,61 @@ export default function DeliveryDashboard()
   }
 };
 
-    const handleAssignDelivery = () =>{
-        if(!selectDriver || selectDeliveries.length === 0)return;
-        const deliveryIds = selectDeliveries.map(d => d._id);
+    const handleAssignDelivery = async () => {
+        if (selectDeliveries.length === 0) return;
 
-        axios.post(`http://localhost:8070/api/deliveries/assign`,{
-            driverId: selectDriver.driverID,
-            deliveryIds
-        })
-        .then(res =>{
+        for (let delivery of selectDeliveries) {
+          try {
+            const res = await axios.post(`http://localhost:8070/api/deliveries/auto-assign`, {
+              deliveryId: delivery._id
+            });
             toast.success(res.data.message);
-            setSelectDeliveries([]);
-            setSelectDriver(null);
-            deliveriesAssigned();
-            driversDeliveries();
-            fetchStats();
-        })
-        .catch(err => {
-        console.error(err);
-        if(err.response.data.message){
-            toast.error(err.response.data.message);
-        } else {
-            toast.error("Failed to assign delivery.");
-        }});
-    };
+          } catch (err) {
+            console.error(err);
+            if (err.response?.data?.message) {
+              toast.error(err.response.data.message);
+            } else {
+              toast.error("Failed to auto-assign delivery.");
+            }
+          }
+        }
 
-    const handleSchedule = (assignedId) => {
-      setSceduleDeliveryId(assignedId);
-      setShowModal(true);
-    };
+      setSelectDeliveries([]);
+      deliveriesAssigned();
+      driversDeliveries();
+      fetchStats();
+  };
 
-    const submitSchedule = () => {
-  if(!validateSchedule()){
-        return;
-      }
+  const fetchReport = async () => {
+    let url = "";
+    // eslint-disable-next-line default-case
+    switch(reportType) {
+      case "dailyCompleted": url="/api/deliveryreports/completed-daily"; break;
+      case "pending": url="/api/deliveryreports/pending"; break;
+      case "driverPerformance": url="/api/deliveryreports/driver-performance"; break;
+      case "revenueSummary": url="/api/deliveryreports/revenue-summary"; break;
+      default: url="/api/deliveryreports/completed-daily"; break;
+    }
+    try {
+      const res = await axios.get(url);
+      setReportData(res.data);
+    } catch(err) {
+      console.error(err);
+    }
+  };
 
-      axios.post('http://localhost:8070/api/deliveries/schedule', {
-        assignedDeliveryId: sceduleDeliveryId,
-        startTime,
-        endTime
-      })
-      .then(res =>{
-        toast.success(res.data.message);
-        setShowModal(false);
-        setStartTime("");
-        setEndTime("");
-        deliveriesAssigned();
-        driversDeliveries();
-        fetchStats();
-      })
-      .catch(err =>{
-        console.error(err);
-        toast.error("Failed to scedule delivery");
-      });
-    };
+  useEffect(() => { fetchReport(); }, [reportType]);
 
-    const validateSchedule = () => {
-      const now = new Date();
-      const start = new Date(startTime);
-      const end = new Date(endTime);
-      
-      const startHour =start.getHours();
-      const endHour = end.getHours();
-      const endMinute = end.getMinutes();
+  const downloadPDF = () => {
+    const input = document.getElementById("delivery-report-preview");
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, "PNG", 10, 10, 190, 0);
+      pdf.save(`${reportType}.pdf`);
+    });
+  };
 
-      const minStartTime = new Date(now.getTime() + 60 * 60 * 1000);
-
-      if(!startTime || !endTime){
-        toast.error("Please select start and end time.");
-        return false;
-      }
-
-      if(start < now){
-        toast.error("Start time cannot be in the past.");
-        return false;
-      }
-
-      if(startHour < 8 || startHour > 14){
-        toast.error("Start time must be between 8 AM and 12 AM.");
-        return false;
-      }
-
-
-      if(start < minStartTime){
-        toast.error("Start time must be at least 1 hour from now.");
-        return false;
-      }
-
-      if(end <= start){
-        toast.error("End time must be later than start time.");
-        return false;
-      }
-      
-      if(endHour < 14 || (endHour === 17 && endMinute > 0) || endHour > 17){
-          toast.error("End time must be between 2 PM and 5 PM.");
-          return false;
-      }
-
-      return true;
-    }; 
 
     const toggleDarkMode = () =>{
         setDarkMode(!darkMode);
@@ -428,6 +420,19 @@ export default function DeliveryDashboard()
                 />
         )}
 
+        {activeSection === "completed" && (
+              <input
+                type="text"
+                placeholder="Search completed deliveries..."
+                value={completedSearch}
+                onChange={(e) => setCompletedSearch(e.target.value)}
+                className="search-input"
+              />
+        )}
+
+
+    
+
           <div className="stats-row">
             <div className="stat-card blue">Pending Deliveries <br></br>
               <span><strong>{stats?.totalDeliveries}</strong></span>
@@ -520,9 +525,8 @@ export default function DeliveryDashboard()
           .map(driver => (
         <div
           key={driver._id}
-          className={`delvery-card ${selectDriver?._id === driver._id ? "selected" : ""}`}
-          onClick={() => handleSelectDriver(driver)}
-          >
+          className="delvery-card">
+
           <p><b>{driver.name}</b></p>
           <p>Capacity: {driver.vehicleCapacity} kg</p>
           <p>Location: {driver.currentLocation || "N/A"}</p>
@@ -533,145 +537,303 @@ export default function DeliveryDashboard()
         ))}
         </div>
 
-        {selectDeliveries.length > 0 && selectDriver && (
-        <button className="assign-btn" onClick={handleAssignDelivery} disabled={!selectDriver || selectDeliveries.length === 0}>Assign Delivery</button>
+        {selectDeliveries.length > 0 && (
+        <button className="assign-btn" onClick={handleAssignDelivery} disabled={selectDeliveries.length === 0}>Assign Delivery</button>
         )}
         </div>
       )}
 
       {activeSection === "deliveries" && (
-      <div className="schedule-wrapper">
-      <h2><Truck color= '#1e3a8a' size={36} /> Scheduled Deliveries</h2>
+        <div className="schedule-wrapper">
+          <h2><Truck color='#1e3a8a' size={36} /> Scheduled Deliveries</h2>
 
-      {assignedDeliveries.length === 0 && <p>No assigned deliveries yet.</p>}
+          {assignedDeliveries.length === 0 && <p>No assigned deliveries yet.</p>}
 
-      <div className="driver-cards-container">
-        {assignedDeliveries.map((ad) => (
-          <div key={ad._id} className="driver-card">
-            <div className="driver-header">
-              <h3>{ad.driver?.name || "Unknown Driver"}</h3>
-
-      <p className="status-label"
-           style={{
-          color: ad.status === "sceduled" ? "green" : "red",
-          fontWeight: "bold",
-          marginTop: "5px",
-          textTransform: "uppercase",
-          fontSize: "12px",
-          backdropFilter: "blur(5px)",
-          backgroundColor: ad.status === "sceduled" ? "rgba(0, 128, 0, 0.1)" : "rgba(255, 0, 0, 0.1)",
-          padding: "2px 6px",
-          borderRadius: "4px",
-          width: "fit-content"
-        }}>
-        {ad.status === "sceduled" ? "Scheduled" : "Not Scheduled"}
-      </p>
-
-              <p className="capacity">Capacity: {ad.driver?.vehicleCapacity} kg</p>
-              <p className="location"><MapPinned color='red' size={22}/> {ad.driver?.currentLocation || "N/A"}</p>
-            </div>
-
-            <div className="driver-info">
-              <p><b>Total Weight:</b> {ad.totalWeight} kg</p>
-              <p><b>Assigned On:</b> {new Date(ad.assignDate).toLocaleDateString()}</p>
-            </div>
-
-            <div className="delivery-list">
-              <h4><PackageCheck color='blue' size={32}/> Deliveries:</h4>
-              <ul>
-                {ad.deliveries?.map((d, i) => (
-                  <li key={i}>
-                    <b>{d.orderID}</b> - {d.customerName}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <button
-              className="schedule-btn"
-              onClick={() => handleSchedule(ad._id)}
-              disabled={ad.status === "sceduled"}
-              style={{
-                backgroundColor: ad.status === "sceduled" ? "#ccc" : "#007bff",
-                cursor: ad.status === "sceduled" ? "not-allowed" : "pointer",
-              }}
-            >
-              {ad.status === "sceduled" ? "Scheduled" : "Schedule"}
-            </button>
-          </div>
-          
-        ))}
-
-      </div>
-    </div>
-    )}
-
-    {activeSection === "completed" && (
-      <div className="schedule-wrapper">
-      <h2><Truck color= '#1e3a8a' size={36} /> Completed Deliveries</h2>
-
-      {completedDeliveries.length === 0 && <p>No completed deliveries yet.</p>}
-      <div className="driver-cards-container">
-        {completedDeliveries.map((ad) => (
-          <div key={ad._id} className="driver-card">
-            <div className="driver-header">
-              <h3>{ad.driver?.name || "Unknown Driver"}</h3>
-              <p className="capacity">Capacity: {ad.driver?.vehicleCapacity} kg</p>
-            </div>
-            <div className="driver-info">
-              <p><b>Total Weight:</b> {ad.totalWeight} kg</p>
-              <p><b>Assigned On:</b> {new Date(ad.assignDate).toLocaleDateString()}</p>
-              <p><b>Start Time:</b> {new Date(ad.startTime).toLocaleTimeString()}</p>
-              <p><b>End Time:</b> {new Date(ad.endTime).toLocaleTimeString()}</p>
-            </div>
-            <div className="delivery-list">
-              <h4><PackageCheck color='blue' size={32}/> Deliveries:</h4>
-              <ul>
-                {ad.deliveries?.map((d, i) => (
-                  <li key={i}>
-                    <b>{d.orderID}</b> - {d.customerName} - {d.status}
-                  </li>
-                ))}
-              </ul>
-              <p className="completed-label">
-                  Completed
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-    )}
-    </main>
-        {showModal && (
-          <div className="modal-overlay">
-            <div className="modal">
-              <h2>Set Schedule Time</h2>
-
-              <label>Start Time: (8am - 11am)</label>
-              <input 
-                type="datetime-local" 
-                value={startTime} 
-                onChange={(e) => setStartTime(e.target.value)} 
-              />
-
-              <label>End Time: (2pm - 5pm)</label>
-              <input 
-                type="datetime-local" 
-                value={endTime} 
-                onChange={(e) => setEndTime(e.target.value)} 
-              />
-
-              <div className="modal-actions">
-                <button onClick={submitSchedule}>Confirm</button>
-                <button onClick={() => {
-                  setShowModal(false);
-                  setStartTime("");
-                  setEndTime("")}}>Cancel</button>
+          <div className="driver-cards-container">
+            {assignedDeliveries.map((ad) => (
+              <div key={ad._id} className="driver-card">
+                <div className="driver-header">
+                  <h3>{ad.driver?.name || "Unknown Driver"}</h3>
+            
+                  <p className="status-label"
+                     style={{
+                       color: ad.status === "sceduled" ? "green" : "red",
+                       fontWeight: "bold",
+                       marginTop: "5px",
+                       textTransform: "uppercase",
+                       fontSize: "12px",
+                       backdropFilter: "blur(5px)",
+                       backgroundColor: ad.status === "sceduled" ? "rgba(0, 128, 0, 0.1)" : "rgba(255, 0, 0, 0.1)",
+                       padding: "2px 6px",
+                       borderRadius: "4px",
+                       width: "fit-content"
+                     }}>
+                    {ad.status === "sceduled" ? "Scheduled" : "Not Scheduled"}
+                  </p>
+                   
+                  <p className="capacity">Capacity: {ad.driver?.vehicleCapacity} kg</p>
+                  <p className="location"><MapPinned color='red' size={22}/> {ad.driver?.currentLocation || "N/A"}</p>
+                </div>
+                   
+                <div className="driver-info">
+                  <p><b>Total Weight:</b> {ad.totalWeight} kg</p>
+                  <p><b>Assigned On:</b> {new Date(ad.assignDate).toLocaleDateString()}</p>
+                </div>
+                   
+                <div className="delivery-list">
+                  <h4><PackageCheck color='blue' size={32}/> Deliveries:</h4>
+                  <ul>
+                    {ad.deliveries?.map((d, i) => (
+                      <li key={i}>
+                        <b>{d.orderID}</b> - {d.customerName}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                  
+                <button
+                  className="schedule-btn"
+                  disabled={ad.status === "sceduled"}
+                  onClick={async () => {
+                    try {
+                      const res = await axios.post('http://localhost:8070/api/deliveries/auto-schedule', {
+                        assignedDeliveryId: ad._id
+                      });
+                      toast.success(res.data.message);
+                      deliveriesAssigned();
+                      driversDeliveries();
+                      fetchStats();
+                    } catch (err) {
+                      console.error(err);
+                      if (err.response?.data?.suggestNextDay) {
+                        setNextDayConfirm({
+                          adId: ad._id,
+                          message: "Cannot schedule today. Schedule for next day?"
+                        });
+                      } else {
+                        toast.error("Failed to schedule delivery.");
+                      }
+                    }
+                  }}
+                  style={{
+                    backgroundColor: ad.status === "sceduled" ? "#ccc" : "#007bff",
+                    cursor: ad.status === "sceduled" ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {ad.status === "sceduled" ? "Scheduled" : "Schedule"}
+                </button>
               </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {nextDayConfirm && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>{nextDayConfirm.message}</h3>
+            <div className="modal-actions">
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await axios.post('http://localhost:8070/api/deliveries/schedule-next-day', {
+                      assignedDeliveryId: nextDayConfirm.adId
+                    });
+                    toast.success(res.data.message);
+                    deliveriesAssigned();
+                    driversDeliveries();
+                    fetchStats();
+                  } catch (err) {
+                    console.error(err);
+                    toast.error("Failed to schedule for next day.");
+                  } finally {
+                    setNextDayConfirm(null);
+                  }
+                }}
+              >
+                Yes
+              </button>
+              <button onClick={() => setNextDayConfirm(null)}>No</button>
             </div>
           </div>
+        </div>
       )}
+
+
+
+      {activeSection === "completed" && (
+          <div className="schedule-wrapper">
+            <h2><Truck color= '#1e3a8a' size={36} /> Completed Deliveries</h2>
+            
+            {completedDeliveries.length === 0 && <p>No completed deliveries yet.</p>}
+            
+            <div className="driver-cards-container">
+              {currentDeliveries.map((ad) => (
+                <div key={ad._id} className="driver-card">
+                  <div className="driver-header">
+                    <h3>{ad.driver?.name || "Unknown Driver"}</h3>
+                    <p className="capacity">Capacity: {ad.driver?.vehicleCapacity} kg</p>
+                  </div>
+                  <div className="driver-info">
+                    <p><b>Total Weight:</b> {ad.totalWeight} kg</p>
+                    <p><b>Assigned On:</b> {new Date(ad.assignDate).toLocaleDateString()}</p>
+                    <p><b>Start Time:</b> {new Date(ad.startTime).toLocaleTimeString()}</p>
+                    <p><b>End Time:</b> {new Date(ad.endTime).toLocaleTimeString()}</p>
+                  </div>
+                  <div className="delivery-list">
+                    <h4><PackageCheck color='blue' size={32}/> Deliveries:</h4>
+                    <ul>
+                      {ad.deliveries?.map((d, i) => (
+                        <li key={i}>
+                          <b>{d.orderID}</b> - {d.customerName} - {d.status}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="completed-label">Completed</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Pagination controls */}
+            {totalPages > 1 && (
+              <div className="pagination">
+                <button 
+                  disabled={currentPage === 1} 
+                  onClick={() => setCurrentPage((prev) => prev - 1)}
+                >
+                  Prev
+                </button>
+            
+                {pageNumbers.map((num) => (
+                  <button
+                    key={num}
+                    className={num === currentPage ? "active" : ""}
+                    onClick={() => setCurrentPage(num)}
+                  >
+                    {num}
+                  </button>
+                ))}
+
+                <button 
+                  disabled={currentPage === totalPages} 
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeSection === "reports" && (
+            <div className="delivery-report-wrapper">
+                <h2 className="delivery-report-title">Reports</h2>
+
+                <select
+                  className="delivery-report-select"
+                  value={reportType}
+                  onChange={(e) => setReportType(e.target.value)}
+                >
+                  <option value="dailyCompleted">Daily Completed Deliveries</option>
+                  <option value="pending">Pending Deliveries</option>
+                  <option value="driverPerformance">Driver Performance</option>
+                  <option value="revenueSummary">Revenue / Cost Summary</option>
+                </select>
+
+                <div id="delivery-report-preview" className="delivery-report-preview">
+                  {/* Chart Preview */}
+                  {reportType === "dailyCompleted" && (
+                    <LineChart width={600} height={300} data={reportData} className="delivery-report-chart">
+                      <XAxis dataKey="employeeID" />
+                      <YAxis />
+                      <Tooltip />
+                      <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+                      <Line type="monotone" dataKey="deliveries.length" stroke="#8884d8" />
+                    </LineChart>
+                  )}
+
+                  {reportType === "driverPerformance" && (
+                    <BarChart width={600} height={300} data={reportData} className="delivery-report-chart">
+                      <XAxis dataKey="employeeID" />
+                      <YAxis />
+                      <Tooltip />
+                      <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+                      <Bar dataKey="totalDeliveries" fill="#82ca9d" />
+                    </BarChart>
+                  )}
+
+                  {/* Table Preview */}
+                  <table className="delivery-report-table">
+                    <thead>
+                      <tr>
+                        {reportType === "driverPerformance" ? (
+                          <>
+                            <th>Driver ID</th>
+                            <th>Total Completed Orders</th>
+                          </>
+                        ) : reportType === "revenueSummary" ? (
+                          <>
+                            <th>Total Deliveries</th>
+                            <th>Total Revenue</th>
+                          </>
+                        ) : (
+                          <>
+                            <th>Driver ID</th>
+                            <th>Order Details</th>
+                            <th>Total Weight</th>
+                            <th>Status</th>
+                          </>
+                        )}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {reportData.map((item, i) => (
+                        <tr key={i}>
+                          {reportType === "driverPerformance" ? (
+                            <>
+                              <td>{item.employeeID}</td>
+                              <td>{item.totalDeliveries}</td>
+                            </>
+                          ) : reportType === "revenueSummary" ? (
+                            <>
+                              <td>{item.totalDeliveries}</td>
+                              <td>{item.totalRevenue}</td>
+                            </>
+                          ) : (
+                            <>
+                              <td>
+                                  {item.employeeID}
+                                </td>
+
+                              <td>{item.deliveries?.length > 0 ? (
+                                      item.deliveries.map((delivery) => (
+                                        <div key={delivery._id}>
+                                          {delivery.orderID} - {delivery.customerName}
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <div>No deliveries</div>
+                                    )}
+                              </td>
+                              <td>{item.totalWeight}</td>
+                              <td>{item.status}</td>
+                            </>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                    
+                <button className="delivery-report-download" onClick={downloadPDF}>
+                  Download PDF
+                </button>
+            </div>
+        )}
+
+    </main>
+        
     </div>
     );
 };

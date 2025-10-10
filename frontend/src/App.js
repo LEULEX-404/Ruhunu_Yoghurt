@@ -32,6 +32,10 @@ import RawMaterialWithHistory from './Pages/admin/Rawhistory';
 import AddRemoveProductForm from './Pages/admin/add productstock';
 import Smdashboardpage from './Pages/admin/smdashboard';
 import ProductTable from './Pages/StockDashboard';
+import RequestRawMaterialEmail from './Pages/admin/reqrawmaterial';
+import RawMaterialRequestTable from './Pages/RawMaterialRequestTable';
+
+// Axios global config    
 
 axios.defaults.baseURL = 'http://localhost:8070'; 
 axios.defaults.withCredentials = true;
@@ -70,6 +74,9 @@ function Appwrapper() {
         <Route path="/smdashboard" element={<Smdashboardpage />} />
         <Route path="/stockpage" element={<Stockpage />} />
         <Route path="/productStock" element={<ProductTable />} />
+        <Route path="/Reqrawmaterial" element={<RequestRawMaterialEmail />} />
+        <Route path="/rawMaterialRequests" element={<RawMaterialRequestTable />} /> 
+
 
         {/* Admin */}
         <Route path="/admin/*" element={<AdminPage />} />

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Product from "../Pathum/product.js";
 
 const orderSchema = new mongoose.Schema({
 
@@ -8,6 +9,10 @@ const orderSchema = new mongoose.Schema({
      
     items: [
         {
+            productId : {
+                type : String,
+                required : true
+            },
             product: String,
             quantity: Number,
             price: Number
@@ -35,5 +40,19 @@ const orderSchema = new mongoose.Schema({
         default: "Low"
     }   
 }, { timestamps: true });
+
+orderSchema.post("findOneAndUpdate", async function (doc) {
+  if (doc && doc.status === "cancelled") {
+    for (const item of doc.items) {
+      // Find product by custom productId
+      await Product.findOneAndUpdate(
+        { productId: item.productId },
+        { $inc: { quantity: item.quantity } }
+      );
+    }
+    console.log(`✅ Products restocked for cancelled order: ${doc.orderNumber}`);
+  }
+});
+
 
 export default mongoose.model("Order", orderSchema);

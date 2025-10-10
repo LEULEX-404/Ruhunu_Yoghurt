@@ -5,7 +5,6 @@ export default function PaymentPage({ user, order }) {
   const [totalAmount, setTotalAmount] = useState(0);
 
   useEffect(() => {
-    // Example: calculate total from order items
     if (order && order.items) {
       const sum = order.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
       setTotalAmount(sum);

@@ -1,4 +1,4 @@
-/* ===== Base Reset ===== */
+
 * {
   margin: 0;
   padding: 0;
@@ -19,7 +19,7 @@ body {
   height: 100vh;
 }
 
-/* ===== Sidebar ===== */
+
 .sidebar {
   width: 260px;
   background: linear-gradient(180deg, #6366f1 0%, #4338ca 100%);
@@ -108,6 +108,7 @@ body {
 .manager-name {
   font-size: 14px;
   font-weight: bold;
+  color: #fff;
 }
 
 .manager-role {
@@ -139,7 +140,6 @@ body {
 
 
 
-/* ===== Main Content ===== */
 .main-content {
   font-family: 'Poppins', 'Segoe UI', sans-serif;
   flex:1;
@@ -164,14 +164,14 @@ body {
     font-family: 'Poppins', 'Segoe UI', sans-serif;
     font-size: 1.1rem;
     font-weight: 500;
-    color: #6b7280; /* Modern subtle gray */
+    color: #6b7280; 
     margin-bottom: 1.5rem;
     line-height: 1.5;
     letter-spacing: 0.5px;
 }
 
 
-/* ===== Modern Stats Row ===== */
+
 .stats-row {
   display: flex;
   gap: 20px;
@@ -195,8 +195,8 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
-  overflow: visible; /* popup outside card */
-  cursor: pointer; /* pointer on hover */
+  overflow: visible; 
+  cursor: pointer; 
 }
 
 .stat-card::before {
@@ -213,7 +213,6 @@ body {
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
 }
 
-/* Tooltip / Popup */
 .stat-card::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -238,7 +237,6 @@ body {
 }
 
 
-/* ==== Bright & Modern Gradients ==== */
 .blue {
   --card-bg: #3b82f6;
   background: linear-gradient(135deg, #3b82f6, #1d4ed8);
@@ -263,7 +261,6 @@ body {
   color: white;
 }
 
-/* Smooth fade-in on page load */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -273,7 +270,6 @@ body {
 }
 
 
-/* ===== Orders Section (Modernized) ===== */
 .section-content {
   margin-top: 25px;
 }
@@ -328,10 +324,9 @@ body {
   line-height: 1.4;
 }
 
-/* Modern Primary Button */
 .order-card {
   display: flex;
-  flex-direction: row; /* info left, items right */
+  flex-direction: row; 
   justify-content: space-between;
   align-items: flex-start;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(245, 245, 255, 0.88));
@@ -431,7 +426,7 @@ body {
   scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
 }
 
-/* Custom Scrollbar (modern look) */
+
 .side::-webkit-scrollbar {
   width: 6px;
 }
@@ -482,7 +477,7 @@ body {
   color: #4b5563;
 }
 
-/* ===== Assign Button (Modern Glow) ===== */
+
 .assign-btn {
   position: absolute;
   bottom: 20px;
@@ -510,16 +505,14 @@ body {
 }
 
 
-/* ===== Variables ===== */
 :root {
   --body-color: #f3f4f6;
   --sidebar-color: #ffffff;
-  --primary-color: #6366f1; /* Indigo */
+  --primary-color: #6366f1; 
   --primary-color-light: #eef2ff;
   --text-color: #1f2937;
 }
 
-/* ===== Modern Toggle Switch ===== */
 .switch {
   position: relative;
   display: inline-block;
@@ -568,13 +561,13 @@ input:checked + .slider:before {
   box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
-/* Optional: hover effect for slider */
+
 .slider:hover:before {
   transform: translateX(var(--translate, 0)) scale(1.05);
 }
 
 
-/* ===== Modern Schedule Wrapper & Driver Cards ===== */
+
 .schedule-wrapper {
   padding: 25px;
 }
@@ -666,7 +659,6 @@ input:checked + .slider:before {
 }
 
 
-/* ===== Modern Search Bar ===== */
 .search-input {
   width: 60%;
   max-width: 500px;
@@ -685,7 +677,7 @@ input:checked + .slider:before {
 }
 
 .search-input::placeholder {
-  color: #9ca3af; /* Subtle placeholder */
+  color: #9ca3af; 
   font-style: italic;
 }
 
@@ -710,7 +702,6 @@ input:checked + .slider:before {
 }
 
 
-/* ===== Modern Modal ===== */
 .modal-overlay {
     top: 0;
     left: 0;
@@ -796,10 +787,10 @@ input:checked + .slider:before {
 
 
 
-/* Dark Mode CSS */
+
 body.dark-mode {
   background: #1f2937;
-  color: #f3f4f6; /* Default text color */
+  color: #f3f4f6;
 }
 
 body.dark-mode h1,

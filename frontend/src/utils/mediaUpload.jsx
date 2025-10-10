@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js"
+/*import { createClient } from "@supabase/supabase-js"
 
 const url = "https://tnygeegyssiymgunhsmv.supabase.co"
 const key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRueWdlZWd5c3NpeW1ndW5oc212Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2NTQ2NTMsImV4cCI6MjA3NDIzMDY1M30.tkVlccbxETMkgrVRE8ZXu2gKtg4Tz-nYaBD9Koj2W_Y"
@@ -28,4 +28,4 @@ export default function MediaUpload(file){
     })
 
     return mediaUploadPromise
-}
+}*/

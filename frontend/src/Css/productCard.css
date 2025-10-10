@@ -1,4 +1,3 @@
-/* Card container */
 .product-card {
     display: flex;
     flex-direction: column;
@@ -6,8 +5,8 @@
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-decoration: none; /* Removes underline from the Link component */
-    color: inherit; /* Inherits text color */
+    text-decoration: none;
+    color: inherit;
 }
 
 .product-card:hover {
@@ -15,11 +14,10 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Image section */
 .product-card-image-container {
     position: relative;
     width: 100%;
-    height: 250px; /* Fixed height for consistent card size */
+    height: 250px;
     overflow: hidden;
     border-bottom: 1px solid #eee;
 }
@@ -49,12 +47,11 @@
     transform: scale(1.05);
 }
 
-/* Details section */
 .product-card-info {
     padding: 16px;
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Allows this section to expand */
+    flex-grow: 1;
 }
 
 .product-card-title {
@@ -69,15 +66,15 @@
     color: #666;
     line-height: 1.4;
     margin-bottom: 16px;
-    min-height: 40px; /* Ensures consistent description height */
+    min-height: 40px;
 }
 
-/* Price and stock section */
+
 .product-card-price-stock {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: auto; /* Pushes content to the bottom of the card */
+    margin-top: auto;
     margin-bottom: 12px;
 }
 
@@ -111,22 +108,21 @@
     color: #dc3545;
 }
 
-/* Rating section */
+
 .product-card-rating {
     display: flex;
     align-items: center;
     gap: 4px;
-    color: #ffc107; /* A gold color for stars */
+    color: #ffc107;
     margin-bottom: 16px;
     font-size: 0.9rem;
 }
 
-/* Button section */
 .product-card-button {
     width: 100%;
     padding: 12px;
     border: none;
-    border-radius: 0 0 12px 12px; /* Bottom corners only */
+    border-radius: 0 0 12px 12px;
     background-color: #007bff;
     color: white;
     font-size: 1rem;
@@ -144,7 +140,6 @@
     background-color: #0056b3;
 }
 
-/* Optional: Add a subtle animation for the whole card */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -160,14 +155,20 @@
     animation: fadeIn 0.5s ease-in-out;
 }
 
+.product-card.unavailabe {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
 .product-card.expiring-soon {
     border: 2px solid #ff4444 !important;
     border-radius: 8px;
     position: relative;
-    overflow: hidden; /* Ensures border-radius works properly */
+    overflow: hidden;
 }
 
-/* Optional: Add a subtle animation to draw attention */
+
 .product-card.expiring-soon {
     animation: pulse 2s infinite;
 }

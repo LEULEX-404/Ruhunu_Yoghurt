@@ -61,22 +61,22 @@ function Home() {
 
   const slides = [
     {
-      title: "Get a Fully Branded Mobile App",
-      text: "Simple Dairy App with your brand name (White label) and more features.",
+      title: "Streamline Dairy Operations",
+      text: "Our system helps you manage milk, yogurt, cheese, and more with efficiency and accuracy.",
       image: sample1,
-      btn: "Contact Us",
-    },
-    {
-      title: "Fresh Dairy at Your Fingertips",
-      text: "Order milk, yogurt, and cheese with just one tap on your phone.",
-      image: sample2,
-      btn: "Explore Services",
-    },
-    {
-      title: "Grow Your Business Digitally",
-      text: "Expand your dairy business reach with our modern mobile solutions.",
-      image: sample3,
       btn: "Learn More",
+    },
+    {
+      title: "Track Production & Inventory",
+      text: "Monitor daily production and maintain accurate stock levels with ease.",
+      image: sample2,
+      btn: "View Features",
+    },
+    {
+      title: "Deliver Quality, On Time",
+      text: "Ensure fresh dairy products reach customers quickly and safely with smart logistics.",
+      image: sample3,
+      btn: "Get Started",
     },
   ];
 
@@ -370,7 +370,7 @@ function Home() {
             </div>
           </div>
 
-          {/* Right Side - Form */}          <div className="contact-form">
+          <div className="contact-form">
             <h3>Send Us a Message</h3>
             <form onSubmit={handleSubmit}>
               <input

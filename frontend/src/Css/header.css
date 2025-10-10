@@ -1,6 +1,3 @@
-/* ==========================
-   Header Styles
-   ========================== */
 .header {
     display: flex;
     justify-content: space-between;
@@ -19,7 +16,6 @@
     gap: 1.5rem;
 }
 
-/* Navigation Links */
 .nav-link {
     color: #ecf0f1;
     text-decoration: none;
@@ -31,7 +27,6 @@
     color: #f39c12;
 }
 
-/* Login / Logout Buttons */
 .btn-login,
 .btn-logout {
     background-color: #f39c12;
@@ -49,7 +44,6 @@
     background-color: #d35400;
 }
 
-/* Cart Icon */
 .cart-icon {
     color: #ecf0f1;
     font-size: 1.5rem;

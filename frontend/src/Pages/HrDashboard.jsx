@@ -8,6 +8,7 @@ import { FiUserX, FiHome, FiLogOut, FiMoon,FiSun ,FiBarChart2, FiCheckSquare, Fi
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '../Css/HrDashboard.css';
+import HrReport from '../Pages/HrReport.jsx';
 
 export default function HrDashboard() {
     const [employee, setEmployee] = useState("");
@@ -175,7 +176,7 @@ export default function HrDashboard() {
         e.preventDefault();
         if(validateForm()){
             try{
-                const response = await axios.post(`http://localhost:8070/api/employees/add`, newEmployee);
+                await axios.post(`http://localhost:8070/api/employees/add`, newEmployee);
                 toast.success("Employee Added Successfully");
                 setNewEmployee({ name:'', email:'', position:'Unassigned', phone:'', password:'' });
                 setConfirmPassword('');
@@ -224,7 +225,7 @@ export default function HrDashboard() {
         }
         if(validateUpdateForm()){
             try{
-                const response = await axios.put(`http://localhost:8070/api/employees/update/${editEmployee._id}`, 
+                await axios.put(`http://localhost:8070/api/employees/update/${editEmployee._id}`, 
                     {employeeID: editEmployee.employeeID, name: editEmployee.name, email: editEmployee.email, position: editEmployee.position, phone: editEmployee.phone });
                 toast.success("Employee Updated Successfully");
                 fetchEmployees();
@@ -283,7 +284,7 @@ export default function HrDashboard() {
         e.preventDefault();
         if(!await validateAssignRole()) return;
         try{
-            const response = await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, 
+            await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, 
               { position: selectedEmployee.position, 
                 employeeID: selectedEmployee.employeeID, 
                 vehicleCapacity: selectedEmployee.vehicleCapacity || 0 
@@ -315,6 +316,46 @@ export default function HrDashboard() {
         }
         return true;
     }
+
+    useEffect(() => {
+      if (view === "attendence") {
+          fetchAttendanceByDate(selectedDate);
+      }
+  }, [selectedDate]);
+  
+
+    useEffect(() => {
+      if (Array.isArray(attendanceByDate) && attendanceByDate.length > 0) {
+        let presentCount = 0;
+        let lateCount = 0;
+        attendanceByDate.forEach((record) => {
+          if (record.checkInTime) {
+            const checkInTime = new Date(record.checkInTime);
+            const lateTime = new Date();
+            lateTime.setHours(12, 30, 0, 0);
+            if (checkInTime <= lateTime) {
+              presentCount++;
+            } else {
+              lateCount++;
+            }
+          }
+        });
+        setAttendanceSummary((prev) => ({
+          ...prev,
+          present: presentCount,
+          late: lateCount,
+          absent: employees.length - (presentCount + lateCount),
+        }));
+      } else {
+        setAttendanceSummary((prev) => ({
+          ...prev,
+          present: 0,
+          late: 0,
+          absent: employees.length,
+        }));
+      }
+    }, [attendanceByDate, employees]);
+    
 
     const handleSignOut = () =>{
         localStorage.removeItem("token");
@@ -625,10 +666,12 @@ export default function HrDashboard() {
                       <div className="content-card">
                         <div className='attendence-header'>
                             <h2>ATTENDENCE TRACKING SECTION</h2>
-                            <ul>
+                            <ul className="attendance-summary">
                               <li>Present: {attendanceSummary.present}</li>
+                              <li>Late: {attendanceSummary.late}</li>
+                              <li>Absent: {attendanceSummary.absent}</li>
                             </ul>
-                              <div style={{ margin: "10px 0" }}>
+                              <div className="date-picker-container">
                                   <label>Select Date: </label>
                                   <DatePicker
                                       selected={selectedDate}
@@ -704,7 +747,7 @@ export default function HrDashboard() {
 
             {view === "reports" && (
                 <div className="content-card">
-                    <h2>Reports Section (To Implement)</h2>
+                    <HrReport employees={employees} attendanceByDate={attendanceByDate} />
                 </div>
             )}
         </main>

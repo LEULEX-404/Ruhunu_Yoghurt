@@ -18,6 +18,7 @@ import StockRouter from './routes/Kalindu/StockRoutes.js';
 import RawMaterialRoutes from "./routes/Kalindu/RawmaterialRoutes.js";
 import supplierRoutes from './routes/Kalindu/SuplierRoutes.js';
 import RawMaterialRequestRoutes from './routes/Kalindu/RawMaterialRequestRoutes.js';
+import HrReportRoutes from './routes/Tharuka/reportRoutes.js'
 
 
 dotenv.config();
@@ -29,6 +30,7 @@ app.use(express.json());
 
 app.use('/api',authRoutes);
 app.use('/api/employees', employeeRoutes);
+app.use('/api/hrreports',HrReportRoutes)
 app.use('/api/deliveries',deliveryRoutes);
 app.use('/api/attendance', attendenceRoutes);
 app.use('/api/user',userRoutes);

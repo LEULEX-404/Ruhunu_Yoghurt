@@ -1,4 +1,4 @@
-import Attendence from "../../models/Tharuka/attendence.js";
+import Attendence from "../../models/Tharuka/Attendence.js";
 import Employee from "../../models/Tharuka/Employee.js";
 
 export const getTodaysAttendence = async (req, res) => {

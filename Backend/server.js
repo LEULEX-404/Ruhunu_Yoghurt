@@ -18,6 +18,7 @@ import StockRouter from './routes/Kalindu/StockRoutes.js';
 import RawMaterialRoutes from "./routes/Kalindu/RawmaterialRoutes.js";
 import supplierRoutes from './routes/Kalindu/SuplierRoutes.js';
 import DeliveryReportsRoutes from './routes/Imasha/reportRoutes.js';
+import HrReportRoutes from './routes/Tharuka/reportRoutes.js'
 
 dotenv.config();
 connectDB();

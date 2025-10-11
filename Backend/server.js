@@ -14,6 +14,7 @@ import cartRoutes from './routes/Lasiru/cartRoutes.js'
 import paymentRouter from './routes/Lasiru/paymentRoutes.js';
 import orderRoutes from './routes/Lasiru/orderRoutes.js';
 import cartRouter from './routes/Pathum/cartRoute.js';
+import notificationsRoutes from "./routes/Lasiru/emailRoute.js";
 
 
 dotenv.config();
@@ -39,6 +40,7 @@ app.use('/api/cart', cartRoutes)
 app.use('/api/products', productRouter)
 app.use('/api/payments', paymentRouter)
 app.use('/api/cart', cartRouter)
+app.use("/api/ordernotifications", notificationsRoutes);
 
 
 const PORT = process.env.PORT || 8070;

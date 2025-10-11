@@ -317,9 +317,20 @@ export default function HrDashboard() {
         return true;
     }
 
-    useEffect(() => {
-      if (view === "attendence") {
-          fetchAttendanceByDate(selectedDate);
+    const fetchAttendanceSummary = async () => {
+      try {
+        const response = await fetch('http://localhost:8070/api/attendance/summary', {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+    
+        const data = await response.json();
+        setAttendanceSummary(data);
+      } catch (error) {
+        console.error("Error fetching attendance summary:", error);
       }
   }, [selectedDate]);
   

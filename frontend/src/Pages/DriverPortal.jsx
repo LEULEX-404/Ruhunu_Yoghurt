@@ -65,6 +65,7 @@ const handleCompleteDelivery = async (deliveryId) => {
   try{
     await axios.put(`http://localhost:8070/api/driver/complete/${deliveryId}`);
 
+    toast.success("Delivery marked as completed");
     fetchDeliveries();
     fetchCompletedDeliveries();
     fetchDriver()

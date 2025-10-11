@@ -324,84 +324,304 @@ export default function HrDashboard() {
     };
 
     // ======= RETURN JSX ========
-    return(
-        <div className = {`HR-dashboard-container ${darkMode ? 'dark':''}`}>
-          <Toaster position="bottom-center" richColors />
-            <div className="HR-wrapper">
-                <aside className="HR-sidebar">
-                    <div className="HR-sidebar-header">
-                        <h2>Human & Resource Management</h2>
-                        <div className='HR-manager-card'>
-                            <img
-                                src = 'https://cdn-icons-png.flaticon.com/512/3237/3237472.png' 
-                                alt='Profile' 
-                                className='profile-avatar'
-                            />
-                            <div>
-                                <h4 className="HR-manager-name"><p>{employee?.position}</p></h4>
-                                <p className="HR-manager-role">{employee?.employeeID}</p>
-                                <p className="HR-manager-role">{employee?.name}</p>
-                                <p className="HR-manager-role">{employee?.email}</p>
+  return(
+
+<div className = {`HR-dashboard-container ${darkMode ? 'dark':''}`}>
+  <Toaster position="bottom-center" richColors />
+    <div className="HR-wrapper">
+        <aside className="HR-sidebar">
+            <div className="HR-sidebar-header">
+                <h2>Human & Resource Management</h2>
+                <div className='HR-manager-card'>
+                    <img
+                        src = 'https://cdn-icons-png.flaticon.com/512/3237/3237472.png' 
+                        alt='Profile' 
+                        className='profile-avatar'
+                    />
+                    <div>
+                        <h4 className="HR-manager-name"><p>{employee?.position}</p></h4>
+                        
+                        <p className="HR-manager-role">{employee?.employeeID}</p>
+                        <p className="HR-manager-role">{employee?.name}</p>
+                        <p className="HR-manager-role">{employee?.email}</p>
+                    </div>
+
+                </div>
+            </div>
+                <ul className="HR-sidebar-menu">
+                  <li 
+                    className={view === 'dashboard' ? 'active' : ''} 
+                    onClick={() => setView('dashboard')}
+                  >
+                    <FiHome /> Dashboard
+                  </li>
+                  <li 
+                    className={view === 'add' ? 'active' : ''} 
+                    onClick={() => setView('add')}
+                  >
+                   <FiUserPlus /> Add Employee
+                  </li>
+                  <li 
+                    className={view === 'unassigned' ? 'active' : ''} 
+                    onClick={() => setView('unassigned')}
+                  >
+                    <FiUserX /> Unassigned
+                  </li>
+                  <li 
+                    className={view === 'assigned' ? 'active' : ''} 
+                    onClick={() => setView('assigned')}
+                  >
+                    <FiUserCheck /> Assigned
+                  </li>
+                  <li 
+                    className={view === 'attendence' ? 'active' : ''} 
+                    onClick={() => setView('attendence')}
+                  >
+                    <FiCheckSquare /> Attendence
+                  </li>
+                  <li 
+                    className={view === 'reports' ? 'active' : ''} 
+                    onClick={() => setView('reports')}
+                  >
+                    <FiBarChart2 /> Reports
+                  </li>
+                </ul>
+
+
+                <div className="HR-sidebar-footer">
+                    <button className = 'dark-mode-btn' onClick={toggleDarkMode}>
+                        {darkMode ? <FiSun/> : <FiMoon/>} {darkMode ? 'Light' : 'Dark'} Mode
+                    </button>
+                    <button className="signout-btn" onClick = {handleSignOut}>
+                        <FiLogOut /> Sign Out
+                    </button>
+                    
+                </div>
+        </aside>
+
+        <main className="HR-main-content">
+            <div className = 'topbar'>
+                <h1>Human & Resource Management</h1>
+                <p className="subtitle">Monitor and manage all employee & user operations</p>
+            </div>
+            
+
+            {view === 'dashboard' && (
+                <div className='HR-dashboard-view'>
+                  <h2>Welcome to the HR Dashboard</h2>
+                                    
+                  <div className="HR-stats-container">
+                  <div className="stats-row">
+                      <div className="stat-card blue" data-tooltip="Total number of employees">
+                        <h3>Employees</h3>
+                        <span>{employees.length}</span>
+                      </div>
+                      <div className="stat-card green" data-tooltip="Drivers available for delivery">
+                        <h3>Available Drivers</h3>
+                        <span>{employees.filter(emp => emp.position === "Driver").length}</span>
+                      </div>
+                      <div className="stat-card orange" data-tooltip="Staff available for Work">
+                        <h3>Available Staff</h3>
+                        <span>{employees.filter(emp => emp.position === "Staff").length}</span>
+                      </div>
+                      <div className="stat-card purple" data-tooltip="All Manager Roles">
+                        <h3>Manager</h3>
+                        <span>{employees.filter(emp => emp.position === "HR Manager" ||emp.position === "Delivery Manager"  ||emp.position === "Product Manager"  ||emp.position === "Order Manager"  ||emp.position === "Stock Manager" ).length}</span>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div className="recent-activities">
+                     <h3>Recent Activities</h3>
+                     <ul>
+                       <li>🚚 Delivery #123 assigned to Driver John</li>
+                       <li>👤 New Employee: Sarah added to HR system</li>
+                       <li>✅ Delivery #122 completed</li>
+                     </ul>
+                  </div>
+                </div>
+            )}
+
+
+
+            {view === 'add' && (
+                <div className = 'contend-card'>
+                    <div className = 'add-employee-form'>
+                        <h2>ADD NEW EMPLOYEE</h2>
+
+                        <form onSubmit = { handleAddEmployee } className = 'HR-add-form'>
+                            <div className = 'HR-form-group'>
+
+                                <input type = 'text' placeholder='Name' value={newEmployee.name} onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}/>
+
+                                <input type = 'text' placeholder='Email' value={newEmployee.email} onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}/>
+
+                                <input type = 'text' placeholder='Phone' value={newEmployee.phone} onChange={(e) => setNewEmployee({...newEmployee, phone: e.target.value})} />
+
+                                <input type = 'password' placeholder='Password' value={newEmployee.password} onChange={(e) => setNewEmployee({...newEmployee, password: e.target.value})}/>
+
+                                <input type = 'password' placeholder='Confirm Password' value={confirmPassword} onChange={(e) => setConfirmPassword( e.target.value)}/>
                             </div>
-                        </div>
-                    </div>
-                    <ul className="HR-sidebar-menu">
-                      <li className={view === 'dashboard' ? 'active' : ''} onClick={() => setView('dashboard')}><FiHome /> Dashboard</li>
-                      <li className={view === 'add' ? 'active' : ''} onClick={() => setView('add')}><FiUserPlus /> Add Employee</li>
-                      <li className={view === 'unassigned' ? 'active' : ''} onClick={() => setView('unassigned')}><FiUserX /> Unassigned</li>
-                      <li className={view === 'assigned' ? 'active' : ''} onClick={() => setView('assigned')}><FiUserCheck /> Assigned</li>
-                      <li className={view === 'attendence' ? 'active' : ''} onClick={() => setView('attendence')}><FiCheckSquare /> Attendence</li>
-                      <li className={view === 'reports' ? 'active' : ''} onClick={() => setView('reports')}><FiBarChart2 /> Reports</li>
-                    </ul>
-                    <div className="HR-sidebar-footer">
-                        <button className = 'dark-mode-btn' onClick={toggleDarkMode}>
-                            {darkMode ? <FiSun/> : <FiMoon/>} {darkMode ? 'Light' : 'Dark'} Mode
-                        </button>
-                        <button className="signout-btn" onClick = {handleSignOut}><FiLogOut /> Sign Out</button>
-                    </div>
-                </aside>
 
-                <main className="HR-main-content">
-                    <div className = 'topbar'>
-                        <h1>Human & Resource Management</h1>
-                        <p className="subtitle">Monitor and manage all employee & user operations</p>
+                            <button type = 'submit' className='submit-btn'>Add Employee</button>
+                        </form>
                     </div>
+                </div>
+            )}
 
-                    {view === 'dashboard' && (
-                        <div className='HR-dashboard-view'>
-                          <h2>Welcome to the HR Dashboard</h2>
-                          <div className="HR-stats-container">
-                          <div className="stats-row">
-                              <div className="stat-card blue" data-tooltip="Total number of employees">
-                                <h3>Employees</h3>
-                                <span>{employees.length}</span>
-                              </div>
-                              <div className="stat-card green" data-tooltip="Drivers available for delivery">
-                                <h3>Available Drivers</h3>
-                                <span>{employees.filter(emp => emp.position === "Driver").length}</span>
-                              </div>
-                              <div className="stat-card orange" data-tooltip="Staff available for Work">
-                                <h3>Available Staff</h3>
-                                <span>{employees.filter(emp => emp.position === "Staff").length}</span>
-                              </div>
-                              <div className="stat-card purple" data-tooltip="All Manager Roles">
-                                <h3>Manager</h3>
-                                <span>{employees.filter(emp => ["HR Manager","Delivery Manager","Product Manager","Order Manager","Stock Manager"].includes(emp.position)).length}</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="recent-activities">
-                             <h3>Recent Activities</h3>
-                             <ul>
-                               <li>🚚 Delivery #123 assigned to Driver John</li>
-                               <li>👤 New Employee: Sarah added to HR system</li>
-                               <li>✅ Delivery #122 completed</li>
-                             </ul>
-                          </div>
-                        </div>
-                    )}
 
-                    {view === "attendence" && (
+            {(view === 'unassigned' ) && (
+                <div className = 'content-card'>
+                    <div className='unassingn-employee'>
+                    <h2>UNASSIGNED EMPLOYEE</h2>
+                    </div>
+                    <div className='search-container'>
+                        <input className = 'search-bar'
+                          type="text"
+                          placeholder="Search Employee..."
+                          value={employeeSearch}
+                          onChange={(e) => setEmployeeSearch(e.target.value)}
+                        />
+                    </div>
+                    <table className>
+                        <thead>
+                            <tr>
+                                <th>Employee ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Position</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {employees.filter(emp => view === 'unassigned' ? emp.position === 'Unassigned' : emp.position !== 'Unassigned')
+                            .sort((a, b) => {
+                              const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
+                              const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
+                              return numA - numB;
+                            })
+                            .map((emp) => (
+                                <tr key = {emp._id}>
+                                    <td>{emp.employeeID}</td>
+                                    <td>{emp.name}</td>
+                                    <td>{emp.email}</td>
+                                    <td>{emp.position}</td>
+                                    <td>{emp.phone}</td>
+                                    <td>
+                                        <button onClick = {() => openAssignModal(emp)} className='submit-btn'>Assign Role</button>
+                                        <button onClick = {() => handleDeleteEmployee(emp._id)} className='delete-btn'>Delete</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+            {(view === 'assigned' ) && (
+                <div className = 'content-card'>
+                    <div className='assign-employee'>
+                    <h2>ASSIGNED EMPLOYEES</h2>
+                    </div>
+                    <div className='search-container'>
+                        <input className = 'search-bar'
+                          type="text"
+                          placeholder="Search Employee..."
+                          value={employeeSearch}
+                          onChange={(e) => setEmployeeSearch(e.target.value)}
+                        />
+                    </div>
+                    <div className='employee-table'>
+                    <h3>EMPLOYEES</h3>
+                    </div>
+                    <table className>
+                        <thead>
+                            <tr>
+                                <th>Employee ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Position</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {employees.filter(emp => 
+                            view === 'unassigned' 
+                                ? emp.position === 'Unassigned' 
+                                : emp.position !== 'Unassigned' && emp.position !=='Driver')
+                            .sort((a,b) =>{
+
+                                const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
+                                const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
+
+                                return numA -numB;
+                            }).map((emp) => (
+                                <tr key = {emp._id}>
+                                    <td>{emp.employeeID}</td>
+                                    <td>{emp.name}</td>
+                                    <td>{emp.email}</td>
+                                    <td>{emp.position}</td>
+                                    <td>{emp.phone}</td>
+                                    <td>
+                                        <button onClick = {() => openEditModal(emp)} className='update'>Update</button>
+                                        <button onClick = {() => handleDeleteEmployee(emp._id)} className='delete-btn'>Delete</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div className='driver-table'>
+                    <h3>DRIVER</h3>
+                    </div>
+                    <table className>
+                        <thead>
+                            <tr>
+                                <th>Driver ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Position</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {employees.filter(emp => 
+                            view === 'unassigned' 
+                                ? emp.position === 'Unassigned' 
+                                : emp.position !== 'Unassigned' && emp.position ==='Driver')
+                            .sort((a,b) =>{
+
+                                const numA = parseInt(a.employeeID.replace(/\D/g, ""), 10);
+                                const numB = parseInt(b.employeeID.replace(/\D/g, ""), 10);
+
+                                return numA -numB;
+                            }).map((emp) => (
+                                <tr key = {emp._id}>
+                                    <td>{emp.employeeID}</td>
+                                    <td>{emp.name}</td>
+                                    <td>{emp.email}</td>
+                                    <td>{emp.position}</td>
+                                    <td>{emp.phone}</td>
+                                    <td>
+                                        <button onClick = {() => openEditModal(emp)} className='update'>Update</button>
+                                        <button onClick = {() => handleDeleteEmployee(emp._id)} className='delete-btn'>Delete</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                
+            )}
+
+
+                {view === "attendence" && (
                       <div className="content-card">
                         <div className='attendence-header'>
                             <h2>ATTENDENCE TRACKING SECTION</h2>
@@ -481,9 +701,110 @@ export default function HrDashboard() {
                         )}
                       </div>
                     )}
-                    
-                </main>
-            </div>
-        </div>
-    );
+
+            {view === "reports" && (
+                <div className="content-card">
+                    <h2>Reports Section (To Implement)</h2>
+                </div>
+            )}
+        </main>
+    </div>
+
+            {isModalOpen && (
+                <div className = 'modal-overlay'>
+                    <div className = 'modal-content'>
+                        <h2>Assign Role to {selectedEmployee.name}</h2>
+                            <form onSubmit = {handleAssignRole}>
+                                <div className = 'HR-form-group'>
+                                    <label>Select Role</label>
+                                    <select value={selectedEmployee?.position || 'Unassigned'} onChange={(e) => setSelectedEmployee({...selectedEmployee, position: e.target.value})} required>
+                                        <option value = 'Unassigned'>Unassigned</option>
+                                        <option value = 'Product Manager'>Product Manager</option>
+                                        <option value = 'Stock Manager'>Stock Manager</option>
+                                        <option value = 'Delivery Manager'>Delivery Manager</option>
+                                        <option value = 'Order Manager'>Order Manager</option>
+                                        <option value = 'HR Manager'>HR Manager</option>
+                                        <option value = 'Driver'>Driver</option>
+                                        <option value = 'Staff'>Staff</option>
+                                    </select>
+                                    {selectedEmployee?.position === "Driver" && (
+                                        <div>
+                                    <input
+                                        type="text"
+                                        placeholder="Driver ID"
+                                        value={selectedEmployee?.employeeID || ''}
+                                        onChange={(e) => setSelectedEmployee({...selectedEmployee, employeeID: e.target.value})}
+
+                                     />
+                                    <input
+                                        type="number"
+                                        placeholder="Vehicle Capacity"
+                                        value={selectedEmployee?.vehicleCapacity || ''}
+                                        onChange={(e) => setSelectedEmployee({...selectedEmployee, vehicleCapacity: e.target.value})}
+                                    />
+                                    </div>
+                                )}
+                                </div>
+
+                                <div className = 'modal-buttons'>
+                                    <button type = 'submit' className='submit-btn'>Assign Role</button>
+                                    <button type = 'button' className='cancel-btn' onClick={closeAssignModal}>Cancel</button>
+                                </div>
+                            </form>
+                    </div>
+                </div>
+            )}
+
+            {editModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2>Edit Profile: {editEmployee?.name}</h2>
+                        <form onSubmit={handleUpdateEmployee}>
+                            <div className="HR-form-group">
+                                <input 
+                                    type="text" 
+                                    placeholder="Name" 
+                                    value={editEmployee?.name || ''} 
+                                    onChange={(e) => setEditEmployee({...editEmployee, name: e.target.value})} 
+                                />
+                                <input 
+                                    type="text" 
+                                    placeholder="Email" 
+                                    value={editEmployee?.email || ''} 
+                                    onChange={(e) => setEditEmployee({...editEmployee, email: e.target.value})} 
+                                />
+                                <input 
+                                    type="text" 
+                                    placeholder="Phone" 
+                                    value={editEmployee?.phone || ''} 
+                                    onChange={(e) => setEditEmployee({...editEmployee, phone: e.target.value})} 
+                                />
+                                <select 
+                                    value={editEmployee?.position || 'Unassigned'}
+                                    onChange={(e) => setEditEmployee({...editEmployee, position: e.target.value})}
+                                    required
+                                >
+                                    <option value="Unassigned">Unassigned</option>
+                                    <option value="Product Manager">Product Manager</option>
+                                    <option value="Stock Manager">Stock Manager</option>
+                                    <option value="Delivery Manager">Delivery Manager</option>
+                                    <option value="Order Manager">Order Manager</option>
+                                    <option value="HR Manager">HR Manager</option>
+                                    <option value="Staff">Staff</option>
+                                </select>
+
+                            </div>
+                            <div className="modal-buttons">
+                                <button type="submit" className="submit-btn">Update</button>
+                                <button type="button" className="cancel-btn" onClick={closeEditModal}>Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+    </div>
+
+);
+
 };

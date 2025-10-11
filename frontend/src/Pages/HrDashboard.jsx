@@ -346,7 +346,7 @@ const validateUpdateForm = () =>{
         toast.success("Signed out successfully!");
         setTimeout(() => {
         window.location.href = "/login";
-  }, 1500);
+   }, 1500);
     };
 
     const fetchAttendanceSummary = async () => {

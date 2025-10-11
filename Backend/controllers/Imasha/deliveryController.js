@@ -85,7 +85,7 @@ export const getAssignDeliveries = async (req,res) =>{
         .populate({
             path: "driver",
             model: "Driver",
-            match: {},
+            match: {}, 
             select: "name vehicleCapacity currentLocation",
             localField: "driver",
             foreignField: "driverID"

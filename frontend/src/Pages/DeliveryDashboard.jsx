@@ -7,6 +7,7 @@ import {FiLogOut} from 'react-icons/fi';
 import {Toaster, toast} from 'sonner';
 import { Truck, UserCheck, Package, CheckCheck, BarChart3, MapPinned, PackageCheck} from "lucide-react";
 import '../Css/DeliveryDashboard.css';
+import image from '../images/mainLogo.png'
 
 export default function DeliveryDashboard()
 {
@@ -22,7 +23,6 @@ export default function DeliveryDashboard()
 
     const [drivers, setDrivers] = useState([]);
     const [selectDeliveries, setSelectDeliveries] = useState([]);
-    const [selectDriver, setSelectDriver] = useState(null);
 
     const [nextDayConfirm, setNextDayConfirm] = useState(null);
 
@@ -35,6 +35,8 @@ export default function DeliveryDashboard()
 
     const [reportType, setReportType] = useState("dailyCompleted");
     const [reportData, setReportData] = useState([]);
+    const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
     const [darkMode, setDarkMode] = useState(false);
 
@@ -74,7 +76,7 @@ export default function DeliveryDashboard()
 
 
 
-    const fetchManager = async () => {
+    const fetchManager = async () => { 
       try{
         const storedManager = localStorage.getItem("user");
         console.log('deliveryManager', storedManager);
@@ -293,35 +295,75 @@ export default function DeliveryDashboard()
       fetchStats();
   };
 
+ // ✅ REPORTS SECTION
   const fetchReport = async () => {
-    let url = "";
-    // eslint-disable-next-line default-case
-    switch(reportType) {
-      case "dailyCompleted": url="/api/deliveryreports/completed-daily"; break;
-      case "pending": url="/api/deliveryreports/pending"; break;
-      case "driverPerformance": url="/api/deliveryreports/driver-performance"; break;
-      case "revenueSummary": url="/api/deliveryreports/revenue-summary"; break;
-      default: url="/api/deliveryreports/completed-daily"; break;
-    }
     try {
+      let url = "";
+      switch (reportType) {
+        case "dailyCompleted":
+          url = "/api/deliveryreports/completed-daily";
+          if (startDate && endDate) url += `?start=${startDate}&end=${endDate}`;
+          else if (startDate) url += `?start=${startDate}`;
+          break;
+        case "pending":
+          url = "/api/deliveryreports/pending";
+          break;
+        case "driverPerformance":
+          url = "/api/deliveryreports/driver-performance";
+          break;
+        case "revenueSummary":
+          url = "/api/deliveryreports/revenue-summary";
+          break;
+        default:
+          url = "/api/deliveryreports/completed-daily";
+      }
+
       const res = await axios.get(url);
       setReportData(res.data);
-    } catch(err) {
+    } catch (err) {
       console.error(err);
     }
   };
 
-  useEffect(() => { fetchReport(); }, [reportType]);
 
-  const downloadPDF = () => {
-    const input = document.getElementById("delivery-report-preview");
-    html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, "PNG", 10, 10, 190, 0);
-      pdf.save(`${reportType}.pdf`);
-    });
-  };
+  useEffect(() => { 
+    fetchReport(); 
+  }, [reportType]);
+
+        const downloadPDF = async () => {
+          const pdf = new jsPDF("p", "mm", "a4");
+
+          pdf.setFontSize(18);
+          pdf.setFont("helvetica", "bold");
+          pdf.text("RUHUNU Yoghurt", 10, 20);
+        
+          const logoImg = new Image();
+          logoImg.src = image; 
+          logoImg.onload = () => {
+            pdf.addImage(logoImg, "PNG", 160, 10, 40, 20);
+ 
+            pdf.setFontSize(12);
+            pdf.setFont("helvetica", "normal");
+            pdf.text(`Report Type: ${reportType}`, 10, 35);
+            pdf.text(`Generated Date: ${new Date().toLocaleDateString()}`, 10, 42);
+
+            const input = document.getElementById("delivery-report-preview");
+            html2canvas(input).then((canvas) => {
+              const imgData = canvas.toDataURL("image/png");
+              const imgProps = pdf.getImageProperties(imgData);
+              const pdfWidth = pdf.internal.pageSize.getWidth() - 20; 
+              const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            
+              pdf.addImage(imgData, "PNG", 10, 50, pdfWidth, pdfHeight);
+
+              const footerY = 50 + pdfHeight + 20;
+              pdf.line(10, footerY, 80, footerY);
+              pdf.text("Signature", 10, footerY + 6);
+            
+              pdf.save(`${reportType}.pdf`);
+            });
+          };
+        };
 
 
     const toggleDarkMode = () =>{
@@ -726,114 +768,132 @@ export default function DeliveryDashboard()
           </div>
         )}
 
+{/* ✅ REPORTS SECTION UPDATED */}
         {activeSection === "reports" && (
-            <div className="delivery-report-wrapper">
-                <h2 className="delivery-report-title">Reports</h2>
+          <div className="delivery-report-wrapper">
+            <h2 className="delivery-report-title">Reports</h2>
 
-                <select
-                  className="delivery-report-select"
-                  value={reportType}
-                  onChange={(e) => setReportType(e.target.value)}
-                >
-                  <option value="dailyCompleted">Daily Completed Deliveries</option>
-                  <option value="pending">Pending Deliveries</option>
-                  <option value="driverPerformance">Driver Performance</option>
-                  <option value="revenueSummary">Revenue / Cost Summary</option>
-                </select>
+            <select
+              className="delivery-report-select"
+              value={reportType}
+              onChange={(e) => setReportType(e.target.value)}
+            >
+              <option value="dailyCompleted">Daily Completed Deliveries</option>
+              <option value="pending">Pending Deliveries</option>
+              <option value="driverPerformance">Driver Performance</option>
+              <option value="revenueSummary">Revenue / Cost Summary</option>
+            </select>
 
-                <div id="delivery-report-preview" className="delivery-report-preview">
-                  {/* Chart Preview */}
-                  {reportType === "dailyCompleted" && (
-                    <LineChart width={600} height={300} data={reportData} className="delivery-report-chart">
-                      <XAxis dataKey="employeeID" />
-                      <YAxis />
-                      <Tooltip />
-                      <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-                      <Line type="monotone" dataKey="deliveries.length" stroke="#8884d8" />
-                    </LineChart>
-                  )}
+            {/* 🔹 Date Range Filter only for daily completed */}
+            {reportType === "dailyCompleted" && (
+              <div className="date-range-filter">
+                <label>Start Date: </label>
+                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                <label>End Date: </label>
+                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                <button className="view-btn" onClick={fetchReport}>
+                  View by Date Range
+                </button>
+              </div>
+            )}
 
-                  {reportType === "driverPerformance" && (
-                    <BarChart width={600} height={300} data={reportData} className="delivery-report-chart">
-                      <XAxis dataKey="employeeID" />
-                      <YAxis />
-                      <Tooltip />
-                      <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-                      <Bar dataKey="totalDeliveries" fill="#82ca9d" />
-                    </BarChart>
-                  )}
+            <div id="delivery-report-preview" className="delivery-report-preview">
+              {reportType === "dailyCompleted" && (
+                <LineChart width={600} height={300} data={reportData}>
+                  <XAxis dataKey="employeeID" />
+                  <YAxis />
+                  <Tooltip />
+                  <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+                  <Line type="monotone" dataKey="deliveries.length" stroke="#8884d8" />
+                </LineChart>
+              )}
 
-                  {/* Table Preview */}
-                  <table className="delivery-report-table">
-                    <thead>
-                      <tr>
+              {reportType === "driverPerformance" && (
+                <BarChart width={600} height={300} data={reportData}>
+                  <XAxis dataKey="employeeID" />
+                  <YAxis />
+                  <Tooltip />
+                  <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+                  <Bar dataKey="totalDeliveries" fill="#82ca9d" />
+                </BarChart>
+              )}
+
+              <table className="delivery-report-table">
+                <thead>
+                  <tr>
+                    {reportType === "driverPerformance" ? (
+                      <>
+                        <th>Driver ID</th>
+                        <th>Total Completed Orders</th>
+                      </>
+                    ) : reportType === "revenueSummary" ? (
+                      <>
+                        <th>Date</th>
+                        <th>Total Deliveries</th>
+                        <th>Total Revenue (Rs.)</th>
+                      </>
+                    ) : (
+
+                      <>
+                        <th>Driver ID</th>
+                        <th>Order Details</th>
+                        <th>Total Weight</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                      </>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {reportData
+                    .slice()
+                    .sort((a, b) => new Date(b.endTime) - new Date(a.endTime))
+                    .map((item, i) => (
+                      <tr key={i}>
                         {reportType === "driverPerformance" ? (
                           <>
-                            <th>Driver ID</th>
-                            <th>Total Completed Orders</th>
+                            <td>{item.employeeID}</td>
+                            <td>{item.totalDeliveries}</td>
                           </>
                         ) : reportType === "revenueSummary" ? (
                           <>
-                            <th>Total Deliveries</th>
-                            <th>Total Revenue</th>
+                            <td>{new Date(item.date).toLocaleDateString()}</td>
+                            <td>{item.totalDeliveries}</td>
+                            <td>{item.totalRevenue}</td>
                           </>
                         ) : (
+
                           <>
-                            <th>Driver ID</th>
-                            <th>Order Details</th>
-                            <th>Total Weight</th>
-                            <th>Status</th>
+                            <td>{item.employeeID}</td>
+                            <td>
+                              {item.deliveries?.length > 0 ? (
+                                item.deliveries.map((delivery) => (
+                                  <div key={delivery._id}>
+                                    {delivery.orderID} - {delivery.customerName}
+                                  </div>
+                                ))
+                              ) : (
+                                <div>No deliveries</div>
+                              )}
+                            </td>
+                            <td>{item.totalWeight} Kg</td>
+                            <td>{item.status}</td>
+                            <td>{new Date(item.endTime).toLocaleDateString()}</td>
                           </>
                         )}
                       </tr>
-                    </thead>
-                    <tbody>
-                      {reportData.map((item, i) => (
-                        <tr key={i}>
-                          {reportType === "driverPerformance" ? (
-                            <>
-                              <td>{item.employeeID}</td>
-                              <td>{item.totalDeliveries}</td>
-                            </>
-                          ) : reportType === "revenueSummary" ? (
-                            <>
-                              <td>{item.totalDeliveries}</td>
-                              <td>{item.totalRevenue}</td>
-                            </>
-                          ) : (
-                            <>
-                              <td>
-                                  {item.employeeID}
-                                </td>
+                    ))}
+                </tbody>
 
-                              <td>{item.deliveries?.length > 0 ? (
-                                      item.deliveries.map((delivery) => (
-                                        <div key={delivery._id}>
-                                          {delivery.orderID} - {delivery.customerName}
-                                        </div>
-                                      ))
-                                    ) : (
-                                      <div>No deliveries</div>
-                                    )}
-                              </td>
-                              <td>{item.totalWeight}</td>
-                              <td>{item.status}</td>
-                            </>
-                          )}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                    
-                <button className="delivery-report-download" onClick={downloadPDF}>
-                  Download PDF
-                </button>
+              </table>
             </div>
-        )}
 
+            <button className="delivery-report-download" onClick={downloadPDF}>
+              Download PDF
+            </button>
+          </div>
+        )}
     </main>
-        
     </div>
-    );
+  );
 };

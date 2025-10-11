@@ -876,6 +876,69 @@ input:checked + .slider:before {
   background-color: #e6f0ff;
 }
 
+.date-range-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  background: #f9fafb;
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.date-range-filter label {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.date-range-filter input[type="date"] {
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.date-range-filter input[type="date"]:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+}
+
+@media (max-width: 600px) {
+  .date-range-filter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+
+.view-btn {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.view-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.view-btn:active {
+  transform: translateY(0);
+}
+
+
 .delivery-report-download {
   margin-top: 15px;
   padding: 10px 18px;

@@ -1,32 +1,36 @@
 import RawMaterialRequest from "../../models/Kalindu/RawMaterialRequest.js";
 import Supplier from "../../models/Kalindu/Suplier.js";
 import Rawmaterial from "../../models/Kalindu/Rawmaterial.js";
-import nodemailer from "nodemailer";
+import  sendEmail  from "../../utils/sendEmails.js";  
+import dotenv from "dotenv";
 
-/** 🧩 Helper 1: Auto-generate Request ID */
+dotenv.config();
+console.log("🔧 EMAIL_USER:", process.env.EMAIL_USER);
+
+
+
+/** Helper: Generate Request ID */
 const generateRequestId = async () => {
   const count = await RawMaterialRequest.countDocuments();
   return `REQ${String(count + 1).padStart(4, "0")}`;
 };
 
-/** ✉️ Helper 2: Reusable email sender */
-const sendEmail = async (to, subject, text) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+/** Helper: Email Sender */
 
-  const mailOptions = {
-    from: `"Your Company" <${process.env.EMAIL_USER}>`,
-    to,
-    subject,
-    text,
-  };
 
-  await transporter.sendMail(mailOptions);
+/** ✉️ New: send only email */
+export const sendCustomEmail = async (req, res) => {
+  try {
+    const { supplierEmail, subject, message } = req.body;
+    if (!supplierEmail || !subject || !message)
+      return res.status(400).json({ error: "Missing required fields" });
+
+    await sendEmail(supplierEmail, subject, message);
+    res.status(200).json({ message: "✅ Email sent successfully" });
+  } catch (err) {
+    console.error("❌ Email send error:", err);
+    res.status(500).json({ error: "Failed to send email" });
+  }
 };
 
 /** 📩 Create new raw material request + send email */
@@ -37,9 +41,8 @@ export const createRequest = async (req, res) => {
     const supplier = await Supplier.findById(supplierId);
     const material = await Rawmaterial.findById(materialId);
 
-    if (!supplier || !material) {
+    if (!supplier || !material)
       return res.status(404).json({ error: "Supplier or Material not found" });
-    }
 
     const requestId = await generateRequestId();
 
@@ -54,7 +57,6 @@ export const createRequest = async (req, res) => {
 
     await newRequest.save();
 
-    /** ✉️ Send email */
     const emailBody = `
 Hello ${supplier.name},
 
@@ -98,29 +100,24 @@ export const getAllRequests = async (req, res) => {
   }
 };
 
-/** ✏️ Update request status (Approved / Rejected / Delivered) */
+/** ✏️ Update request status */
 export const updateRequestStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
 
-    if (!["Pending", "Approved", "Rejected", "Delivered"].includes(status)) {
-      return res.status(400).json({ error: "Invalid status value" });
-    }
+    if (!["Pending", "Approved", "Rejected", "Delivered"].includes(status))
+      return res.status(400).json({ error: "Invalid status" });
 
     const request = await RawMaterialRequest.findById(id);
-    if (!request) {
-      return res.status(404).json({ error: "Request not found" });
-    }
+    if (!request) return res.status(404).json({ error: "Request not found" });
 
-    // Update status and timestamp
     request.status = status;
     if (status === "Approved") request.approvedAt = new Date();
     if (status === "Rejected") request.rejectedAt = new Date();
     if (status === "Delivered") request.deliveredAt = new Date();
 
     await request.save();
-
     res.status(200).json({ message: "✅ Status updated", data: request });
   } catch (err) {
     console.error("❌ Error updating status:", err);
@@ -128,22 +125,19 @@ export const updateRequestStatus = async (req, res) => {
   }
 };
 
-/** 🛑 Close a request (set status = Delivered) */
+/** 🛑 Close request */
 export const closeRequest = async (req, res) => {
   try {
     const { id } = req.params;
 
     const request = await RawMaterialRequest.findById(id);
-    if (!request) {
-      return res.status(404).json({ error: "Request not found" });
-    }
+    if (!request) return res.status(404).json({ error: "Request not found" });
 
     request.status = "Delivered";
     request.deliveredAt = new Date();
 
     await request.save();
-
-    res.status(200).json({ message: "✅ Request closed successfully", data: request });
+    res.status(200).json({ message: "✅ Request closed", data: request });
   } catch (err) {
     console.error("❌ Error closing request:", err);
     res.status(500).json({ error: "Failed to close request" });

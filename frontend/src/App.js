@@ -34,6 +34,7 @@ import Smdashboardpage from './Pages/admin/smdashboard';
 import ProductTable from './Pages/StockDashboard';
 import RequestRawMaterialEmail from './Pages/admin/reqrawmaterial';
 import RawMaterialRequestTable from './Pages/RawMaterialRequestTable';
+import StockReport from './Pages/admin/stockreport';  
 
 // Axios global config    
 
@@ -76,6 +77,8 @@ function Appwrapper() {
         <Route path="/productStock" element={<ProductTable />} />
         <Route path="/Reqrawmaterial" element={<RequestRawMaterialEmail />} />
         <Route path="/rawMaterialRequests" element={<RawMaterialRequestTable />} /> 
+        <Route path="/stockReport" element={<StockReport />} />
+        
 
 
         {/* Admin */}

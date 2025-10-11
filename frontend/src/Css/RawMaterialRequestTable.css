@@ -1,0 +1,78 @@
+.rm-table-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fefefe;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  font-family: "Poppins", sans-serif;
+}
+
+.rm-table-title {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.6rem;
+  color: #333;
+}
+
+.rm-table-wrapper {
+  overflow-x: auto;
+}
+
+.rm-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 750px;
+}
+
+.rm-table th,
+.rm-table td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.rm-table th {
+  background: #f3f4f6;
+  font-weight: 500;
+}
+
+.rm-no-data {
+  text-align: center;
+  padding: 15px;
+  color: #555;
+}
+
+.rm-status-text {
+  background: #f0f0f0;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.rm-actions .rm-btn-simple {
+  padding: 5px 10px;
+  margin: 2px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.rm-actions .rm-btn-simple:hover:not(:disabled) {
+  background: #f3f3f3;
+}
+
+.rm-actions .rm-btn-simple:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rm-loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+}

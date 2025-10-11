@@ -18,6 +18,7 @@ import StockRouter from './routes/Kalindu/StockRoutes.js';
 import RawMaterialRoutes from "./routes/Kalindu/RawmaterialRoutes.js";
 import supplierRoutes from './routes/Kalindu/SuplierRoutes.js';
 import RawMaterialRequestRoutes from './routes/Kalindu/RawMaterialRequestRoutes.js';
+import reportroutes from './routes/Kalindu/reportRoutes.js';  
 
 
 dotenv.config();
@@ -47,6 +48,7 @@ app.use('/api/stock', StockRouter);
 app.use("/api/rawmaterials", RawMaterialRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use("/api/raw-material", RawMaterialRequestRoutes);
+app.use("/api/report", reportroutes);
 
 
 

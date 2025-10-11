@@ -22,7 +22,7 @@ export default function AddSupplierPage() {
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return "Invalid email format";
     if (!phone.match(/^\d{10}$/)) return "Phone number must be 10 digits";
     if (!address.trim()) return "Address is required";
-    if (!schedule) return "Schedule date is required";
+    
     return null;
   }
 

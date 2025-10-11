@@ -1,4 +1,4 @@
-import Attendence from "../../models/Tharuka/attendence.js";
+import Attendence from "../../models/Tharuka/Attendence.js";
 import Employee from "../../models/Tharuka/Employee.js";
 
 export const getTodaysAttendence = async (req, res) => {
@@ -154,4 +154,25 @@ export const getAllTodaysAttendance = async (req, res) => {
       });
     }
   };
+
+  export const getAttendanceByDate = async (req, res) => {
+    try {
+        const { date } = req.query;
+        if (!date) return res.status(400).json({ message: "Date query is required" });
+
+        const selectedDate = new Date(date);
+        selectedDate.setHours(0, 0, 0, 0);
+        const nextDay = new Date(selectedDate);
+        nextDay.setDate(selectedDate.getDate() + 1);
+
+        const records = await Attendence.find({
+            date: { $gte: selectedDate, $lt: nextDay }
+        });
+
+        res.json(records);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching attendance by date", error: error.message });
+    }
+};
+
   

@@ -28,6 +28,7 @@ app.use(express.json());
 
 app.use('/api',authRoutes);
 app.use('/api/employees', employeeRoutes);
+app.use('/api/hrreports',HrReportRoutes)
 app.use('/api/deliveries',deliveryRoutes);
 app.use('/api/attendance', attendenceRoutes);
 app.use('/api/user',userRoutes);

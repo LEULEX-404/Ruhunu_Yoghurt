@@ -81,7 +81,7 @@ export default function CartPage() {
               <div className="item-details">
                 <h2 className="item-name">{item.productId.name}</h2>
                 <span className="item-id">ID: {item.productId.productId}</span>
-                <span className="single-price">${item.price.toFixed(2)}</span>
+                <span className="single-price">Rs {item.price.toFixed(2)}</span>
               </div>
 
               <div className="quantity-control">
@@ -95,7 +95,7 @@ export default function CartPage() {
               </div>
 
               <div className="item-subtotal-container">
-                <span className="item-subtotal">${item.subtotal.toFixed(2)}</span>
+                <span className="item-subtotal">Rs {item.subtotal.toFixed(2)}</span>
               </div>
 
               <button className="remove-item-button" onClick={() => handleRemove(item.productId._id)}>
@@ -108,7 +108,7 @@ export default function CartPage() {
         {cart.length > 0 && (
           <div className="cart-summary-desktop">
             <p className="cart-total-text">Total:</p>
-            <span className="cart-total-amount">${getTotal().toFixed(2)}</span>
+            <span className="cart-total-amount">Rs{getTotal().toFixed(2)}</span>
             <Link to="/checkout" state={{ cart }} className="checkout-button">Checkout</Link>
           </div>
         )}

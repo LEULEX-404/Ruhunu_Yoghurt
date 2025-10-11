@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaExclamationTriangle, FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import '../../Css/adminProductsPage.css';
 
@@ -68,6 +68,7 @@ export default function AdminProductPage() {
                                 <th>Image</th>
                                 <th>Labelled Price</th>
                                 <th>Price</th>
+                                <th>Quantity</th>
                                 <th>Availability</th>
                                 <th>Actions</th>
                             </tr>
@@ -82,6 +83,7 @@ export default function AdminProductPage() {
                                     </td>
                                     <td>{item.labelledPrice}</td>
                                     <td>{item.price}</td>
+                                    <td>{item.quantity}</td>
                                     <td>{item.isAvailable ? "Available" : "Unavailable"}</td>
                                     <td className="product-table-actions">
                                         <button className="delete-btn" onClick={() => deleteProduct(item.productId)}>
@@ -89,6 +91,9 @@ export default function AdminProductPage() {
                                         </button>
                                         <button className="edit-btn" onClick={() => navigate("/admin/edit-product", { state: item })}>
                                             <FaEdit />
+                                        </button>
+                                        <button className="damage-log-btn" onClick={() => navigate("/admin/damage-log", {state : item})}>
+                                            <FaExclamationTriangle/>
                                         </button>
                                     </td>
                                 </tr>

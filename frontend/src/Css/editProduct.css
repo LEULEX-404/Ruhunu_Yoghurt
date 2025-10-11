@@ -1,5 +1,5 @@
 .edit-product-container {
-  max-width: 700px;
+  max-width: 800px;
   margin: 3rem auto;
   padding: 2rem 3rem;
   background: #ffffff;
@@ -17,11 +17,23 @@
   letter-spacing: 0.5px;
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 0.4rem;
+}
+
 .form-input,
 .form-select {
   width: 100%;
   padding: 0.8rem 1rem;
-  margin-bottom: 1.2rem;
   border: 1px solid #dcdfe6;
   border-radius: 10px;
   font-size: 0.95rem;
@@ -42,16 +54,17 @@
   cursor: not-allowed;
 }
 
-.form-label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #555;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
 .file-input {
   padding: 0.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.half-width {
+  flex: 1;
 }
 
 .btn {
@@ -67,7 +80,6 @@
 .submit-btn {
   background-color: #3498db;
   color: #fff;
-  margin-left: 1rem;
 }
 
 .submit-btn:hover {
@@ -83,7 +95,6 @@
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
   background-color: #ecf0f1;
   color: #7f8c8d;
   text-decoration: none;
@@ -91,22 +102,6 @@
 }
 
 .cancel-btn:hover {
-  background-color: #bdc3c7;
-  color: #2c3e50;
-}
-
-
-.form-actions a {
-  text-decoration: none;
-  color: #7f8c8d;
-  font-weight: 500;
-  padding: 0.8rem 1.4rem;
-  border-radius: 10px;
-  background-color: #ecf0f1;
-  transition: all 0.3s ease;
-}
-
-.form-actions a:hover {
   background-color: #bdc3c7;
   color: #2c3e50;
 }

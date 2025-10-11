@@ -24,7 +24,8 @@ export default function ProductCard({ product }) {
         <Wrapper
             className={`product-card
             ${isExpiringSoon() ? "expiring-soon" : ""}
-            ${!product.isAvailable ? "unavailable" : ""}`}>
+            ${!product.isAvailable ? "unavailable" : ""}`}
+            {...wrapperProps}>
             <div className="product-card-image-container">
                 <img
                     src={product.images?.[0] || "https://via.placeholder.com/300"}

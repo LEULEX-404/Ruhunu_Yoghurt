@@ -11,17 +11,51 @@ export async function saveProduct(req, res){
         return
     }
 
-    const product = new Product(req.body);
+    try {
+       
+        let productId = "RYP0001"
 
-    product.save().then(() => {
-        res.json({
-            message : "Product added successfully"
+        const lastProduct = await Product.find().sort({productId : -1}).limit(1)
+
+        if(lastProduct.length > 0){
+            const lastProductId = lastProduct[0].productId
+            const lastNumber = parseInt(lastProductId.replace("RYP", ""))
+            const newNumber = lastNumber + 1;
+            const newId = String(newNumber).padStart(4, "0")
+            productId = "RYP" + newId
+        }
+
+        const productData = {
+            ...req.body,
+            productId
+        }
+
+        const product = new Product(productData)
+        await product.save()
+
+        return res.status(201).json({
+            message : "Product added successfully",
+            productId
         })
-    }).catch(() => {
-        res.json({
-            message : "Failed to add product"
+    } catch (err) {
+        console.error("Error saving product", err);
+        res.status(500).json({
+            message : "Failed to add product",
+            error : err.message
         })
-    })
+    }
+
+    // const product = new Product(req.body);
+
+    // product.save().then(() => {
+    //     res.json({
+    //         message : "Product added successfully"
+    //     })
+    // }).catch(() => {
+    //     res.json({
+    //         message : "Failed to add product"
+    //     })
+    // })
 }
 
 export async function getProduct(req, res) {

@@ -46,3 +46,23 @@ export async function addDamage(req, res) {
     });
   }
 }
+
+export async function getAllDamages(req, res) {
+  if (!isAdmin(req)) {
+    return res.status(403).json({
+      message: "You are not authorized to view damage products",
+    });
+  }
+
+  try {
+    const damages = await Damage.find().sort({ _id: -1 }); // latest first
+    return res.json(damages);
+  } catch (err) {
+    console.error("Error fetching damages:", err);
+    return res.status(500).json({
+      message: "Internal server error",
+      error: err.message,
+    });
+  }
+}
+

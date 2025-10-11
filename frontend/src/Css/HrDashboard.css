@@ -774,6 +774,79 @@
   letter-spacing: 0.5px;
 }
 
+.attendance-summary {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+  gap: 15px;
+}
+
+.attendance-summary li {
+  list-style: none;
+  flex: 1;
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.attendance-summary li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.attendance-summary li:nth-child(1) { /* Present */
+  color: #2ecc71; 
+  border-top: 4px solid #27ae60;
+}
+
+.attendance-summary li:nth-child(2) { /* Late */
+  color: #e67e22;
+  border-top: 4px solid #d35400;
+}
+
+.attendance-summary li:nth-child(3) { /* Absent */
+  color: #e74c3c;
+  border-top: 4px solid #c0392b;
+}
+
+.date-picker-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.date-picker-container label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.date-picker-container .react-datepicker-wrapper {
+  width: auto;
+}
+
+.date-picker-container .react-datepicker__input-container input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.date-picker-container .react-datepicker__input-container input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 2px 6px rgba(74,144,226,0.3);
+}
+
+
 .refresh-btn {
   display: inline-flex;
   align-items: center;

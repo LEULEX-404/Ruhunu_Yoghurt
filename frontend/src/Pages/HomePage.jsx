@@ -82,64 +82,64 @@ function Home() {
 
   const services = [
     {
-      title: "Fresh Milk",
+      title: "Milk Management",
       icon: <FaGlassWhiskey />,
-      desc: "Farm-fresh milk delivered to your doorstep every morning.",
-      more: "Sourced directly from local farms, processed hygienically to preserve natural nutrition.",
+      desc: "Track milk production and supply with real-time accuracy.",
+      more: "Monitor sources, volumes, and distribution channels with ease.",
     },
     {
-      title: "Cheese Varieties",
+      title: "Cheese & Yogurt",
       icon: <FaCheese />,
-      desc: "Premium cheese with authentic taste.",
-      more: "Wide range including mozzarella, cheddar, and cottage cheese with freshness guaranteed.",
+      desc: "Manage cheese and yogurt processing efficiently.",
+      more: "Maintain product quality, batch records, and stock levels automatically.",
     },
     {
-      title: "Yogurt & Curd",
+      title: "Product Quality",
       icon: <FaIceCream />,
-      desc: "Healthy probiotic-rich yogurt and creamy curd.",
-      more: "Naturally fermented, packed with nutrients and perfect for daily consumption.",
+      desc: "Ensure hygiene and freshness of all dairy products.",
+      more: "Every product is monitored for safety, quality, and compliance.",
     },
     {
-      title: "Fast Delivery",
+      title: "Distribution",
       icon: <FaTruck />,
-      desc: "On-time delivery service across the region.",
-      more: "We ensure freshness with our refrigerated vans, maintaining product quality until delivery.",
+      desc: "Control supply chain and deliveries effectively.",
+      more: "Track vehicles, routes, and delivery timelines for maximum efficiency.",
     },
     {
-      title: "Organic Products",
+      title: "Eco-Friendly Dairy",
       icon: <FaLeaf />,
-      desc: "100% organic and chemical-free dairy items.",
-      more: "Pure, natural, and eco-friendly dairy to support your healthy lifestyle.",
+      desc: "Support sustainable and green dairy practices.",
+      more: "Use eco-friendly packaging and reduce waste in operations.",
     },
     {
-      title: "Dairy Equipment Supply",
+      title: "System Automation",
       icon: <FaCog />,
-      desc: "Modern dairy tools & storage solutions.",
-      more: "We provide eco-friendly packaging, storage containers, and dispensers to preserve product quality.",
+      desc: "Automate processes for better efficiency.",
+      more: "Save time and reduce manual errors in daily operations.",
     },
   ]
 
 
   const features = [
     {
-      title: "Farm Fresh Products",
-      icon: <FaLeaf />,
-      desc: "Directly sourced from trusted local farms to ensure quality and nutrition in every sip.",
-    },
-    {
-      title: "Timely Delivery",
+      title: "Real-Time Tracking",
       icon: <FaClock />,
-      desc: "Our advanced logistics system ensures your order arrives right on schedule, every time.",
+      desc: "Monitor dairy product flow instantly from production to delivery.",
     },
     {
-      title: "Eco-Friendly Packaging",
-      icon: <FaRecycle />,
-      desc: "We use biodegradable, recyclable, and reusable packaging to protect the planet.",
+      title: "Smart Analytics",
+      icon: <FaRecycle  />,
+      desc: "Get detailed reports on sales, expenses, and product efficiency.",
     },
     {
-      title: "Safe & Hygienic",
-      icon: <FaBox />,
-      desc: "Handled under strict hygiene standards from farm to doorstep for your safety.",
+      title: "Secure Records",
+      icon: <FaBox  />,
+      desc: "All data is stored securely for future reference and compliance.",
+    },
+    {
+      title: "Customer Trust",
+      icon: <FaLeaf  />,
+      desc: "Build trust by delivering high-quality dairy products on time.",
     },
   ];
 
@@ -236,17 +236,19 @@ function Home() {
             
           <section id="about" className="aboutpage-section">
             <div className="aboutpage-container">
-              <h2 className="aboutpage-title">About Us</h2>
+              <h2 className="aboutpage-title">About Our System</h2>
               <p className="aboutpage-text">
-                We provide <span>fresh dairy products</span> daily to your doorstep.
+              We provide a <span>smart Dairy Product Management System</span> that
+            helps producers, distributors, and retailers manage their operations
+            efficiently.
               </p>
 
               {showMore && (
                 <div className="aboutpage-more">
                   <p>
-                    Our dairy management system ensures **quality, freshness, and
-                    trust**. From farm to home, we maintain high standards of hygiene,
-                    delivering milk, curd, yogurt, and cheese directly to you.
+                  Our official system ensures <b>accuracy, freshness, and trust</b>.
+                From production to delivery, we maintain high standards of
+                hygiene and quality in every stage of dairy management.
                   </p>
                 </div>
               )}
@@ -266,10 +268,10 @@ function Home() {
                   <div className="aboutpage-popup-content">
                     <h3>Why Choose Us?</h3>
                     <ul>
-                      <li>✅ 100% Farm Fresh Products</li>
-                      <li>✅ Hygienic Processing & Packaging</li>
-                      <li>✅ Trusted by Thousands of Families</li>
-                      <li>✅ Doorstep Delivery Every Morning</li>
+                      <li>✅ Real-time Product Tracking</li>
+                      <li>✅ Automated Reports & Insights</li>
+                      <li>✅ Secure and Reliable Records</li>
+                      <li>✅ Timely Distribution Management</li>
                     </ul>
                     <button
                       className="aboutpage-close"
@@ -286,7 +288,7 @@ function Home() {
           <section id="services" className="servicespage-section">
           <h2 className="servicespage-title">Our Services</h2>
           <p className="servicespage-subtext">
-            Milk, yogurt, cheese, and other dairy essentials delivered fresh.
+          Efficient dairy management, from production to delivery.
           </p>
 
           <div className="servicespage-grid">
@@ -313,7 +315,7 @@ function Home() {
         <section id="features" className="features-section">
         <h2 className="features-title">Our Features</h2>
         <p className="features-subtext">
-          Farm fresh products, timely delivery, and eco-friendly packaging.
+        Real-time tracking, automation, and secure record management.
         </p>
 
         <div className="features-timeline">
@@ -333,7 +335,7 @@ function Home() {
       <section id="contact" className="contact-section">
         <h2 className="contact-title">Contact Us</h2>
         <p className="contact-subtext">
-          Have a question or facing an issue? Reach out to us — we’re here to help.
+        Have a question or need system support? Reach out to us anytime.
         </p>
 
         <div className="contact-container">
@@ -342,19 +344,19 @@ function Home() {
             <div className="contact-card">
               <FaEnvelope className="contact-icon" />
               <h3>Email</h3>
-              <p>info@simpledairy.com</p>
+              <p>itpdairyproduct@gmail.com</p>
             </div>
 
             <div className="contact-card">
               <FaPhone className="contact-icon" />
               <h3>Phone</h3>
-              <p>012-3456789</p>
+              <p>076-215-7137</p>
             </div>
 
             <div className="contact-card">
               <FaMapMarkerAlt className="contact-icon" />
               <h3>Location</h3>
-              <p>123 Dairy Street, Colombo, Sri Lanka</p>
+              <p>kirindiwela, Gamapaha, Sri Lanka</p>
             </div>
 
             <div className="contact-map">
@@ -418,7 +420,8 @@ function Home() {
 
         <div className="footer-left">
           <img src={logo} alt="Simple Dairy Logo" className="footer-logo" />
-          <p>Simple Dairy delivers fresh and healthy dairy products to your doorstep every day. Quality you can trust.</p>
+          <p>Our Dairy Product Management System ensures efficiency, accuracy,
+              and quality from production to delivery.</p>
           <div className="social-icons">
             <a href="#"><i className="fab fa-facebook-f"></i></a>
             <a href="#"><i className="fab fa-twitter"></i></a>
@@ -439,9 +442,9 @@ function Home() {
 
         <div className="footer-right">
             <h4>Contact Us</h4>
-            <p><i className="fas fa-map-marker-alt"></i> 123 Dairy Street, Colombo, Sri Lanka</p>
-            <p><i className="fas fa-phone"></i> +94 77 123 4567</p>
-            <p><i className="fas fa-envelope"></i> dairyproduct@gmail.com</p>
+            <p><i className="fas fa-map-marker-alt"></i>kirindiwela, Gamapaha, Sri Lanka</p>
+            <p><i className="fas fa-phone"></i> 076-215-7137</p>
+            <p><i className="fas fa-envelope"></i> itpdairyproduct@gmail.com</p>
             <form className="newsletter-form">
               <input type="email" placeholder="Subscribe to our newsletter" />
               <button>Subscribe</button>
@@ -449,7 +452,7 @@ function Home() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© 2025 Ruhunu Yoghurt. All Rights Reserved. Crafted with ❤️ by Group B1 - 12</p>
+          <p>© 2025 Dairy Product Management System. All Rights Reserved.</p>
         </div>
         </footer>
         </div>

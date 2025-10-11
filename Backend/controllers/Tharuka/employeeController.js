@@ -2,24 +2,43 @@ import Employee from '../../models/Tharuka/Employee.js';
 import Driver from '../../models/Tharuka/Driver.js';
 
 export const createEmployee = async (req, res) => {
-    try{
-        const { employeeID, name, email, position, phone, password } = req.body;
+    try {
+      const { name, email, position, phone, password } = req.body;
 
-        const newEmployee = new Employee({
-            employeeID,
-            name,
-            email,
-            position,
-            phone,
-            password
+      const newEmployee = new Employee({
+        name,
+        email,
+        position,
+        phone,
+        password
+      });
+
+      await newEmployee.save();
+
+      if (position === "Driver") {
+        const newDriver = new Driver({
+          driverID: newEmployee._id,
+          employeeID: newEmployee.employeeID,
+          name: newEmployee.name,
+          email: newEmployee.email,
+          phone: newEmployee.phone,
+          vehicleCapacity: 0
         });
-
-        await newEmployee.save();
-        res.status(201).json({ message: 'Employee created successfully', employee: newEmployee });
+  
+        await newDriver.save();
+      }
+  
+      res.status(201).json({
+        message: "Employee created successfully",
+        employee: newEmployee
+      });
     } catch (error) {
-        res.status(500).json({ message: 'Error creating employee', error: error.message });
+      res.status(500).json({
+        message: "Error creating employee",
+        error: error.message
+      });
     }
-};
+  };
 
 export const getEmployees = async (req, res) =>{
     try{

@@ -3,6 +3,8 @@ import React, { useEffect, useState, useRef } from "react";
 import { FiHome, FiLogOut, FiUserPlus, FiShoppingBag, FiGift, FiCreditCard, FiBarChart  } from 'react-icons/fi';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import { confirmAlert } from "react-confirm-alert";
 import AddPromocodeModal from "../Components/AddPromocode";
 import UpdatePromocode from "../Components/UpdatePromocode";
 import "../Css/OrderDashboard.css";
@@ -89,16 +91,42 @@ export default function OrderDashboard() {
     }
   };
 
-  const handleCancel = async (id) => {
-    try {
-      await fetch(`http://localhost:8070/api/orders/${id}/cancel`, { method: "PUT" });
-      toast.success("Order cancelled!");
-      fetchOrders();
-    } catch (err) {
-      toast.error("Failed to cancel order");
-      console.error(err);
-    }
-  };
+const handleCancel = async (order) => {
+  confirmAlert({
+    title: "Cancel Order?",
+    message: `Are you sure you want to cancel order ${order.orderNumber}?\nCustomer: ${order.customerName}\nRefund Amount: Rs.${order.total}`,
+    buttons: [
+      {
+        label: "Yes, Cancel It",
+        onClick: async () => {
+          try {
+            const res = await fetch(`http://localhost:8070/api/orders/${order._id}/cancel`, {
+              method: "PUT",
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+              toast.success(`Order cancelled !`);
+              fetchOrders();
+            } else {
+              toast.error(data.error || "Failed to cancel order");
+            }
+          } catch (err) {
+            toast.error("Failed to cancel order");
+            console.error(err);
+          }
+        },
+      },
+      {
+        label: "No, Keep It",
+        onClick: () => toast.info("Order not cancelled."),
+      },
+    ],
+    closeOnEscape: true,
+    closeOnClickOutside: true,
+  });
+};
+
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure to delete this promocode?")) {
@@ -343,7 +371,7 @@ export default function OrderDashboard() {
                               {(order.status || "").toLowerCase() === "pending" && (
                                 <div className="order-actions-unique">
                                   <button className="ord-btn approve" onClick={() => handleApprove(order._id)}>Approve</button>
-                                  <button className="ord-btn cancel" onClick={() => handleCancel(order._id)}>Cancel</button>
+                                  <button className="ord-btn cancel" onClick={() => handleCancel(order)}>Cancel</button>
                                 </div>
                               )}
                             </div>

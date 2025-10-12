@@ -857,7 +857,7 @@ export default function DeliveryDashboard()
                       <tr key={i}>
                         {reportType === "driverPerformance" ? (
                           <>
-                            <td>{item.employeeID} </td>
+                            <td>{item.employeeID} - {item.driverName}</td>
                             <td>{item.totalDeliveries}</td>
                           </>
                         ) : reportType === "revenueSummary" ? (
@@ -869,7 +869,7 @@ export default function DeliveryDashboard()
                         ) : (
 
                           <>
-                            <td>{item.employeeID}</td>
+                            <td>{item.employeeID} - {item.driverName}</td>
                             <td>
                               {item.deliveries?.length > 0 ? (
                                 item.deliveries.map((delivery) => (

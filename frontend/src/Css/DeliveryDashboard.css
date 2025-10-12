@@ -261,6 +261,12 @@ body {
   color: white;
 }
 
+.red {
+  --card-bg: #eb2323;
+  background: linear-gradient(135deg, #eb2323, #9b111e);
+  color: white;
+}
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -936,6 +942,17 @@ input:checked + .slider:before {
 
 .view-btn:active {
   transform: translateY(0);
+}
+
+
+.delivery-report-table tfoot tr {
+  background-color: #f9f9f9;
+  border-top: 2px solid #000;
+}
+
+.delivery-report-table tfoot td {
+  padding: 8px;
+  font-size: 15px;
 }
 
 

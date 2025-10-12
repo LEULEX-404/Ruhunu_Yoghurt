@@ -36,7 +36,8 @@ export default function DeliveryDashboard()
     const [reportType, setReportType] = useState("dailyCompleted");
     const [reportData, setReportData] = useState([]);
     const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
 
     const [darkMode, setDarkMode] = useState(false);
 
@@ -320,6 +321,10 @@ export default function DeliveryDashboard()
 
       const res = await axios.get(url);
       setReportData(res.data);
+      const totalRevenueSum = reportType === "revenueSummary"
+      ? reportData.reduce((sum, item) => sum + (item.totalRevenue || 0), 0)
+      : 0;
+
     } catch (err) {
       console.error(err);
     }
@@ -852,14 +857,14 @@ export default function DeliveryDashboard()
                       <tr key={i}>
                         {reportType === "driverPerformance" ? (
                           <>
-                            <td>{item.employeeID}</td>
+                            <td>{item.employeeID} </td>
                             <td>{item.totalDeliveries}</td>
                           </>
                         ) : reportType === "revenueSummary" ? (
                           <>
                             <td>{new Date(item.date).toLocaleDateString()}</td>
                             <td>{item.totalDeliveries}</td>
-                            <td>{item.totalRevenue}</td>
+                            <td>{item.totalRevenue?.toFixed(2)}</td>
                           </>
                         ) : (
 
@@ -876,7 +881,7 @@ export default function DeliveryDashboard()
                                 <div>No deliveries</div>
                               )}
                             </td>
-                            <td>{item.totalWeight} Kg</td>
+                           <td>{(Number(item.totalWeight) || 0).toFixed(2)} Kg</td>
                             <td>{item.status}</td>
                             <td>{new Date(item.endTime).toLocaleDateString()}</td>
                           </>
@@ -884,6 +889,19 @@ export default function DeliveryDashboard()
                       </tr>
                     ))}
                 </tbody>
+                  {reportType === "revenueSummary" && (
+                    <tfoot>
+                      <tr>
+                        <td colSpan="2" style={{ textAlign: "center", fontWeight: "bold" }}>Grand Total:</td>
+                        <td style={{ textAlign: "left", fontWeight: "bold" }}>
+                          Rs. {reportData
+                            .reduce((sum, item) => sum + (Number(item.totalRevenue) || 0), 0)
+                            .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </td>
+                      </tr>
+                    </tfoot>
+                  )}
+
 
               </table>
             </div>

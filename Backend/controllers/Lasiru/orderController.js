@@ -55,6 +55,6 @@ export const approveOrder = async (req, res) => {
       await order.save();
       res.status(200).json({ message: "Order cancelled successfully", order });
     } catch (err) {
-      res.status(500).json({ error: "Failed to cancel order" });
+      res.status(500).json({ error: "Failed to cancel order",err });
     }
   };

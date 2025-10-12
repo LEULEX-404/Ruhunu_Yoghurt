@@ -16,6 +16,7 @@ import orderRoutes from './routes/Lasiru/orderRoutes.js';
 import cartRouter from './routes/Pathum/cartRoute.js';
 import notificationsRoutes from "./routes/Lasiru/emailRoute.js";
 import damageProductRouter from './routes/Pathum/damageRoute.js';
+import HrReportRoutes from './routes/Tharuka/reportRoutes.js';
 
 dotenv.config();
 connectDB();

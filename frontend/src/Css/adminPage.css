@@ -1,104 +1,144 @@
-.dashboard-container {
-    padding: 2rem;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f8;
-    min-height: auto; /* remove full page height */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.admin-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+  background-color: #2c3e50;
+  color: #fff;
+  width: 100%;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-/* ====== Header ====== */
+.nav-left a {
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  color: #fff;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.nav-left a.active-link {
+  background-color: #3498db;
+  font-weight: bold;
+}
+
+.nav-left a.inactive-link:hover {
+  background-color: #2980b9;
+}
+
+.nav-right .btn-logout {
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #e74c3c;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nav-right .btn-logout:hover {
+  background-color: #c0392b;
+}
+
 .dashboard-header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    padding: 1rem 2rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    width: 100%;
-    max-width: 1200px;
+  text-align: center;
+  margin: 2rem auto 3rem auto;
 }
 
 .dashboard-header h1 {
-    margin: 0;
-    font-size: 2rem;
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
 }
 
 .dashboard-header p {
-    margin: 0;
-    font-size: 1.1rem;
-    color: #bdc3c7;
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  margin: 0;
 }
 
-/* ====== Navigation Links ====== */
-.admin-nav {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    background-color: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    width: 100%;
-    max-width: 1200px;
-    margin-bottom: 2rem;
-}
-
-.admin-nav a {
-    text-decoration: none;
-    font-size: 1.1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.active-link {
-    background-color: #2c3e50;
-    color: #ecf0f1 !important;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-.inactive-link {
-    color: #34495e;
-}
-
-.inactive-link:hover {
-    background-color: #ecf0f1;
-    color: #2c3e50;
-}
-
-/* ====== Cards ====== */
+/* ✅ Dashboard Cards Layout */
 .dashboard-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: flex-start; /* align left instead of center */
-    width: 100%;
-    max-width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .card {
-    background-color: #fff;
-    padding: 1.5rem;
-    border-radius: 10px;
-    width: 250px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 260px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
 .card h2 {
-    margin-bottom: 1rem;
-    color: #34495e;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
-.card p, .card ul {
-    font-size: 1.2rem;
-    color: #2c3e50;
+.card p,
+.card ul {
+  font-size: 1.1rem;
+  color: #34495e;
 }
 
 .card ul {
-    list-style-type: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ✅ Damage Card Highlight */
+.damage-card {
+  background-color: #fdf2f2;
+  border: 1px solid #e74c3c33;
+}
+
+.damage-card h2 {
+  color: #c0392b;
+}
+
+/* General layout */
+.admin-content {
+  padding: 30px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .admin-nav {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem 1.5rem;
+  }
+
+  .nav-left,
+  .nav-right {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
 }

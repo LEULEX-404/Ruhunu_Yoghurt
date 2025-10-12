@@ -1,0 +1,144 @@
+/* 
+   Raw Material Table Styles
+   
+*/
+
+.rawmaterial-admin-container {
+  padding: 2rem;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: #f4f6fa;
+  min-height: 100vh;
+}
+
+.rawmaterial-add-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  background: linear-gradient(135deg, #00bcd4, #009688);
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.rawmaterial-add-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+}
+
+/* Table Container */
+.rawmaterial-table-container {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+}
+
+/* Table Styles */
+.rawmaterial-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.rawmaterial-table thead {
+  background: #00bcd4;
+  color: #fff;
+}
+
+.rawmaterial-table thead th {
+  padding: 0.85rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.rawmaterial-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.rawmaterial-table tbody tr:nth-child(even) {
+  background: #e0f7fa;
+}
+
+.rawmaterial-table tbody tr:hover {
+  background: #b2ebf2;
+}
+
+.rawmaterial-table td {
+  padding: 0.8rem;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: middle;
+}
+
+/* Action Buttons */
+.rawmaterial-table-actions button {
+  margin: 0 4px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.rawmaterial-table-actions .edit-btn {
+  background: #4caf50;
+}
+
+.rawmaterial-table-actions .edit-btn:hover {
+  background: #43a047;
+  transform: scale(1.05);
+}
+
+.rawmaterial-table-actions .delete-btn {
+  background: #f44336;
+}
+
+.rawmaterial-table-actions .delete-btn:hover {
+  background: #e53935;
+  transform: scale(1.05);
+}
+
+/* Loading and No Data States */
+.rawmaterial-loading,
+.rawmaterial-no-data {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.rawmaterial-loading {
+  color: #00bcd4;
+}
+
+.rawmaterial-no-data {
+  color: #777;
+}
+
+/* Quantity Badge */
+.rawmaterial-quantity {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #ff9800, #ff5722);
+}
+
+/* Availability Badge */
+.rawmaterial-availability {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.rawmaterial-availability.yes {
+  background: #4caf50;
+}
+
+.rawmaterial-availability.no {
+  background: #f44336;
+}

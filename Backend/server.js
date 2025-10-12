@@ -15,7 +15,7 @@ import paymentRouter from './routes/Lasiru/paymentRoutes.js';
 import orderRoutes from './routes/Lasiru/orderRoutes.js';
 import cartRouter from './routes/Pathum/cartRoute.js';
 import notificationsRoutes from "./routes/Lasiru/emailRoute.js";
-
+import damageProductRouter from './routes/Pathum/damageRoute.js';
 
 dotenv.config();
 connectDB();
@@ -26,6 +26,7 @@ app.use(express.json());
 
 app.use('/api',authRoutes);
 app.use('/api/employees', employeeRoutes);
+app.use('/api/hrreports',HrReportRoutes)
 app.use('/api/deliveries',deliveryRoutes);
 app.use('/api/attendance', attendenceRoutes);
 app.use('/api/user',userRoutes);
@@ -41,7 +42,7 @@ app.use('/api/products', productRouter)
 app.use('/api/payments', paymentRouter)
 app.use('/api/cart', cartRouter)
 app.use("/api/ordernotifications", notificationsRoutes);
-
+app.use('/api/damage', damageProductRouter)
 
 const PORT = process.env.PORT || 8070;
 

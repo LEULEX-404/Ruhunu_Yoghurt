@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import ProductCard from "../../Components/productCard";
-import Header from "../../Components/header"; // ✅ Import Header
-import "../../Css/customerProductsPage.css"; // ✅ Import CSS file
+import Header from "../../Components/header";
+import "../../Css/customerProductsPage.css";
 
 export default function ProductPage() {
     const [products, setProducts] = useState([]);
@@ -37,10 +37,8 @@ export default function ProductPage() {
 
     return (
         <div className="product-page-container">
-            {/* ✅ Header at top */}
             <Header />
 
-            {/* ✅ Filter bar under header */}
             <aside className="filter-section">
                 <h3>Filter Products</h3>
 
@@ -75,7 +73,6 @@ export default function ProductPage() {
                 </div>
             </aside>
 
-            {/* ✅ Product grid below filters */}
             <section className="product-grid">
                 {products.length === 0 ? (
                     <p>No products found</p>

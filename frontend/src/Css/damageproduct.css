@@ -1,0 +1,80 @@
+.damage-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.damage-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.damage-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.damage-form label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.damage-form input[type="text"],
+.damage-form input[type="number"],
+.damage-form textarea {
+    padding: 10px 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.damage-form input[type="text"]:focus,
+.damage-form input[type="number"]:focus,
+.damage-form textarea:focus {
+    border-color: #007bff;
+}
+
+.damage-form input[disabled] {
+    background-color: #f5f5f5;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.damage-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.damage-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Optional — for better responsiveness */
+@media (max-width: 600px) {
+    .damage-container {
+        padding: 20px;
+        margin: 20px;
+    }
+
+    .damage-form button {
+        font-size: 0.95rem;
+        padding: 9px;
+    }
+}

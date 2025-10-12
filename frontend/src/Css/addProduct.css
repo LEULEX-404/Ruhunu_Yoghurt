@@ -17,7 +17,20 @@
     max-width: 500px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
+}
+
+/* Group label + input neatly */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #444;
+    font-size: 15px;
 }
 
 .form-input,
@@ -35,7 +48,7 @@
 .form-input:focus,
 .form-textarea:focus,
 .form-select:focus {
-    border-color: #7ab536; /* A fresh green, suitable for dairy */
+    border-color: #7ab536;
     outline: none;
     box-shadow: 0 0 0 3px rgba(122, 181, 54, 0.2);
 }
@@ -50,24 +63,14 @@
     border-radius: 8px;
     padding: 12px 15px;
     background-color: #fafafa;
-}
-
-.availability-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.availability-label {
-    font-weight: bold;
-    color: #555;
+    font-size: 15px;
 }
 
 .button-container {
     display: flex;
     justify-content: flex-end;
     gap: 15px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .btn {
@@ -83,7 +86,7 @@
 }
 
 .btn-cancel {
-    background-color: #e74c3c; /* Red for cancel */
+    background-color: #e74c3c;
     color: white;
 }
 
@@ -93,7 +96,7 @@
 }
 
 .btn-submit {
-    background-color: #2ecc71; /* Green for submit */
+    background-color: #2ecc71;
     color: white;
 }
 

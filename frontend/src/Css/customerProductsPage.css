@@ -1,19 +1,13 @@
-/* ================================
-   Customer Products Page Styles
-   ================================ */
 
 .product-page-container {
   display: flex;
-  flex-direction: column; /* stack everything */
+  flex-direction: column;
   min-height: 100vh;
   background-color: #f9f9f9;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
 }
 
-/* -------------------------
-   Header (top)
-   ------------------------- */
 .product-page-container > header {
   width: 100%;
   position: sticky;
@@ -22,9 +16,6 @@
   flex-shrink: 0;
 }
 
-/* -------------------------
-   Filter Section (below header, full width)
-   ------------------------- */
 .filter-section {
   width: 100%;
   background-color: #fff;
@@ -71,9 +62,6 @@
   box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
 }
 
-/* -------------------------
-   Product Grid (below filters)
-   ------------------------- */
 .product-grid {
   flex: 1;
   display: grid;

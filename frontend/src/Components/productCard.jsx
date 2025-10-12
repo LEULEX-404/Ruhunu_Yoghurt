@@ -17,8 +17,15 @@ export default function ProductCard({ product }) {
         return daysDiff <= 7 && daysDiff >= 0;
     }
 
+    const Wrapper = product.isAvailable ? Link : "div"
+    const wrapperProps = product.isAvailable ? {to: "/overview/" + product.productId} : {}
+
     return (
-        <Link to={"/overview/" + product.productId} className={`product-card ${isExpiringSoon() ? "expiring-soon" : ""}`}>
+        <Wrapper
+            className={`product-card
+            ${isExpiringSoon() ? "expiring-soon" : ""}
+            ${!product.isAvailable ? "unavailable" : ""}`}
+            {...wrapperProps}>
             <div className="product-card-image-container">
                 <img
                     src={product.images?.[0] || "https://via.placeholder.com/300"}
@@ -54,16 +61,16 @@ export default function ProductCard({ product }) {
                             <>
                                 {product.labelledPrice > product.price && (
                                     <span className="product-card-labelled-price">
-                                        {product.labelledPrice}
+                                        Rs {product.labelledPrice}
                                     </span>
                                 )}
                                 <span className="product-card-price">
-                                    {product.price}
+                                    Rs {product.price}
                                 </span>
                             </>
                         ) : (
                             <span className="product-card-price">
-                                {product.labelledPrice}
+                                Rs {product.labelledPrice}
                             </span>
                         )}
                     </div>
@@ -86,6 +93,6 @@ export default function ProductCard({ product }) {
                     {product.isAvailable ? "Buy Now" : "Unavailable"}
                 </button>
             </div>
-        </Link>
+        </Wrapper>
     )
 }

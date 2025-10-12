@@ -13,6 +13,8 @@ export const getCart = async (req, res) => {
     const { customerId } = req.params;
     let cart = await Cart.findOne({ customerId }).populate("items.productId");
 
+    cart.items = cart.items.filter(item => item.productId !== null)
+
     if (!cart) {
       return res.json({ customerId, items: [], totalCost: 0, totalWeight: 0 });
     }

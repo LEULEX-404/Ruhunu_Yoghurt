@@ -8,7 +8,7 @@ export default function ImageSlider(props){
     return(
         <div className="image-slider">
             <div className="image-slider-main">
-                <img className="" src={images[currentIndex]} alt="" />
+                <img className="image-slider-main-image" src={images[currentIndex]} alt="" />
             </div>
             <div className="image-slider-thumbnails">
                 {

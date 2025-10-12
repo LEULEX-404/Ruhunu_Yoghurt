@@ -1,4 +1,5 @@
-import Attendence from "../../models/Tharuka/attendence.js";
+import Attendence from "../../models/Tharuka/Attendence.js";
+import Employee from "../../models/Tharuka/Employee.js";
 
 export const getTodaysAttendence = async (req, res) => {
     try {
@@ -108,4 +109,70 @@ export const getAllTodaysAttendance = async (req, res) => {
     }
   };
   
+
+  export const getAttendanceSummary = async (req, res) => {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+  
+      const records = await Attendence.find({
+        date: { $gte: today, $lt: tomorrow }
+      });
+  
+      let present = 0;
+      let late = 0;
+  
+      records.forEach(r => {
+        if (r.checkInTime) {
+          const checkIn = new Date(r.checkInTime);
+          const lateTime = new Date(today);
+          lateTime.setHours(9, 30, 0, 0);
+  
+          if (checkIn > lateTime) {
+            late++;
+          } else {
+            present++;
+          }
+        }
+      });
+
+      const totalEmployees = await Employee.countDocuments();
+      const absent = totalEmployees - (present + late);
+  
+      res.json({
+        totalEmployees,
+        present,
+        late,
+        absent
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error fetching today's attendance summary",
+        error: error.message
+      });
+    }
+  };
+
+  export const getAttendanceByDate = async (req, res) => {
+    try {
+        const { date } = req.query;
+        if (!date) return res.status(400).json({ message: "Date query is required" });
+
+        const selectedDate = new Date(date);
+        selectedDate.setHours(0, 0, 0, 0);
+        const nextDay = new Date(selectedDate);
+        nextDay.setDate(selectedDate.getDate() + 1);
+
+        const records = await Attendence.find({
+            date: { $gte: selectedDate, $lt: nextDay }
+        });
+
+        res.json(records);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching attendance by date", error: error.message });
+    }
+};
+
   

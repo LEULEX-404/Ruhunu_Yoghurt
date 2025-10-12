@@ -1,99 +1,129 @@
 // controllers/cartController.js
 import Cart from "../../models/Lasiru/cart.js";
-import Order from "../../models/Lasiru/order.js";
+import Promocode from "../../models/Lasiru/promocode.js";
 import mongoose from "mongoose";
 
-export const getCartById = async (req, res) => {
+export const getCartByUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid cart id" });
+    const { userId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: "Invalid user id" });
     }
 
-    const cart = await Cart.findById(id).populate("items.productId", "name price weight");
+    // Find cart and populate customer & product info
+    const cart = await Cart.findOne({ customerId: userId })
+      .populate("customerId", "name email")
+      .populate("items.productId", "name price weight");
+
     if (!cart) return res.status(404).json({ error: "Cart not found" });
 
+    // Map items with proper subtotal
     const items = cart.items.map((it) => ({
       productId: it.productId._id ? it.productId._id : it.productId,
       name: it.productId.name ?? "Unknown Product",
+      weight: it.productId.weight ?? 0,
       quantity: it.quantity,
       price: it.price ?? it.productId.price ?? 0,
-      subtotal: it.subtotal ?? (it.quantity * (it.price ?? it.productId.price ?? 0)),
+      subtotal: it.subtotal ?? it.quantity * (it.price ?? it.productId.price ?? 0),
     }));
-    const total = items.reduce((s, it) => s + it.subtotal, 0);
+
+    // Calculate total and totalWeight
+    let total = items.reduce((sum, it) => sum + it.subtotal, 0);
+    let totalWeight = items.reduce((sum, it) => sum + it.weight * it.quantity, 0);
+
+    let discountApplied = null;
+    let promoMessage = null;
+
+    // Validate promocode
+    if (cart.promocode) {
+      const promo = await Promocode.findOne({ code: cart.promocode });
+      if (
+        !promo ||
+        !promo.isActive ||
+        promo.expiryDate <= new Date() ||
+        promo.usedCount >= promo.usageLimit
+      ) {
+        promoMessage = "Promocode is invalid or expired";
+      } else {
+        if (promo.discountType === "percentage") {
+          const discount = (total * promo.discountValue) / 100;
+          total -= discount;
+          discountApplied = { type: "percentage", value: promo.discountValue, discount };
+        } else if (promo.discountType === "fixed") {
+          total -= promo.discountValue;
+          discountApplied = { type: "fixed", value: promo.discountValue, discount: promo.discountValue };
+        }
+      }
+    }
 
     return res.json({
       id: cart._id,
-      customerId: cart.customerId,
+      customer: cart.customerId?.name ?? "N/A",
       items,
       total,
-      totalWeight: cart.totalWeight ?? items.reduce((s, it) => s + ((it.weight ?? 0) * it.quantity), 0),
+      totalWeight: cart.totalWeight ?? totalWeight,
       promocode: cart.promocode ?? null,
+      discountApplied,
+      promoMessage,
     });
   } catch (err) {
-    console.error("getCartById:", err);
+    console.error("getCartByUser:", err);
     res.status(500).json({ error: "Server error" });
   }
 };
 
-export const payNow = async (req, res) => {
+
+export const applyPromocodeToCart = async (req, res) => {
   try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ error: "Invalid cart id" });
+    const { userId } = req.params;
+    const { code } = req.body;
+    if (!code) return res.status(400).json({ error: "Promocode required" });
 
-    const cart = await Cart.findById(id).populate("items.productId", "name");
-    if (!cart) return res.status(404).json({ error: "Cart not found" });
-
-
-    const paymentResult = {
-      status: "success",
-      provider: "demo",
-      transactionId: `txn_${Date.now()}`,
-    };
-
-    if (typeof Order !== "undefined") {
-      await Order.create({
-        cartId: cart._id,
-        customerId: cart.customerId,
-        items: cart.items,
-        total: cart.items.reduce((s, it) => s + it.subtotal, 0),
-        paymentMethod: "online",
-        paymentInfo: paymentResult,
-        status: "paid",
-      });
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: "Invalid user id" });
     }
 
-    return res.json({ message: "Payment successful", paymentResult });
-  } catch (err) {
-    console.error("payNow:", err);
-    res.status(500).json({ error: "Payment error" });
-  }
-};
-
-export const codOrder = async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ error: "Invalid cart id" });
-
-    const cart = await Cart.findById(id).populate("items.productId", "name");
+    const cart = await Cart.findOne({ customerId: userId }).populate("items.productId");
     if (!cart) return res.status(404).json({ error: "Cart not found" });
+    if (!cart.items || cart.items.length === 0) return res.status(400).json({ error: "Cart is empty" });
 
+    // compute current total (based on subtotal if available)
+    const items = cart.items.map((it) => {
+      const price = it.price ?? (it.productId?.price ?? 0);
+      const qty = it.quantity ?? 0;
+      return { price, qty, subtotal: it.subtotal ?? price * qty, name: it.productId?.name ?? it.name ?? "Item" };
+    });
+    let total = items.reduce((s, it) => s + it.subtotal, 0);
 
-    if (typeof Order !== "undefined") {
-      await Order.create({
-        cartId: cart._id,
-        customerId: cart.customerId,
-        items: cart.items,
-        total: cart.items.reduce((s, it) => s + it.subtotal, 0),
-        paymentMethod: "cod",
-        paymentInfo: null,
-        status: "pending",
-      });
+    // find promocode
+    const promo = await Promocode.findOne({ code: code.trim() });
+    if (!promo) return res.status(404).json({ error: "Promocode not found" });
+
+    if (!promo.isActive || promo.expiryDate <= new Date() || promo.usedCount >= promo.usageLimit) {
+      return res.status(400).json({ error: "Promocode is invalid or expired" });
     }
 
-    return res.json({ message: "Order placed (COD). We'll contact you to collect payment on delivery." });
+    let discountApplied = null;
+    if (promo.discountType === "percentage") {
+      const discount = (total * promo.discountValue) / 100;
+      total -= discount;
+      discountApplied = { type: "percentage", value: promo.discountValue, discount };
+    } else if (promo.discountType === "fixed") {
+      const discount = promo.discountValue;
+      total -= discount;
+      if (total < 0) total = 0;
+      discountApplied = { type: "fixed", value: promo.discountValue, discount };
+    }
+
+    // Save promocode in cart (so preview & subsequent checkout know applied code)
+    cart.promocode = promo.code;
+    cart.total = total; // optional: you might prefer not to store total if you calculate on the fly
+    await cart.save();
+
+    return res.json({ total, discountApplied, promocode: promo.code });
   } catch (err) {
-    console.error("codOrder:", err);
-    res.status(500).json({ error: "COD error" });
+    console.error("applyPromocodeToCart:", err);
+    return res.status(500).json({ error: "Failed to apply promocode" });
   }
 };

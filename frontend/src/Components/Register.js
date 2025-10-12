@@ -30,7 +30,8 @@ export default function RegisterPage() {
       toast.error("Email is required");
       return false;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(form.email)) {
       toast.error("Enter a valid email address");
       return false;
     }
@@ -61,7 +62,6 @@ export default function RegisterPage() {
     return true;
   };
 
-  // === Submit Handler ===
   const handleSubmit = async (e) => {
     e.preventDefault();
 

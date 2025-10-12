@@ -6,6 +6,8 @@ const orderSchema = new mongoose.Schema({
     orderNumber: { type: String, required: true },
 
     customerName: { type: String, required: true },
+
+    phone:{type: String},
      
     items: [
         {

@@ -11,7 +11,8 @@ import cors from 'cors';
 import productRouter from './routes/Pathum/productRoute.js';
 import promoCodeRouter from './routes/Lasiru/promocoderoutes.js';
 import cartRoutes from './routes/Lasiru/cartRoutes.js'
-import paymentRouter from './routes/Pathum/payment.js';
+import paymentRouter from './routes/Lasiru/paymentRoutes.js';
+import orderRoutes from './routes/Lasiru/orderRoutes.js';
 import cartRouter from './routes/Pathum/cartRoute.js';
 import damageProductRouter from './routes/Pathum/damageRoute.js';
 
@@ -24,12 +25,17 @@ app.use(express.json());
 
 app.use('/api',authRoutes);
 app.use('/api/employees', employeeRoutes);
+app.use('/api/hrreports',HrReportRoutes)
 app.use('/api/deliveries',deliveryRoutes);
 app.use('/api/attendance', attendenceRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/driver',driverRoutes);
 app.use('/api/products', productRouter);
-app.use('/api/promocode', promoCodeRouter)
+app.use('/api/promocode', promoCodeRouter);
+app.use('/api/cart', cartRoutes);
+app.use('/api/products', productRouter);
+app.use('/api/payment', paymentRouter);
+app.use("/api/orders", orderRoutes);
 app.use('/api/cart', cartRoutes)
 app.use('/api/products', productRouter)
 app.use('/api/payments', paymentRouter)

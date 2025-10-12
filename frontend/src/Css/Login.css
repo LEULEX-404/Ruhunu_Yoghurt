@@ -1,24 +1,21 @@
-/* Global styles */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #f0f8f5 0%, #e6f7ff 100%);
   color: #333;
 }
-/* Background image for the whole page */
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  /* background image */
   background: url('../images/bg.jpg') no-repeat center center;
-  background-size: cover; /* cover the entire container */
+  background-size: cover;
   position: relative;
 }
 
-/* Optional: add overlay for better contrast */
 .login-container::before {
   content: '';
   position: absolute;
@@ -26,16 +23,15 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.3); /* semi-transparent overlay */
+  background: rgba(255, 255, 255, 0.3);
   z-index: 0;
 }
 
 .login-wrapper {
-  position: relative; /* to stay above overlay */
+  position: relative;
   z-index: 1;
 }
 
-/* Wrapper to hold image + form */
 .login-wrapper {
   display: flex;
   align-items: center;
@@ -48,7 +44,6 @@ body {
   width: 100%;
 }
 
-/* Left side image */
 .login-image {
   flex: 1;
   background: #f0f8ff;
@@ -63,7 +58,6 @@ body {
   object-fit: cover;
 }
 
-/* Right side form */
 .login-card {
   flex: 1;
   padding: 40px 30px;
@@ -72,14 +66,13 @@ body {
   background: #fff;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .login-wrapper {
     flex-direction: column;
   }
 
   .login-image {
-    display: none; /* hide image on small screens */
+    display: none;
   }
 
   .login-card {
@@ -87,8 +80,6 @@ body {
   }
 }
 
-
-/* Container */
 .login-container {
   display: flex;
   justify-content: center;
@@ -97,7 +88,6 @@ body {
   padding: 20px;
 }
 
-/* Card */
 .login-card {
   background: #ffffff;
   border-radius: 16px;
@@ -114,7 +104,6 @@ body {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
 }
 
-/* Avatar */
 .avatar {
   background: #e8f9f1;
   border-radius: 50%;
@@ -127,7 +116,6 @@ body {
   font-size: 32px;
 }
 
-/* Headings */
 .login-card h2 {
   margin-bottom: 8px;
   font-size: 24px;
@@ -140,7 +128,6 @@ body {
   font-size: 14px;
 }
 
-/* Inputs */
 .login-card input,
 .login-card input{
   width: 100%;
@@ -175,7 +162,6 @@ body {
   text-decoration: underline;
 }
 
-/* Button */
 .login-card button {
   width: 100%;
   padding: 12px;
@@ -194,7 +180,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* Signup text */
 .signup {
   margin-top: 16px;
   font-size: 14px;
@@ -211,7 +196,7 @@ body {
 }
 
 .login-card .link-button {
-  all: unset; /* Resets all inherited button styles */
+  all: unset;
   color: #38b2ac;
   font-size: 14px;
   cursor: pointer;
@@ -228,7 +213,6 @@ body {
   outline: none;
 }
 
-/* Modal overlay */
 .register-modal-overlay {
   position: fixed;
   top: 0;
@@ -242,7 +226,6 @@ body {
   z-index: 999;
 }
 
-/* Modal content box */
 .register-modal-content {
   background: #ffffff;
   border-radius: 20px;
@@ -254,7 +237,6 @@ body {
   animation: popup 0.3s ease;
 }
 
-/* Popup animation */
 @keyframes popup {
   from {
     transform: translateY(-20px);
@@ -266,7 +248,6 @@ body {
   }
 }
 
-/* Close button */
 .register-modal-close {
   position: absolute;
   top: 12px;
@@ -286,7 +267,7 @@ body {
 
 .choice-buttons {
   display: flex;
-  gap: 1rem; /* space between buttons */
+  gap: 1rem;
   justify-content: center;
   margin-top: 20px;
 }
@@ -322,7 +303,6 @@ body {
   background: linear-gradient(135deg, #1e7e34, #155d27);
 }
 
-/* Password field with eye */
 .password-wrapper {
   position: relative;
   width: 100%;
@@ -330,7 +310,7 @@ body {
 
 .password-wrapper input {
   width: 100%;
-  padding-right: 40px; /* space for eye */
+  padding-right: 40px;
 }
 
 

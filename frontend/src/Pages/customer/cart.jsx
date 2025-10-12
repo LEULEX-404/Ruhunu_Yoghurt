@@ -109,7 +109,7 @@ export default function CartPage() {
           <div className="cart-summary-desktop">
             <p className="cart-total-text">Total:</p>
             <span className="cart-total-amount">Rs{getTotal().toFixed(2)}</span>
-            <Link to="/checkout" state={{ cart }} className="checkout-button">Checkout</Link>
+            <Link to="/cart/preview" state={{ cart }} className="checkout-button">Checkout</Link>
           </div>
         )}
       </div>

@@ -104,6 +104,19 @@
   background-color: #fff3cd;
 }
 
+.damage-log-btn {
+    background-color: #f5a623;
+    color: #f5a623;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.damage-log-btn:hover {
+    background-color: #d48806;
+}
 
 .loading, .no-products {
   text-align: center;

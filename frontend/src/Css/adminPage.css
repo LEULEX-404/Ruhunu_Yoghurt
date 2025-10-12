@@ -62,6 +62,7 @@
   margin: 0;
 }
 
+/* ✅ Dashboard Cards Layout */
 .dashboard-cards {
   display: flex;
   flex-wrap: wrap;
@@ -106,35 +107,22 @@
   margin: 0;
 }
 
-.report-container {
-  width: 100%;
-  max-width: 1200px;
-  background-color: #fff;
-  margin: 2rem auto;
-  padding: 1.8rem 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+/* ✅ Damage Card Highlight */
+.damage-card {
+  background-color: #fdf2f2;
+  border: 1px solid #e74c3c33;
 }
 
-.report-container h2 {
-  margin-bottom: 1rem;
-  color: #2c3e50;
-  font-size: 1.5rem;
-  font-weight: 600;
+.damage-card h2 {
+  color: #c0392b;
 }
 
-.report-container p {
-  font-size: 1.1rem;
-  color: #34495e;
-  line-height: 1.5rem;
+/* General layout */
+.admin-content {
+  padding: 30px;
 }
 
-.admin-routes {
-  width: 100%;
-  max-width: 1200px;
-  margin: 2rem auto;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
   .dashboard-cards {
     flex-direction: column;

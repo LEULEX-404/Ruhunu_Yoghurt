@@ -14,11 +14,7 @@ import cartRoutes from './routes/Lasiru/cartRoutes.js'
 import paymentRouter from './routes/Lasiru/paymentRoutes.js';
 import orderRoutes from './routes/Lasiru/orderRoutes.js';
 import cartRouter from './routes/Pathum/cartRoute.js';
-import StockRouter from './routes/Kalindu/StockRoutes.js';
-import RawMaterialRoutes from "./routes/Kalindu/RawmaterialRoutes.js";
-import supplierRoutes from './routes/Kalindu/SuplierRoutes.js';
-import DeliveryReportsRoutes from './routes/Imasha/reportRoutes.js';
-import HrReportRoutes from './routes/Tharuka/reportRoutes.js'
+import damageProductRouter from './routes/Pathum/damageRoute.js';
 
 dotenv.config();
 connectDB();
@@ -44,10 +40,7 @@ app.use('/api/cart', cartRoutes)
 app.use('/api/products', productRouter)
 app.use('/api/payments', paymentRouter)
 app.use('/api/cart', cartRouter)
-app.use('/api/stock', StockRouter);
-app.use("/api/rawmaterials", RawMaterialRoutes);
-app.use('/api/suppliers', supplierRoutes);
-app.use('/api/deliveryreports',DeliveryReportsRoutes);
+app.use('/api/damage', damageProductRouter)
 
 const PORT = process.env.PORT || 8070;
 

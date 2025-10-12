@@ -108,3 +108,15 @@ export async function addPayment(req, res) {
         })
     }
 }
+
+
+export const getAllPayments = async (req, res) => {
+  try {
+    const payments = await Payment.find(); // no populate needed
+    res.status(200).json(payments);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch payments", error: err.message });
+  }
+};
+

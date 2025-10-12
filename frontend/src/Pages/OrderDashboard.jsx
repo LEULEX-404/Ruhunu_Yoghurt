@@ -1,11 +1,14 @@
 // OrderDashboard.jsx
 import React, { useEffect, useState, useRef } from "react";
-import { FiHome, FiLogOut, FiUserPlus, FiShoppingBag, FiGift, FiCreditCard } from 'react-icons/fi';
+import { FiHome, FiLogOut, FiUserPlus, FiShoppingBag, FiGift, FiCreditCard, FiBarChart  } from 'react-icons/fi';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import { confirmAlert } from "react-confirm-alert";
 import AddPromocodeModal from "../Components/AddPromocode";
 import UpdatePromocode from "../Components/UpdatePromocode";
 import "../Css/OrderDashboard.css";
+import ReportsSection from '../Components/OrderReport.jsx'
 
 export default function OrderDashboard() {
   const [view, setView] = useState("dashboard");
@@ -88,16 +91,42 @@ export default function OrderDashboard() {
     }
   };
 
-  const handleCancel = async (id) => {
-    try {
-      await fetch(`http://localhost:8070/api/orders/${id}/cancel`, { method: "PUT" });
-      toast.success("Order cancelled!");
-      fetchOrders();
-    } catch (err) {
-      toast.error("Failed to cancel order");
-      console.error(err);
-    }
-  };
+const handleCancel = async (order) => {
+  confirmAlert({
+    title: "Cancel Order?",
+    message: `Are you sure you want to cancel order ${order.orderNumber}?\nCustomer: ${order.customerName}\nRefund Amount: Rs.${order.total}`,
+    buttons: [
+      {
+        label: "Yes, Cancel It",
+        onClick: async () => {
+          try {
+            const res = await fetch(`http://localhost:8070/api/orders/${order._id}/cancel`, {
+              method: "PUT",
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+              toast.success(`Order cancelled !`);
+              fetchOrders();
+            } else {
+              toast.error(data.error || "Failed to cancel order");
+            }
+          } catch (err) {
+            toast.error("Failed to cancel order");
+            console.error(err);
+          }
+        },
+      },
+      {
+        label: "No, Keep It",
+        onClick: () => toast.info("Order not cancelled."),
+      },
+    ],
+    closeOnEscape: true,
+    closeOnClickOutside: true,
+  });
+};
+
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure to delete this promocode?")) {
@@ -198,13 +227,9 @@ export default function OrderDashboard() {
           <ul className="order-sidebar-menu">
             <li className={view === 'dashboard' ? 'active' : ''} onClick={() => setView('dashboard')}><FiHome /> Dashboard</li>
             <li className={view === 'order' ? 'active' : ''} onClick={() => setView('order')}><FiShoppingBag /> Orders</li>
-            <li
-              className={view === 'promo' ? 'active' : ''}
-              onClick={() => { setView('promo'); setShowAddForm(false); setEditingPromo(null); }}
-            >
-              <FiGift /> PromoCodes
-            </li>
+            <li className={view === 'promo' ? 'active' : ''} onClick={() => { setView('promo'); setShowAddForm(false); setEditingPromo(null); }}><FiGift /> PromoCodes</li>
             <li className={view === 'payments' ? 'active' : ''} onClick={() => setView('payments')}><FiCreditCard /> Payments</li>
+            <li className={view === 'reports' ? 'active' : ''} onClick={() => setView('reports')}><FiBarChart /> Reports</li>
           </ul>
 
           <div className="order-sidebar-footer">
@@ -245,7 +270,7 @@ export default function OrderDashboard() {
                 </div>
               </div>
 
-              {/* --- UNIQUE PART: Quick Insights --- */}
+             
               <div className="quick-insights" style={{ marginTop: 20, display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <div className="insight-card" style={{ flex: "1 1 300px", padding: 12, borderRadius: 8, boxShadow: "0 1px 6px rgba(0,0,0,0.08)" }}>
                   <h4>Most Recent Order</h4>
@@ -346,7 +371,7 @@ export default function OrderDashboard() {
                               {(order.status || "").toLowerCase() === "pending" && (
                                 <div className="order-actions-unique">
                                   <button className="ord-btn approve" onClick={() => handleApprove(order._id)}>Approve</button>
-                                  <button className="ord-btn cancel" onClick={() => handleCancel(order._id)}>Cancel</button>
+                                  <button className="ord-btn cancel" onClick={() => handleCancel(order)}>Cancel</button>
                                 </div>
                               )}
                             </div>
@@ -375,9 +400,6 @@ export default function OrderDashboard() {
                     <div key={payment._id} className="manage-order-card">
                       <div className="order-card-header">
                         <span className="order-number">{payment.paymentId}</span>
-                        <span className={`order-status ${payment.paymentMode ? payment.paymentMode.toLowerCase() : ""}`}>
-                          {payment.paymentMode}
-                        </span>
                       </div>
                       <div className="order-details">
                         <p><strong>Name:</strong> {payment.name}</p>
@@ -467,6 +489,8 @@ export default function OrderDashboard() {
               {loadingPromos && <p>Loading promocodes...</p>}
             </section>
           )}
+
+         {view === "reports" && <ReportsSection />}
         </main>
       </div>
     </div>

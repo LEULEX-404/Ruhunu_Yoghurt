@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
+
 function AddPromocodeModal({ fetchPromocodes, onClose }) {
   const [code, setCode] = useState("");
   const [discountType, setDiscountType] = useState("percentage");
@@ -8,6 +9,7 @@ function AddPromocodeModal({ fetchPromocodes, onClose }) {
   const [expiryDate, setExpiryDate] = useState("");
   const [usageLimit, setUsageLimit] = useState(1);
 
+  // Validations
   const validateForm = () => {
     if (!code.trim() || code.length < 3) {
       toast.error("Code must be at least 3 characters long.");

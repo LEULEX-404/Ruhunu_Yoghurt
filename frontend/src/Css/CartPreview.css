@@ -81,3 +81,57 @@ button {
   margin-bottom: 10px;
   padding: 8px;
 }
+
+
+.cart-preview-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  margin-bottom: 20px;
+
+  background: linear-gradient(90deg, #6366f1, #4338ca);
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+.cart-preview-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.preview-btn {
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+
+  background: #fff;
+  color: #4338ca;
+  transition: all 0.25s ease;
+}
+
+.preview-btn:hover {
+  background: #f0f0ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(67, 56, 202, 0.2);
+}
+
+.preview-btn:disabled {
+  background: #ddd;
+  color: #888;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

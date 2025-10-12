@@ -118,7 +118,7 @@ export const applyPromocodeToCart = async (req, res) => {
 
     // Save promocode in cart (so preview & subsequent checkout know applied code)
     cart.promocode = promo.code;
-    cart.total = total; // optional: you might prefer not to store total if you calculate on the fly
+    cart.total = total; 
     await cart.save();
 
     return res.json({ total, discountApplied, promocode: promo.code });

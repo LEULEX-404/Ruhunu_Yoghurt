@@ -1,9 +1,7 @@
 //CREATE
 import promocode from "../../models/Lasiru/promocode.js";
 
-// Define an async function called addpromocode  
-// req = request data coming from client  
-// res = response we send back to client
+
 export const addpromocode = async (req, res) => {
     try{
         // Extract values from request body 

@@ -63,7 +63,7 @@ export default function PaymentPage() {
       );
 
       toast.success("Payment successful!");
-      // navigate("/success", { state: { paymentId: response.data.paymentId } });
+      
     } catch (error) {
       console.error(error);
       toast.error("Payment failed. Please try again.");

@@ -128,7 +128,7 @@ export const getAllTodaysAttendance = async (req, res) => {
         if (r.checkInTime) {
           const checkIn = new Date(r.checkInTime);
           const lateTime = new Date(today);
-          lateTime.setHours(12, 30, 0, 0);
+          lateTime.setHours(9, 30, 0, 0);
   
           if (checkIn > lateTime) {
             late++;

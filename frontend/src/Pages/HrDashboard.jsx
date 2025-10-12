@@ -17,7 +17,7 @@ export default function HrDashboard() {
     const [employeeSearch,setEmployeeSearch] = useState("");
 
     const [todaysAttendance, setTodaysAttendance] = useState([]);
-    const [attendanceByDate, setAttendanceByDate] = useState([]); // new state for previous attendance
+    const [attendanceByDate, setAttendanceByDate] = useState([]);
     const [showEarlyLeave, setShowEarlyLeave] = useState(false);
 
     const [view, setView] = useState('dashboard');
@@ -31,7 +31,7 @@ export default function HrDashboard() {
     
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const [selectedDate, setSelectedDate] = useState(new Date()); // date picker
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     const [attendanceSummary, setAttendanceSummary] = useState({
       present: 0,
@@ -83,7 +83,7 @@ export default function HrDashboard() {
 
     const fetchAttendanceByDate = async (date) => {
         try {
-            const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD
+            const formattedDate = date.toISOString().split('T')[0];
             const res = await axios.get(`http://localhost:8070/api/attendance/bydate?date=${formattedDate}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
             });
@@ -121,8 +121,8 @@ export default function HrDashboard() {
         todaysAttendance.forEach((record) => {
           if (record.checkInTime) {
             const checkInTime = new Date(record.checkInTime);
-            const lateTime = new Date();
-            lateTime.setHours(12, 30, 0, 0);
+            const lateTime = new Date(checkInTime);
+            lateTime.setHours(9, 30, 0, 0);
             if (checkInTime <= lateTime) {
               presentCount++;
             } else {
@@ -331,8 +331,8 @@ export default function HrDashboard() {
         attendanceByDate.forEach((record) => {
           if (record.checkInTime) {
             const checkInTime = new Date(record.checkInTime);
-            const lateTime = new Date();
-            lateTime.setHours(12, 30, 0, 0);
+            const lateTime = new Date(checkInTime);
+            lateTime.setHours(9, 30, 0, 0);
             if (checkInTime <= lateTime) {
               presentCount++;
             } else {
@@ -713,8 +713,8 @@ export default function HrDashboard() {
                                       let status = "Absent", color="red";
                                       if(record){
                                         const checkInTime = new Date(record.checkInTime);
-                                        const lateTime = new Date();
-                                        lateTime.setHours(12,30,0,0);
+                                        const lateTime = new Date(checkInTime);
+                                        lateTime.setHours(9,30,0,0);
                                         if(checkInTime <= lateTime){ status="Present"; color="green"; }
                                         else{ status="Late"; color="orange"; }
                                       }

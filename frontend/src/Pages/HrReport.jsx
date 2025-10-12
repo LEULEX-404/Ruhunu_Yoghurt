@@ -89,7 +89,7 @@ export default function Reports() {
         allDates.forEach(date => {
           const record = empAttendance.find(a => new Date(a.date).toDateString() === date.toDateString());
           const lateTime = new Date(date);
-          lateTime.setHours(12, 30, 0, 0);
+          lateTime.setHours(9, 30, 0, 0);
   
           if (!record || !record.checkInTime) totalAbsent += 1;
           else if (new Date(record.checkInTime) > lateTime) totalLate += 1;
@@ -98,7 +98,7 @@ export default function Reports() {
   
         // Attendance-based deduction logic
         const absentDeduction = Math.floor(Math.max(totalAbsent - 3, 0) / 3) * 500;
-        const lateDeduction = Math.floor(Math.max(totalLate - 3, 0) / 3) * 500;
+        const lateDeduction = Math.floor(Math.max(totalLate - 3, 0) / 3) * 200;
         const totalDeduction = absentDeduction + lateDeduction;
   
         const base = baseSalaryMap[emp.position] || 30000;
@@ -149,7 +149,7 @@ export default function Reports() {
           const record = attendance.find(a => a.employeeID === emp.employeeID && new Date(a.date).toDateString() === date.toDateString());
   
           const lateTime = new Date(date);
-          lateTime.setHours(12, 30, 0, 0);
+          lateTime.setHours(9, 30, 0, 0);
   
           if (!record || !record.checkInTime) {
             totalAbsent += 1; // absent

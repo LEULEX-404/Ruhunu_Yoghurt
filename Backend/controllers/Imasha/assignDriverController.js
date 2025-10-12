@@ -209,15 +209,14 @@ export const autoScheduleDelivery = async (req, res) => {
 
     const now = new Date();
 
-    // Start and end for today
     let startTime = new Date();
-    startTime.setHours(8, 0, 0, 0); // 8:00 AM
-    let endTime = new Date(startTime.getTime() + 4 * 60 * 60 * 1000); // +4 hours
-    if (endTime.getHours() > 17) endTime.setHours(17, 0, 0, 0); // cap at 5 PM
+    startTime.setHours(8, 0, 0, 0); 
+    let endTime = new Date(startTime.getTime() + 5 * 60 * 60 * 1000); 
+    if (endTime.getHours() > 17) endTime.setHours(17, 0, 0, 0); 
 
-    const minStartTime = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour from now
+    const minStartTime = new Date(now.getTime() + 60 * 60 * 1000); 
 
-    // Check if start time is within 8AM–12PM and at least 1 hour from now
+    
     const startHour = startTime.getHours();
     const startMinutes = startTime.getMinutes();
 
@@ -228,20 +227,20 @@ export const autoScheduleDelivery = async (req, res) => {
       (startHour === 12 && startMinutes > 0) ||
       startHour > 12
     ) {
-      // Cannot schedule today, suggest next day
+    
       return res.status(400).json({
         message: "Cannot schedule today due to time constraints.",
         suggestNextDay: true,
       });
     }
 
-    // Assign times
+
     assigned.status = "sceduled";
     assigned.startTime = startTime;
     assigned.endTime = endTime;
     await assigned.save();
 
-    // Update driver availability
+  
     const driver = await Driver.findOne({ driverID: assigned.driver });
     if (driver) {
       driver.availability = false;
@@ -269,18 +268,18 @@ export const scheduleNextDay = async (req, res) => {
       return res.status(404).json({ message: "Assigned delivery not found." });
     }
 
-    // Next day date
+   
     const nextDay = new Date();
     nextDay.setDate(nextDay.getDate() + 1);
 
-    // Auto-start: 8 AM next day
+  
     let startTime = new Date(nextDay);
     startTime.setHours(8, 0, 0, 0);
 
-    // Auto-end: 4 hours after start, max 5 PM
-    let endTime = new Date(startTime.getTime() + 4 * 60 * 60 * 1000);
+    
+    let endTime = new Date(startTime.getTime() + 5 * 60 * 60 * 1000);
     if (endTime.getHours() > 17) {
-      endTime.setHours(17, 0, 0, 0); // cap at 5 PM
+      endTime.setHours(17, 0, 0, 0); 
     }
 
     assigned.status = "sceduled";

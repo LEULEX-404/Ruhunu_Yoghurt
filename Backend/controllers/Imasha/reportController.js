@@ -1,39 +1,71 @@
-// GET /api/reports/completed-daily
 import AssignDelivery from "../../models/Imasha/AssignDelivery.js";
 import Delivery from "../../models/Imasha/Delivery.js";
-import Driver from "../../models/Tharuka/Driver.js";
 
 export const dailyCompleted = async (req, res) => {
   try {
-    // 🔹 Extract optional query parameters
+    
     const { start, end } = req.query;
 
     let startDate, endDate;
 
     if (start && end) {
-      // 🔹 If both dates provided (View by Range)
+     
       startDate = new Date(start);
       endDate = new Date(end);
       endDate.setHours(23, 59, 59, 999);
     } else if (start) {
-      // 🔹 If only one date provided, use that day
+     
       startDate = new Date(start);
       startDate.setHours(0, 0, 0, 0);
       endDate = new Date(start);
       endDate.setHours(23, 59, 59, 999);
     } else {
-      // 🔹 Default: today’s report
+      
       startDate = new Date();
       startDate.setHours(0, 0, 0, 0);
       endDate = new Date(startDate);
       endDate.setDate(startDate.getDate() + 1);
     }
 
-    // 🔹 Filter deliveries completed between startDate and endDate
-    const completed = await AssignDelivery.find({
-      status: "completed",
-      endTime: { $gte: startDate, $lte: endDate },
-    }).populate("driver deliveries");
+    const completed = await AssignDelivery.aggregate([
+      {
+        $match: {
+          status: "completed",
+          endTime: { $gte: startDate, $lte: endDate },
+        },
+      },
+      {
+        $lookup: {
+          from: "drivers",
+          localField: "driver",
+          foreignField: "driverID",
+          as: "driverInfo",
+        },
+      },
+      { $unwind: { path: "$driverInfo", preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          from: "deliveries",
+          localField: "deliveries",
+          foreignField: "_id",
+          as: "deliveryDetails",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          employeeID: 1,
+          totalWeight: 1,
+          status: 1,
+          startTime: 1,
+          endTime: 1,
+          driverName: "$driverInfo.name",
+          driverEmail: "$driverInfo.email",
+          driverPhone: "$driverInfo.phone",
+          deliveries: "$deliveryDetails",
+        },
+      },
+    ]);
 
     res.json(completed);
   } catch (err) {
@@ -43,49 +75,112 @@ export const dailyCompleted = async (req, res) => {
 };
 
 
-// GET /api/reports/pending
+
 export const pendingDeliveries = async (req, res) => {
   try {
-    const pending = await AssignDelivery.find({
-      status: { $in: ["assigned", "sceduled"] }
-    }).populate("driver deliveries");
+    const pending = await AssignDelivery.aggregate([
+      {
+        $match: {
+          status: { $in: ["assigned", "sceduled"] },
+        },
+      },
+      {
+        $lookup: {
+          from: "drivers",
+          localField: "driver",
+          foreignField: "driverID",
+          as: "driverInfo",
+        },
+      },
+      { $unwind: { path: "$driverInfo", preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          from: "deliveries",
+          localField: "deliveries",
+          foreignField: "_id",
+          as: "deliveryDetails",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          status: 1,
+          startTime: 1,
+          endTime: 1,
+          employeeID: 1,
+          totalWeight: 1,
+          driverName: "$driverInfo.name",
+          driverEmail: "$driverInfo.email",
+          driverPhone: "$driverInfo.phone",
+          driverEmployeeID: "$driverInfo.employeeID",
+          deliveries: "$deliveryDetails",
+        },
+      },
+    ]);
+
     res.json(pending);
-  } catch(err) {
+  } catch (err) {
+    console.error("Error fetching pending deliveries:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
 
-// GET /api/reports/driver-performance
+
+
 export const driverPerformance = async (req, res) => {
   try {
     const data = await AssignDelivery.aggregate([
       { $match: { status: "completed" } },
       { $unwind: "$deliveries" },
-      {  $group: { 
+      {
+        $lookup: {
+          from: "drivers", 
+          localField: "driver", 
+          foreignField: "driverID", 
+          as: "driverInfo"
+        }
+      },
+      { $unwind: { path: "$driverInfo", preserveNullAndEmptyArrays: true } },
+      {
+        $group: {
           _id: "$driver",
-          employeeID: { $first: "$employeeID" },
-          totalDeliveries: { $sum: 1 } 
-        } },
+          employeeID: { $first: "$driverInfo.employeeID" },
+          driverName: { $first: "$driverInfo.name" },
+          totalDeliveries: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          driverID: "$_id",
+          driverName: 1,
+          employeeID: 1,
+          totalDeliveries: 1
+        }
+      }
     ]);
+
     res.json(data);
-  } catch(err) {
+  } catch (err) {
+    console.error("Error fetching driver performance:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
-// GET /api/reports/revenue-summary
+
+
 
 
 export const revenueSummary = async (req, res) => {
   try {
     const data = await Delivery.aggregate([
       {
-        // Filter only completed deliveries
+     
         $match: { status: "completed" }
       },
       {
-        // Group by date based on updatedAt field
+       
         $group: {
           _id: {
             $dateToString: { format: "%Y-%m-%d", date: "$updatedAt" }
@@ -95,7 +190,7 @@ export const revenueSummary = async (req, res) => {
         }
       },
       {
-        // Rename _id to date
+      
         $project: {
           _id: 0,
           date: "$_id",
@@ -104,7 +199,7 @@ export const revenueSummary = async (req, res) => {
         }
       },
       {
-        // Sort by most recent date first
+    
         $sort: { date: -1 }
       }
     ]);

@@ -33,13 +33,13 @@ const ReportsSection = () => {
       const fromTime = new Date(from).getTime();
       const toTime = new Date(to).getTime();
 
-      // Filter orders by date range
+      
       const filteredOrders = orders.filter((o) => {
         const orderTime = new Date(o.createdAt).getTime();
         return orderTime >= fromTime && orderTime <= toTime;
       });
 
-      // Aggregate daily data
+      
       const dailyDataMap = {};
       filteredOrders.forEach((o) => {
         const date = o.createdAt.split("T")[0];
@@ -57,7 +57,7 @@ const ReportsSection = () => {
         dailyDataMap[date].orders += 1;
         dailyDataMap[date].revenue += o.total || 0;
 
-        // Calculate payment by priority
+       
         const payment = o.total || 0;
         if (o.priority === "Low") {
           dailyDataMap[date].paymentCOD += payment;
@@ -121,7 +121,7 @@ const ReportsSection = () => {
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Reports</h2>
 
-      {/* Filter Section */}
+      
       <div className="flex flex-wrap gap-4 items-center mb-6">
         <select
           className="border rounded px-3 py-2"

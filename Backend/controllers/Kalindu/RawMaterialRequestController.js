@@ -9,16 +9,16 @@ console.log("🔧 EMAIL_USER:", process.env.EMAIL_USER);
 
 
 
-/** Helper: Generate Request ID */
+/**  Generate Request ID */
 const generateRequestId = async () => {
   const count = await RawMaterialRequest.countDocuments();
   return `REQ${String(count + 1).padStart(4, "0")}`;
 };
 
-/** Helper: Email Sender */
 
 
-/** ✉️ New: send only email */
+
+/** send only email */
 export const sendCustomEmail = async (req, res) => {
   try {
     const { supplierEmail, subject, message } = req.body;
@@ -33,7 +33,7 @@ export const sendCustomEmail = async (req, res) => {
   }
 };
 
-/** 📩 Create new raw material request + send email */
+/** Create new raw material request + send email */
 export const createRequest = async (req, res) => {
   try {
     const { supplierId, materialId, quantity, unit } = req.body;
@@ -70,7 +70,7 @@ We would like to request the following raw materials:
 Please confirm availability and delivery timeline.
 
 Thank you,
-Your Company
+Ruhunu Yoghurt Management
 `;
 
     await sendEmail(supplier.email, `New Raw Material Request - ${requestId}`, emailBody);
@@ -85,7 +85,7 @@ Your Company
   }
 };
 
-/** 📦 Get all requests */
+/** Get all requests */
 export const getAllRequests = async (req, res) => {
   try {
     const requests = await RawMaterialRequest.find()
@@ -100,7 +100,7 @@ export const getAllRequests = async (req, res) => {
   }
 };
 
-/** ✏️ Update request status */
+/** Update request status */
 export const updateRequestStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -125,7 +125,7 @@ export const updateRequestStatus = async (req, res) => {
   }
 };
 
-/** 🛑 Close request */
+/** Close request */
 export const closeRequest = async (req, res) => {
   try {
     const { id } = req.params;

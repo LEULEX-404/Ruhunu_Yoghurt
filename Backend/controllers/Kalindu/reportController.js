@@ -1,82 +1,132 @@
 import PDFDocument from "pdfkit";
-import path from "path";
-import fs from "fs";
+import RawMaterialRequest from "../../models/Kalindu/RawMaterialRequest.js";
+import Supplier from "../../models/Kalindu/Suplier.js";
 
-// Dummy data (replace with DB models later)
-const sampleSuppliers = [
-  { _id: "s1", name: "ABC Supplies", total: 10, delivered: 7, pending: 2, rejected: 1 },
-  { _id: "s2", name: "XYZ Traders", total: 8, delivered: 5, pending: 2, rejected: 1 },
-];
-
-const sampleRequests = [
-  {
-    _id: "r1",
-    requestId: "REQ-001",
-    supplierId: { name: "ABC Supplies" },
-    materialId: { name: "Milk Powder" },
-    quantity: 50,
-    unit: "kg",
-    status: "Delivered",
-    requestedAt: new Date(),
-  },
-  {
-    _id: "r2",
-    requestId: "REQ-002",
-    supplierId: { name: "XYZ Traders" },
-    materialId: { name: "Butter" },
-    quantity: 20,
-    unit: "kg",
-    status: "Pending",
-    requestedAt: new Date(),
-  },
-];
-
-// ✅ Get Supplier Performance
+// Get Supplier Performance
 export const getSupplierPerformance = async (req, res) => {
   try {
-    res.status(200).json(sampleSuppliers);
+    const suppliers = await Supplier.find();
+
+    const report = await Promise.all(
+      suppliers.map(async (s) => {
+        const total = await RawMaterialRequest.countDocuments({ supplierId: s._id });
+        const delivered = await RawMaterialRequest.countDocuments({ supplierId: s._id, status: "Delivered" });
+        const pending = await RawMaterialRequest.countDocuments({ supplierId: s._id, status: "Pending" });
+        const rejected = await RawMaterialRequest.countDocuments({ supplierId: s._id, status: "Rejected" });
+
+        return { _id: s._id, name: s.name, total, delivered, pending, rejected };
+      })
+    );
+
+    res.status(200).json(report);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Error fetching supplier data", error });
   }
 };
 
-// ✅ Get All Requests
+// Get All Requests
 export const getAllRequests = async (req, res) => {
   try {
-    res.status(200).json(sampleRequests);
+    const requests = await RawMaterialRequest.find()
+      .populate("supplierId", "name email")
+      .populate("materialId", "name unit")
+      .sort({ requestedAt: -1 });
+
+    res.status(200).json(requests);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Error fetching requests", error });
   }
 };
 
-// ✅ Export Single Request as PDF
+// Export Request PDF
 export const exportRequestPDF = async (req, res) => {
   try {
-    const id = req.params.id;
-    const request = sampleRequests.find((r) => r._id === id);
+    const { id } = req.params;
+    const request = await RawMaterialRequest.findById(id)
+      .populate("supplierId", "name email")
+      .populate("materialId", "name unit");
+
     if (!request) return res.status(404).json({ message: "Request not found" });
 
-    const doc = new PDFDocument();
-    const filePath = path.resolve(`./exports/request_${id}.pdf`);
-    const stream = fs.createWriteStream(filePath);
-    doc.pipe(stream);
+    // Set PDF headers
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=request_${request.requestId || id}.pdf`
+    );
 
-    doc.fontSize(20).text("Raw Material Request Report", { align: "center" });
-    doc.moveDown();
-    doc.fontSize(12).text(`Request ID: ${request.requestId}`);
-    doc.text(`Supplier: ${request.supplierId.name}`);
-    doc.text(`Material: ${request.materialId.name}`);
-    doc.text(`Quantity: ${request.quantity} ${request.unit}`);
-    doc.text(`Status: ${request.status}`);
-    doc.text(`Requested At: ${request.requestedAt.toLocaleString()}`);
-    doc.end();
+    // Create PDF
+    const doc = new PDFDocument({ margin: 50, size: [500, 800] });
+    doc.pipe(res);
 
-    stream.on("finish", () => {
-      res.download(filePath, `request_${id}.pdf`, (err) => {
-        if (err) console.error(err);
-        fs.unlinkSync(filePath); // Delete after sending
-      });
+    // ---------- HEADER ----------
+    doc
+      .rect(0, 0, doc.page.width, 80)
+      .fill("#3b82f6") // blue banner
+      .fillColor("#ffffff")
+      .fontSize(22)
+      .text("Ruhunu Yoghurt Management System", 50, 30, { align: "center" });
+
+    doc.moveDown(2);
+
+    // ---------- TITLE ----------
+    doc.fillColor("#111827")
+      .fontSize(18)
+      .text(" Request Report", { align: "center" });
+
+    doc.moveDown(2);
+
+    // ---------- REQUEST DETAILS ----------
+    doc.fontSize(12).fillColor("#374151");
+
+    const details = [
+      { label: "Request ID", value: request.requestId || "N/A" },
+      { label: "Supplier Name", value: request.supplierId?.name || "N/A" },
+      { label: "Supplier Email", value: request.supplierId?.email || "N/A" },
+      { label: "Material", value: request.materialId?.name || "N/A" },
+      {
+        label: "Quantity",
+        value: `${request.quantity || "N/A"} ${request.materialId?.unit || ""}`,
+      },
+      { label: "Status", value: request.status || "Pending" },
+      {
+        label: "Requested At",
+        value: new Date(request.requestedAt).toLocaleString(),
+      },
+      {
+        label: "Delivered At",
+        value: request.deliveredAt
+          ? new Date(request.deliveredAt).toLocaleString()
+          : "Not Delivered",
+      },
+    ];
+
+    const labelX = 70;
+    const valueX = 250;
+    let y = 180;
+
+    details.forEach((d) => {
+      doc.font("Helvetica-Bold").text(`${d.label}:`, labelX, y);
+      doc.font("Helvetica").text(d.value, valueX, y);
+      y += 25;
     });
+
+    // ---------- Divider ----------
+    doc.moveTo(50, y + 10)
+      .lineTo(doc.page.width - 50, y + 10)
+      .strokeColor("#e5e7eb")
+      .stroke();
+
+    // ---------- FOOTER ----------
+    doc.fontSize(10)
+      .fillColor("#6b7280")
+      .text("Generated automatically by Ruhunu Yoghurt System © 2025", 50, doc.page.height - 60, {
+        align: "center",
+      });
+
+    doc.end();
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error generating PDF", error });

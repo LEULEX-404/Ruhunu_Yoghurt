@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
-import '../../src/Css/RawMaterialRequestTable.css'; // Import CSS for styling
+import { Link } from "react-router-dom";
+import '../../src/Css/stockdashboard.css';
+import '../../src/Css/RawMaterialRequestTable.css';
 
 export default function RawMaterialRequestTable() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
+  const [filterStatus, setFilterStatus] = useState("All");
 
+  // Fetch requests from backend
   const fetchRequests = async () => {
     setLoading(true);
     try {
@@ -24,6 +28,7 @@ export default function RawMaterialRequestTable() {
     fetchRequests();
   }, []);
 
+  // Update request status (approve/reject)
   const handleStatusUpdate = async (id, newStatus) => {
     setUpdatingId(id);
     try {
@@ -42,11 +47,14 @@ export default function RawMaterialRequestTable() {
     }
   };
 
+  // Mark request as delivered
   const handleClose = async (id) => {
     if (!window.confirm("Mark this request as delivered?")) return;
     setUpdatingId(id);
     try {
-      const res = await fetch(`http://localhost:8070/api/raw-material/requests/${id}/close`, { method: "PUT" });
+      const res = await fetch(`http://localhost:8070/api/raw-material/requests/${id}/close`, {
+        method: "PUT",
+      });
       const data = await res.json();
       if (res.ok) fetchRequests();
       else alert(data.error);
@@ -57,76 +65,154 @@ export default function RawMaterialRequestTable() {
     }
   };
 
-  if (loading) return <p className="rm-loading">Loading requests...</p>;
+  // ✅ Filtered Requests
+  const filteredRequests = requests.filter((req) =>
+    filterStatus === "All" ? true : req.status === filterStatus
+  );
 
   return (
-    <div className="rm-table-container">
-      <h2 className="rm-table-title">📦 Raw Material Requests</h2>
-      <div className="rm-table-wrapper">
-        <table className="rm-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Supplier</th>
-              <th>Material</th>
-              <th>Quantity</th>
-              <th>Unit</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.length === 0 ? (
-              <tr>
-                <td colSpan="8" className="rm-no-data">No requests found</td>
-              </tr>
-            ) : (
-              requests.map((req) => (
-                <tr key={req._id}>
-                  <td>{req.requestId}</td>
-                  <td>{req.supplierId?.name || "N/A"}</td>
-                  <td>{req.materialId?.name || "N/A"}</td>
-                  <td>{req.quantity}</td>
-                  <td>{req.unit}</td>
-                  <td className="rm-status-text">{req.status}</td>
-                  <td>{new Date(req.requestedAt).toLocaleString()}</td>
-                  <td className="rm-actions">
-                    {req.status === "Pending" && (
-                      <>
-                        <button
-                          onClick={() => handleStatusUpdate(req._id, "Approved")}
-                          disabled={updatingId === req._id}
-                          className="rm-btn-simple"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleStatusUpdate(req._id, "Rejected")}
-                          disabled={updatingId === req._id}
-                          className="rm-btn-simple"
-                        >
-                          Reject
-                        </button>
-                      </>
-                    )}
-                    {req.status === "Approved" && (
-                      <button
-                        onClick={() => handleClose(req._id)}
-                        disabled={updatingId === req._id}
-                        className="rm-btn-simple"
-                      >
-                        Delivered
-                      </button>
-                    )}
-                    {req.status === "Delivered" && <span>Closed</span>}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+    <div className="stock-dashboard-container">
+      {/* Sidebar */}
+      <aside className="stock-dashboard-sidebar">
+        <h2 className="stock-dashboard-logo">
+          Stock<br />Management
+        </h2>
+
+        <div className="stock-dashboard-profile">
+          <div className="stock-dashboard-avatar">👤</div>
+          <div>
+            <h4 className="stock-dashboard-name">Kalindu</h4>
+            <p className="stock-dashboard-email">Kalindu@gmail.com</p>
+          </div>
+        </div>
+
+        <nav className="stock-dashboard-nav">
+          <Link to="/smdashboard" className="stock-dashboard-link">
+            📊 Dashboard
+          </Link>
+          <Link to="/rawmaterialTable" className="stock-dashboard-link">
+            🧱 Materials
+          </Link>
+          <Link to="/rawMaterialRequests" className="stock-dashboard-link active">
+            🔁 Requests
+          </Link>
+          <Link to="/suplierTable" className="stock-dashboard-link">🧾 Suppliers</Link>
+          <Link to="/stockReport" className="stock-dashboard-link">📈 Reports</Link>
+          <Link to="/Reqrawmaterial" className="stock-dashboard-link">➕ Create Request</Link>
+        </nav>
+
+        <div className="stock-dashboard-footer">
+          <button className="stock-dashboard-signout">⏻ Sign Out</button>
+        </div>
+      </aside>
+
+      {/* Main content */}
+      <main className="stock-dashboard-main">
+        {/* Header */}
+        <div className="stock-dashboard-header">
+          <div className="stock-dashboard-header-left">
+            <h1>📦 Raw Material Requests</h1>
+            <p>Manage, approve, and track raw material requests</p>
+          </div>
+
+          <div className="stock-dashboard-header-right">
+            <Link to="/addrawmaterialform" className="rm-manage-stock-btn">
+              ⚡ Manage Stock
+            </Link>
+          </div>
+        </div>
+
+        {/* ✅ Status Filter */}
+        <div className="rm-filter-container">
+          <label htmlFor="statusFilter">Filter by Status:</label>
+          <select
+            id="statusFilter"
+            onChange={(e) => setFilterStatus(e.target.value)}
+            value={filterStatus}
+            className="rm-filter-select"
+          >
+            <option value="All">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Delivered">Delivered</option>
+          </select>
+        </div>
+
+        {loading ? (
+          <p className="rm-loading">Loading requests...</p>
+        ) : (
+          <div className="rm-table-container">
+            <div className="rm-table-wrapper">
+              <table className="rm-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Supplier</th>
+                    <th>Material</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredRequests.length === 0 ? (
+                    <tr>
+                      <td colSpan="8" className="rm-no-data">No requests found</td>
+                    </tr>
+                  ) : (
+                    filteredRequests.map((req) => (
+                      <tr key={req._id}>
+                        <td>{req.requestId}</td>
+                        <td>{req.supplierId?.name || "N/A"}</td>
+                        <td>{req.materialId?.name || "N/A"}</td>
+                        <td>{req.quantity}</td>
+                        <td>{req.unit}</td>
+                        <td className={`rm-status-text ${req.status.toLowerCase()}`}>{req.status}</td>
+                        <td>{new Date(req.requestedAt).toLocaleString()}</td>
+                        <td className="rm-actions">
+                          {req.status === "Pending" && (
+                            <>
+                              <button
+                                onClick={() => handleStatusUpdate(req._id, "Approved")}
+                                disabled={updatingId === req._id}
+                                className="rm-btn-simple approve"
+                              >
+                                Approve
+                              </button>
+                              <button
+                                onClick={() => handleStatusUpdate(req._id, "Rejected")}
+                                disabled={updatingId === req._id}
+                                className="rm-btn-simple reject"
+                              >
+                                Reject
+                              </button>
+                            </>
+                          )}
+                          {req.status === "Approved" && (
+                            <button
+                              onClick={() => handleClose(req._id)}
+                              disabled={updatingId === req._id}
+                              className="rm-btn-simple delivered"
+                            >
+                              Delivered
+                            </button>
+                          )}
+                          {req.status === "Delivered" && (
+                            <span className="rm-closed">Closed</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 import '../../Css/RequestRawMaterialEmail.css' // Make sure to import the CSS
 
 export default function RequestRawMaterialEmail() {
@@ -11,6 +12,7 @@ export default function RequestRawMaterialEmail() {
     { materialId: "", quantity: "", unit: "kg" },
   ]);
   const [notes, setNotes] = useState("");
+  const navigate = useNavigate();
 
   // Fetch suppliers + materials
   useEffect(() => {
@@ -52,6 +54,7 @@ export default function RequestRawMaterialEmail() {
   };
 
   // Submit request
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -67,14 +70,14 @@ export default function RequestRawMaterialEmail() {
       if (notes) emailText += `\nNotes: ${notes}\n`;
       emailText += "\nPlease deliver at your earliest convenience.\n\nThank you!";
 
-      // 1️⃣ Send Email
+      // Send Email
       await axios.post("http://localhost:8070/api/raw-material/email", {
         supplierEmail,
         subject: "Raw Material Request",
         message: emailText,
       });
 
-      // 2️⃣ Save Requests in DB
+      // Save Requests in DB
       for (let m of selectedMaterials) {
         await axios.post("http://localhost:8070/api/raw-material/requests", {
           supplierId: selectedSupplierId,
@@ -82,9 +85,11 @@ export default function RequestRawMaterialEmail() {
           quantity: m.quantity,
           unit: m.unit,
         });
+        navigate("/rawMaterialRequests");
       }
 
       alert("✅ Request sent and saved successfully!");
+      
       setSelectedMaterials([{ materialId: "", quantity: "", unit: "kg" }]);
       setNotes("");
     } catch (err) {
@@ -173,7 +178,7 @@ export default function RequestRawMaterialEmail() {
           className="rm-textarea"
         />
 
-        <button type="submit" className="rm-submit-btn">
+        <button type="submit" className="rm-submit-btn" >
           Send Request
         </button>
       </form>

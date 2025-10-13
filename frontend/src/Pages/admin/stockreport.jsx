@@ -1,84 +1,133 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import StockLayout from "../../Pages/Stocklayout.jsx"; // Sidebar layout
+import '../../Css/reportpage.css';
 
 const ReportPage = () => {
   const [suppliers, setSuppliers] = useState([]);
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/report/suppliers").then(res => setSuppliers(res.data));
-    axios.get("/api/report/requests").then(res => setRequests(res.data));
+    const fetchData = async () => {
+      try {
+        const [supRes, reqRes] = await Promise.all([
+          axios.get("/api/report/suppliers"),
+          axios.get("/api/report/requests"),
+        ]);
+        setSuppliers(supRes.data);
+        setRequests(reqRes.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+    fetchData();
   }, []);
 
-  const handleExport = (id) => {
-    window.open(`/api/report/export/${id}`, "_blank");
+  const handleExport = async (id) => {
+    try {
+      const res = await axios.get(`/api/report/export/${id}`, {
+        responseType: "blob", // Important: get binary data
+      });
+      const blob = new Blob([res.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `request_${id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Error downloading PDF:", err);
+    }
   };
 
   return (
-    <div className="p-8">
-      <h2 className="text-2xl font-bold mb-4">Supplier Performance</h2>
-      <table className="w-full border mb-10">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="p-2">Supplier</th>
-            <th>Total Requests</th>
-            <th>Delivered</th>
-            <th>Pending</th>
-            <th>Rejected</th>
-            <th>Delivery Rate (%)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {suppliers.map((s) => (
-            <tr key={s._id}>
-              <td className="p-2">{s.name}</td>
-              <td>{s.total}</td>
-              <td>{s.delivered}</td>
-              <td>{s.pending}</td>
-              <td>{s.rejected}</td>
-              <td>{((s.delivered / s.total) * 100).toFixed(1)}%</td>
+    <StockLayout title=" Reports" subtitle="Supplier performance & request history" active="reports">
+      <div className="report-section">
+        <h2>📊 Supplier Performance</h2>
+        <table className="report-table">
+          <thead>
+            <tr>
+              <th>Supplier</th>
+              <th>Total Requests</th>
+              <th>Delivered</th>
+              <th>Pending</th>
+              <th>Rejected</th>
+              <th>Delivery Rate (%)</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {suppliers.length === 0 ? (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center" }}>No suppliers data</td>
+              </tr>
+            ) : (
+              suppliers.map((s) => (
+                <tr key={s._id}>
+                  <td>{s.name}</td>
+                  <td>{s.total}</td>
+                  <td>{s.delivered}</td>
+                  <td>{s.pending}</td>
+                  <td>{s.rejected}</td>
+                  <td>{((s.delivered / s.total) * 100).toFixed(1)}%</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
-      <h2 className="text-2xl font-bold mb-4">Request History</h2>
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-200">
-            <th>Request ID</th>
-            <th>Supplier</th>
-            <th>Material</th>
-            <th>Quantity</th>
-            <th>Unit</th>
-            <th>Status</th>
-            <th>Requested At</th>
-            <th>Export</th>
-          </tr>
-        </thead>
-        <tbody>
-          {requests.map((r) => (
-            <tr key={r._id}>
-              <td>{r.requestId}</td>
-              <td>{r.supplierId?.name}</td>
-              <td>{r.materialId?.name}</td>
-              <td>{r.quantity}</td>
-              <td>{r.unit}</td>
-              <td>{r.status}</td>
-              <td>{new Date(r.requestedAt).toLocaleDateString()}</td>
-              <td>
-                <button
-                  onClick={() => handleExport(r._id)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                >
-                  Export PDF
-                </button>
-              </td>
+      <div className="report-section">
+        <h2>📦 Request History</h2>
+        <table className="report-table">
+          <thead>
+            <tr>
+              <th>Request ID</th>
+              <th>Supplier</th>
+              <th>Material</th>
+              <th>Quantity</th>
+              <th>Unit</th>
+              <th>Status</th>
+              <th>Requested At</th>
+              <th>Export</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {requests.length === 0 ? (
+              <tr>
+                <td colSpan="8" style={{ textAlign: "center" }}>No request data</td>
+              </tr>
+            ) : (
+              requests.map((r) => (
+                <tr key={r._id}>
+                  <td>{r.requestId}</td>
+                  <td>{r.supplierId?.name}</td>
+                  <td>{r.materialId?.name}</td>
+                  <td>{r.quantity}</td>
+                  <td>{r.unit}</td>
+                  <td>
+                    <span className={`status ${r.status?.toLowerCase() || "pending"}`}>
+                      {r.status}
+                    </span>
+                  </td>
+                  <td>{new Date(r.requestedAt).toLocaleDateString()}</td>
+                  <td>
+                    <button
+                      onClick={() => handleExport(r._id)}
+                      className="report-export-btn"
+                    >
+                      Export PDF
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </StockLayout>
   );
 };
 

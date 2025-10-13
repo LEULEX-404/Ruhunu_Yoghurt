@@ -9,10 +9,10 @@ import {
 
 const router = express.Router();
 
-// ✅ new standalone email route
+
 router.post("/email", sendCustomEmail);
 
-// existing routes
+
 router.post("/requests", createRequest);
 router.get("/requests", getAllRequests);
 router.put("/requests/:id/status", updateRequestStatus);

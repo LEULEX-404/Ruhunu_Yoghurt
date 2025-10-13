@@ -17,6 +17,8 @@ export default function AdminPage() {
     availableCount: 0,
     unavailableCount: 0,
     expiringProducts: [],
+    totalSales: 0,
+    totalRevenue: 0,
   });
   const [user, setUser] = useState({ name: "", position: "" });
 
@@ -29,16 +31,32 @@ export default function AdminPage() {
 
     const fetchData = async () => {
       try {
-        const [statsRes, damagesRes] = await Promise.all([
+        const [statsRes, damagesRes, paymentsRes] = await Promise.all([
           axios.get("/api/products/admin", {
             headers: { Authorization: `Bearer ${token}` },
           }),
           axios.get("/api/damage", {
             headers: { Authorization: `Bearer ${token}` },
           }),
+          axios.get("/api/payments", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
         ]);
 
-        setStats(statsRes.data);
+        const payments = paymentsRes.data;
+
+        // Calculate total sales and revenue
+        const totalRevenue = payments.reduce((acc, p) => acc + p.total, 0);
+        const totalSales = payments.length;
+
+        setStats({
+          availableCount: statsRes.data.availableCount,
+          unavailableCount: statsRes.data.unavailableCount,
+          expiringProducts: statsRes.data.expiringProducts || [],
+          totalSales,
+          totalRevenue,
+        });
+
         setDamages(damagesRes.data);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -63,7 +81,6 @@ export default function AdminPage() {
           <Link className={getClass("products")} to="/admin/products">
             Products
           </Link>
-          {/* Damage Log hidden from navbar */}
           <Link className={getClass("report")} to="/admin/report">
             Reports
           </Link>
@@ -104,6 +121,17 @@ export default function AdminPage() {
                     <h2>Unavailable Products</h2>
                     <p>{stats.unavailableCount}</p>
                   </div>
+
+                  {/* 🧾 Added Sales and Revenue cards */}
+                  <div className="card">
+                    <h2>Total Sales</h2>
+                    <p>{stats.totalSales}</p>
+                  </div>
+                  <div className="card">
+                    <h2>Total Revenue</h2>
+                    <p>Rs.{stats.totalRevenue.toLocaleString()}</p>
+                  </div>
+
                   <div className="card">
                     <h2>Expiring in 7 Days</h2>
                     {stats.expiringProducts.length === 0 ? (
@@ -116,6 +144,7 @@ export default function AdminPage() {
                       </ul>
                     )}
                   </div>
+
                   <div className="card damage-card">
                     <h2>Damage Products</h2>
                     {damages.length === 0 ? (

@@ -1,4 +1,5 @@
-.admin-nav {
+/* ================= Navigation ================= */
+.admin-page .admin-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,7 +13,7 @@
   z-index: 1000;
 }
 
-.nav-left a {
+.admin-page .nav-left a {
   text-decoration: none;
   font-size: 1.1rem;
   padding: 0.5rem 1rem;
@@ -21,16 +22,16 @@
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-.nav-left a.active-link {
+.admin-page .nav-left a.active-link {
   background-color: #3498db;
   font-weight: bold;
 }
 
-.nav-left a.inactive-link:hover {
+.admin-page .nav-left a.inactive-link:hover {
   background-color: #2980b9;
 }
 
-.nav-right .btn-logout {
+.admin-page .nav-right .btn-logout {
   padding: 0.5rem 1.2rem;
   border: none;
   border-radius: 6px;
@@ -41,102 +42,111 @@
   transition: background-color 0.3s ease;
 }
 
-.nav-right .btn-logout:hover {
+.admin-page .nav-right .btn-logout:hover {
   background-color: #c0392b;
 }
 
-.dashboard-header {
+/* ================= Dashboard Header ================= */
+.admin-page .dashboard-header {
   text-align: center;
   margin: 2rem auto 3rem auto;
 }
 
-.dashboard-header h1 {
+.admin-page .dashboard-header h1 {
   font-size: 2rem;
   color: #2c3e50;
   margin-bottom: 0.5rem;
 }
 
-.dashboard-header p {
+.admin-page .dashboard-header p {
   font-size: 1.1rem;
   color: #7f8c8d;
   margin: 0;
 }
 
-/* ✅ Dashboard Cards Layout */
-.dashboard-cards {
-  display: flex;
-  flex-wrap: wrap;
+/* ================= Dashboard Cards Layout ================= */
+.admin-page .dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
   gap: 1.5rem;
-  justify-content: center;
+  justify-items: center;
   margin-bottom: 3rem;
   width: 100%;
   max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto; /* center the grid */
 }
 
-.card {
+.admin-page .card {
   background-color: #fff;
   padding: 1.5rem;
   border-radius: 12px;
-  width: 260px;
+  width: 100%;
+  max-width: 260px;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.card:hover {
+.admin-page .card:hover {
   transform: translateY(-6px);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
-.card h2 {
+.admin-page .card h2 {
   margin-bottom: 1rem;
   color: #2c3e50;
   font-size: 1.2rem;
   font-weight: 600;
 }
 
-.card p,
-.card ul {
+.admin-page .card p,
+.admin-page .card ul {
   font-size: 1.1rem;
   color: #34495e;
 }
 
-.card ul {
+.admin-page .card ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* ✅ Damage Card Highlight */
-.damage-card {
+/* ================= Damage Card Highlight ================= */
+.admin-page .damage-card {
   background-color: #fdf2f2;
   border: 1px solid #e74c3c33;
 }
 
-.damage-card h2 {
+.admin-page .damage-card h2 {
   color: #c0392b;
 }
 
-/* General layout */
-.admin-content {
+/* ================= General layout ================= */
+.admin-page .admin-content {
   padding: 30px;
 }
 
-/* Responsive */
+/* ================= Responsive ================= */
+@media (max-width: 1024px) {
+  .admin-page .dashboard-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
-  .dashboard-cards {
-    flex-direction: column;
-    align-items: center;
+  .admin-page .dashboard-cards {
+    grid-template-columns: 1fr;
   }
 
-  .admin-nav {
+  .admin-page .admin-nav {
     flex-direction: column;
     align-items: stretch;
     padding: 1rem 1.5rem;
   }
 
-  .nav-left,
-  .nav-right {
+  .admin-page .nav-left,
+  .admin-page .nav-right {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;

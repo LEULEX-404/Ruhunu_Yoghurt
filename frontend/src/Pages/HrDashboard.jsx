@@ -364,7 +364,6 @@ export default function HrDashboard() {
         setTimeout(() => { window.location.href = "/login"; }, 1500);
     };
 
-    // ======= RETURN JSX ========
   return(
 
 <div className = {`HR-dashboard-container ${darkMode ? 'dark':''}`}>

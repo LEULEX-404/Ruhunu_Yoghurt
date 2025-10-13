@@ -222,7 +222,7 @@ export const autoScheduleDelivery = async (req, res) => {
 
     if (
       startTime < now ||
-      startTime < minStartTime ||
+      startTime > minStartTime ||
       startHour < 8 ||
       (startHour === 12 && startMinutes > 0) ||
       startHour > 12
@@ -234,6 +234,9 @@ export const autoScheduleDelivery = async (req, res) => {
       });
     }
 
+    if (minStartTime > startTime) {
+      startTime = minStartTime;
+    }
 
     assigned.status = "sceduled";
     assigned.startTime = startTime;

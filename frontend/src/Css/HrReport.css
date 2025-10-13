@@ -1,0 +1,149 @@
+/* hr-reports.css */
+
+/* Card container */
+.hr-reports-content-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 1200px;
+  margin: 20px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Heading */
+.hr-reports-content-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Filters section */
+.hr-reports-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.hr-reports-filters label {
+  font-weight: 500;
+  margin-right: 5px;
+  color: #555;
+}
+
+.hr-reports-filters select,
+.hr-reports-filters input {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.hr-reports-filters select:focus,
+.hr-reports-filters input:focus {
+  border-color: #0077ff;
+  box-shadow: 0 0 5px rgba(0, 119, 255, 0.3);
+}
+
+/* Date picker container */
+.hr-reports-date-range {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Download button */
+.hr-reports-submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 16px;
+  background: linear-gradient(90deg, #0077ff, #00c6ff);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.hr-reports-submit-btn:hover {
+  background: linear-gradient(90deg, #005fcc, #00a3cc);
+  transform: translateY(-2px);
+}
+
+/* Tables */
+.hr-reports-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.hr-reports-table th,
+.hr-reports-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.hr-reports-table th {
+  background: #f4f6f8;
+  font-weight: 600;
+  color: #333;
+}
+
+.hr-reports-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.hr-reports-table td {
+  color: #555;
+}
+
+/* Status coloring for attendance rows */
+.hr-reports-table td.status-present {
+  color: green;
+  font-weight: 600;
+}
+
+.hr-reports-table td.status-late {
+  color: orange;
+  font-weight: 600;
+}
+
+.hr-reports-table td.status-absent {
+  color: red;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .hr-reports-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hr-reports-date-range {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .hr-reports-table th,
+  .hr-reports-table td {
+    font-size: 0.85rem;
+    padding: 8px 6px;
+  }
+
+  .hr-reports-submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

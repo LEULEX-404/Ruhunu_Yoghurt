@@ -66,7 +66,7 @@ export const createDelivery = async (req,res) =>{
 
 export const getPendingOrders = async (req, res) =>{
     try{
-        const pendingOrders = await Order.find({ status: "pending"}).select ("orderNumber customerName items total address productWeight");
+        const pendingOrders = await Order.find({ status: "approved"}).select ("orderNumber customerName phone items total address productWeight ");
 
         res.status(200).json(pendingOrders);
     }
@@ -85,7 +85,7 @@ export const getAssignDeliveries = async (req,res) =>{
         .populate({
             path: "driver",
             model: "Driver",
-            match: {},
+            match: {}, 
             select: "name vehicleCapacity currentLocation",
             localField: "driver",
             foreignField: "driverID"
@@ -130,7 +130,7 @@ export const getSearchOrder = async (req, res) =>{
     try{
         const search = req.query.search || "";
 
-        let query = { status: "pending"};
+        let query = { status: "approved"};
 
         if(search){
             query.$or = [
@@ -141,7 +141,7 @@ export const getSearchOrder = async (req, res) =>{
         };
 
             const pendingOrders = await Order.find(query).select(
-            "orderNumber customerName items total address productWeight"
+            "orderNumber customerName phone items total address productWeight "
             );
  
         res.json(pendingOrders);
@@ -172,7 +172,7 @@ export const searchDeliveriesAndDrivers = async (req,res) =>{
             deliveryconditon.push({
                 productWeight: Number(search)
             });
-        }
+        } 
 
         deliveries = await Delivery.find({
             status: "pending",
@@ -191,7 +191,7 @@ export const searchDeliveriesAndDrivers = async (req,res) =>{
         drivers = await Promise.all(rawDrivers.map(async (driver) => {
             const assigned = await AssignedDelivery.find({
                 driver: driver.driverID,
-                status: { $in: ["assigned", "sceduled"] }
+                status:"assigned",
             });
 
             const totalWeight = assigned.reduce(
@@ -213,7 +213,7 @@ export const searchDeliveriesAndDrivers = async (req,res) =>{
         drivers = await Promise.all(rawDrivers.map(async (driver) => {
             const assigned = await AssignedDelivery.find({
                 driver: driver.driverID,
-                status: { $in: ["assigned", "sceduled"] }
+                status:"assigned"
             });
             const totalWeight = assigned.reduce(
                 (sum,ad) => sum + (ad.totalWeight || 0),
@@ -301,7 +301,7 @@ export const reorderDelivery = async (req, res) => {
       return res.status(404).json({ message: "Related order not found" });
     }
 
-    order.status = "pending";
+    order.status = "approved";
     await order.save();
 
     await Delivery.findByIdAndDelete(id);

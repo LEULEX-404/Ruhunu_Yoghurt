@@ -11,6 +11,7 @@ const cartSchema = new mongoose.Schema({
     },
   ],
   totalWeight: { type: Number, default: 0 },
+  totalCost:{type:Number, default:0 },
   promocode: { type: String },
 });
 

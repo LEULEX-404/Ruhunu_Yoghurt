@@ -1,13 +1,8 @@
-// routes/cartRoutes.js
 import express from "express";
-import { getCartById, payNow, codOrder } from "../../controllers/Lasiru/CartController.js";
-
+import { applyPromocodeToCart, getCartByUser} from "../../controllers/Lasiru/CartController.js";
 const router = express.Router();
 
-router.get("/preview/:id", getCartById);
-
-router.post("/:id/pay", payNow);
-
-router.post("/:id/cod", codOrder);
+router.get("/preview/:userId", getCartByUser);
+router.post("/apply-promocode/:userId", applyPromocodeToCart);
 
 export default router;

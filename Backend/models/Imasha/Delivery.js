@@ -32,6 +32,10 @@ const deliverySchema = new mongoose.Schema({
         default: 'pending'
     },
 
+    priority:{
+        type: String
+    },
+
     assignedDriver:{
         type: mongoose.Schema.Types.ObjectId, ref: "Driver"
     },

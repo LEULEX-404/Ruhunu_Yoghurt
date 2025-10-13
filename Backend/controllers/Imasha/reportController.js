@@ -130,16 +130,44 @@ export const pendingDeliveries = async (req, res) => {
 
 export const driverPerformance = async (req, res) => {
   try {
+    const { start, end } = req.query;
+
+    let startDate, endDate;
+
+    if (start && end) {
+      // Both start and end dates provided
+      startDate = new Date(start);
+      endDate = new Date(end);
+      endDate.setHours(23, 59, 59, 999);
+    } else if (start) {
+      // Only start date provided (single day)
+      startDate = new Date(start);
+      startDate.setHours(0, 0, 0, 0);
+      endDate = new Date(start);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      // Default: today's range
+      startDate = new Date();
+      startDate.setHours(0, 0, 0, 0);
+      endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 1);
+    }
+
     const data = await AssignDelivery.aggregate([
-      { $match: { status: "completed" } },
+      {
+        $match: {
+          status: "completed",
+          endTime: { $gte: startDate, $lte: endDate }, // 🔹 date filter like dailyCompleted
+        },
+      },
       { $unwind: "$deliveries" },
       {
         $lookup: {
-          from: "drivers", 
-          localField: "driver", 
-          foreignField: "driverID", 
-          as: "driverInfo"
-        }
+          from: "drivers",
+          localField: "driver",
+          foreignField: "driverID",
+          as: "driverInfo",
+        },
       },
       { $unwind: { path: "$driverInfo", preserveNullAndEmptyArrays: true } },
       {
@@ -147,8 +175,8 @@ export const driverPerformance = async (req, res) => {
           _id: "$driver",
           employeeID: { $first: "$driverInfo.employeeID" },
           driverName: { $first: "$driverInfo.name" },
-          totalDeliveries: { $sum: 1 }
-        }
+          totalDeliveries: { $sum: 1 },
+        },
       },
       {
         $project: {
@@ -156,9 +184,9 @@ export const driverPerformance = async (req, res) => {
           driverID: "$_id",
           driverName: 1,
           employeeID: 1,
-          totalDeliveries: 1
-        }
-      }
+          totalDeliveries: 1,
+        },
+      },
     ]);
 
     res.json(data);

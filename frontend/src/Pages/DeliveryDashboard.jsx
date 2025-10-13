@@ -311,6 +311,8 @@ export default function DeliveryDashboard()
           break;
         case "driverPerformance":
           url = "/api/deliveryreports/driver-performance";
+          if (startDate && endDate) url += `?start=${startDate}&end=${endDate}`;
+          else if (startDate) url += `?start=${startDate}`;
           break;
         case "revenueSummary":
           url = "/api/deliveryreports/revenue-summary";
@@ -514,6 +516,7 @@ export default function DeliveryDashboard()
                             <p>Address: {order.address}</p>
                             <p>Phone: {order.phone}</p>
                             <p>Weight: {order.productWeight} kg</p>
+                            <p>Priority: {order.priority}</p>
                           </div>
 
                           <div className="order-items">
@@ -550,6 +553,7 @@ export default function DeliveryDashboard()
             <p>Address: {del.address}</p>
             <p>Distance: {del.distanceKm} Km</p>
             <p>Cost: Rs. {del.cost}</p>
+            <p>priority: {del.priority}</p>
             <button 
               className="reorder-btn"
               onClick={(e) => {
@@ -625,6 +629,13 @@ export default function DeliveryDashboard()
                 <div className="driver-info">
                   <p><b>Total Weight:</b> {ad.totalWeight} kg</p>
                   <p><b>Assigned On:</b> {new Date(ad.assignDate).toLocaleDateString()}</p>
+                  <p>
+                    <b>Start Time:</b>{" "}
+                    {ad.startTime
+                      ? new Date(ad.startTime).toLocaleString() // shows both date + time
+                      : "Not scheduled"}
+                  </p>
+
                 </div>
                    
                 <div className="delivery-list">
@@ -773,7 +784,6 @@ export default function DeliveryDashboard()
           </div>
         )}
 
-{/* ✅ REPORTS SECTION UPDATED */}
         {activeSection === "reports" && (
           <div className="delivery-report-wrapper">
             <h2 className="delivery-report-title">Reports</h2>
@@ -798,6 +808,18 @@ export default function DeliveryDashboard()
                 <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                 <button className="view-btn" onClick={fetchReport}>
                   View by Date Range
+                </button>
+              </div>
+            )}
+
+            {reportType === "driverPerformance" && (
+              <div className="date-range-filter">
+                <label>Start Date: </label>
+                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                <label>End Date: </label>
+                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                <button className="view-btn" onClick={fetchReport}>
+                  View Performance
                 </button>
               </div>
             )}

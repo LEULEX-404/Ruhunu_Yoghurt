@@ -1,0 +1,94 @@
+/* Form Container */
+.add-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+}
+
+
+
+/* The Form */
+.add-form {
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+
+/* Form Title */
+.add-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #374151;
+  font-size: 1.6rem;
+}
+
+/* Input Fields */
+.add-form input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  outline: none;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Focus effect */
+.add-form input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+}
+
+/* Button Container */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* Common Button Styles */
+.btn {
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+/* Submit Button */
+.btn-submit {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-submit:hover {
+  background: #1d4ed8;
+  transform: scale(1.05);
+}
+
+/* Cancel Button */
+.btn-cancel {
+  background: #ef4444;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-cancel:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}

@@ -1,0 +1,237 @@
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import MediaUpload from "../../utils/mediaUpload"
+import axios from "axios";
+import "../../Css/addProduct.css"
+
+export default function AddProductPage() {
+    const [productId, setProductId] = useState('')
+    const [name, setName] = useState('')
+    const [altNames, setAltNames] = useState('')
+    const [description, setDescription] = useState('')
+    const [images, setImages] = useState([])
+    const [labelledPrice, setLabelledPrice] = useState('')
+    const [price, setPrice] = useState('')
+    const [expDate, setExpDate] = useState('')
+    const [weight, setWeight] = useState('')
+    const [unit, setUnit] = useState('kg')
+    const [quantity, setQuantity] = useState('')
+    const [isAvailable, setIsAvailable] = useState(true)
+    const navigate = useNavigate()
+
+    async function AddProduct(e) {
+        e.preventDefault();
+        const token = localStorage.getItem("token")
+
+        if (token == null) {
+            toast.error("Please login first")
+            return
+        }
+
+        if (images.length <= 0) {
+            toast.error("Please select at least one image")
+            return
+        }
+
+        if (weight <= 0 || weight > 20) {
+            toast.error("Product weight must be greater than 0 and less than 20kg")
+            return
+        }
+
+        const today = new Date()
+        const selectedDate = new Date(expDate)
+        if (
+            selectedDate.getFullYear() === today.getFullYear() &&
+            selectedDate.getMonth() === today.getMonth() &&
+            selectedDate.getDate() === today.getDate()
+        ) {
+            toast.error("Already Expired!")
+            return
+        }
+
+        const promisesArray = []
+        for (let i = 0; i < images.length; i++) {
+            promisesArray.push(MediaUpload(images[i]))
+        }
+
+        try {
+            const imageUrls = await Promise.all(promisesArray)
+            console.log(imageUrls)
+
+            const altNamesArray = altNames.split(",")
+
+            const product = {
+                // 
+
+                name: name,
+                altNames: altNamesArray,
+                description: description,
+                images: imageUrls,
+                labelledPrice: Number(labelledPrice),
+                price: Number(price),
+                expDate: expDate,
+                weight: Number(weight),
+                unit: unit,
+                quantity: quantity,
+                isAvailable: isAvailable
+            }
+
+            await axios.post(`http://localhost:8070/api/products`, product, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }).then((res) => {
+                toast.success("Product added successfully")
+                navigate("admin/products")
+            })
+        } catch (e) {
+            toast.error(e.response?.data?.message || "An error occured")
+        }
+    }
+
+    return (
+        <div className="add-product-container">
+            <form onSubmit={AddProduct} className="add-product-form">
+                <div className="form-group">
+                    <label className="form-label">Product Name</label>
+                    <input
+                        type="text"
+                        placeholder="Name"
+                        className="form-input"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Alternative Names</label>
+                    <input
+                        type="text"
+                        placeholder="Alt Names (comma-separated)"
+                        className="form-input"
+                        value={altNames}
+                        onChange={(e) => setAltNames(e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Description</label>
+                    <textarea
+                        placeholder="Description"
+                        className="form-textarea"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Product Images</label>
+                    <input
+                        type="file"
+                        multiple
+                        className="form-file-input"
+                        onChange={(e) => setImages(e.target.files)}
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Labelled Price</label>
+                    <input
+                        type="number"
+                        placeholder="Labelled Price"
+                        className="form-input"
+                        value={labelledPrice}
+                        onChange={(e) => setLabelledPrice(e.target.value)}
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Selling Price</label>
+                    <input
+                        type="number"
+                        placeholder="Price"
+                        className="form-input"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Expiration Date</label>
+                    <input
+                        type="date"
+                        className="form-input"
+                        value={expDate}
+                        onChange={(e) => setExpDate(e.target.value)}
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Quantity</label>
+                    <input
+                        type="number"
+                        placeholder="Quantity"
+                        className="form-input"
+                        value={quantity}
+                        onChange={(e) => setQuantity(e.target.value)}
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Weight</label>
+                    <input
+                        type="number"
+                        placeholder="Weight"
+                        className="form-input"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        step="any"
+                        min="0.01"
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Unit</label>
+                    <select
+                        className="form-select"
+                        value={unit}
+                        onChange={(e) => setUnit(e.target.value)}
+                        required
+                    >
+                        <option value="kg">kg</option>
+                        <option value="g">g</option>
+                        <option value="l">l</option>
+                        <option value="ml">ml</option>
+                    </select>
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Availability</label>
+                    <select
+                        id="isAvailable"
+                        className="form-select"
+                        value={isAvailable}
+                        onChange={(e) => setIsAvailable(e.target.value === "true")}
+                    >
+                        <option value="true">Available</option>
+                        <option value="false">Not Available</option>
+                    </select>
+                </div>
+
+                <div className="button-container">
+                    <Link to="/admin/products" className="btn btn-cancel">Cancel</Link>
+                    <button type="submit" className="btn btn-submit">Add Product</button>
+                </div>
+            </form>
+
+        </div>
+    )
+
+}

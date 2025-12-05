@@ -1,0 +1,126 @@
+.admin-product-container {
+  padding: 24px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.add-product-link {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+}
+
+.add-product-link:hover {
+  background-color: #0056b3;
+}
+
+.product-table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.product-table th {
+  background-color: #e9ecef;
+  color: #495057;
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.product-table td {
+  padding: 16px;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: middle;
+  word-wrap: break-word;
+  font-size: 0.9rem;
+  color: #343a40;
+}
+
+.product-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+
+.product-table-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+
+.product-table-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+.product-table-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.product-table-actions button:hover {
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #f8d7da;
+}
+
+.edit-btn {
+  color: #ffc107;
+}
+
+.edit-btn:hover {
+  background-color: #fff3cd;
+}
+
+.damage-log-btn {
+    background-color: #f5a623;
+    color: #f5a623;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.damage-log-btn:hover {
+    background-color: #d48806;
+}
+
+.loading, .no-products {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #6c757d;
+}

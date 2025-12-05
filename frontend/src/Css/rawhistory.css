@@ -1,0 +1,95 @@
+.manager-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.manager-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.manager-form select,
+.manager-form input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.action-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.action-btn.add {
+  background-color: #28a745;
+}
+
+.action-btn.add:hover {
+  background-color: #218838;
+}
+
+.action-btn.remove {
+  background-color: #dc3545;
+}
+
+.action-btn.remove:hover {
+  background-color: #c82333;
+}
+
+.filter-container {
+  margin: 10px 0;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.history-table th, .history-table td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.history-table tr.add {
+  background-color: #e6ffed;
+}
+
+.history-table tr.remove {
+  background-color: #ffe6e6;
+}
+
+.history-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.delete-btn {
+  padding: 5px 10px;
+  border: none;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}

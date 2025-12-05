@@ -1,0 +1,129 @@
+/* 
+   Supplier Table Styles
+*/
+
+.supplier-admin-container {
+  padding: 2rem;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: #f9fafc;
+  min-height: 100vh;
+}
+
+.supplier-add-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  background: linear-gradient(135deg, #0077ff, #00c4cc);
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.supplier-add-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 119, 255, 0.3);
+}
+
+/* Table Container */
+.supplier-table-container {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+}
+
+/* Table Styles */
+.supplier-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.supplier-table thead {
+  background: #0077ff;
+  color: #fff;
+}
+
+.supplier-table thead th {
+  padding: 0.85rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.supplier-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.supplier-table tbody tr:nth-child(even) {
+  background: #f3f7ff;
+}
+
+.supplier-table tbody tr:hover {
+  background: #e9f3ff;
+}
+
+.supplier-table td {
+  padding: 0.8rem;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
+}
+
+/* Action Buttons */
+.supplier-table-actions button {
+  margin: 0 4px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.supplier-table-actions .edit-btn {
+  background: #00c853;
+}
+
+.supplier-table-actions .edit-btn:hover {
+  background: #00b04a;
+  transform: scale(1.05);
+}
+
+.supplier-table-actions .delete-btn {
+  background: #e53935;
+}
+
+.supplier-table-actions .delete-btn:hover {
+  background: #d32f2f;
+  transform: scale(1.05);
+}
+
+/* Rating Stars */
+.supplier-table-rate button {
+  margin: 0 2px;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.supplier-table-rate button:hover {
+  transform: scale(1.3);
+}
+
+/* Loading and No Data States */
+.supplier-loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #0077ff;
+  font-weight: 500;
+}
+
+.supplier-no-data {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #777;
+  font-weight: 500;
+}

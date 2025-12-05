@@ -1,0 +1,163 @@
+.payment-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: #f5f6f8;
+  overflow-y: auto;
+}
+
+.payment-page .payment-container:hover {
+  transform: translateY(-3px);
+}
+
+
+
+.payment-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.payment-page .payment-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #007bff, #00c6ff);
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+}
+
+.payment-page .payment-summary {
+  background: #f8fafc;
+  padding: 1.5rem 1.8rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border-left: 4px solid #007bff;
+}
+
+.payment-page .payment-summary h2 {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.payment-page .payment-summary p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.payment-page .payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem; 
+}
+
+.payment-page .payment-form h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #007bff;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.2rem;
+}
+
+.payment-page .form-group {
+  position: relative;
+  width: 100%;
+}
+
+.payment-page .payment-form input,
+.payment-page .payment-form textarea,
+.payment-page .payment-form select {
+  width: 100%;
+  padding: 1rem 1rem 0.5rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  background: #fafafa;
+  transition: all 0.25s ease;
+}
+
+.payment-page .payment-form input:focus,
+.payment-page .payment-form textarea:focus,
+.payment-page .payment-form select:focus {
+  border-color: #007bff;
+  outline: none;
+  background: #fff;
+}
+
+.payment-page .payment-form label {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.payment-page .payment-form input:focus + label,
+.payment-page .payment-form input:not(:placeholder-shown) + label,
+.payment-page .payment-form textarea:focus + label,
+.payment-page .payment-form textarea:not(:placeholder-shown) + label {
+  top: -8px;
+  left: 0.8rem;
+  font-size: 0.8rem;
+  color: #007bff;
+  background: #ffffff;
+  padding: 0 2px;
+}
+
+.payment-page .card-details {
+  display: flex;
+  gap: 1rem;
+}
+
+.payment-page .card-details input {
+  flex: 1;
+}
+
+
+.payment-page .payment-button {
+  background: linear-gradient(90deg, #007bff, #00c6ff);
+  color: #fff;
+  border: none;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  margin-top: 1rem;
+}
+
+.payment-page .payment-button:hover {
+  background: linear-gradient(90deg, #0056b3, #0099e6);
+  transform: translateY(-2px);
+}
+
+.payment-page .payment-button:active {
+  transform: translateY(0);
+}
+
+.payment-page .payment-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}

@@ -1,0 +1,124 @@
+.product-overview-page {
+    padding: 20px;
+    padding-top: 100px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.product-overview-page .product-overview-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.product-overview-page .product-title-mobile,
+.product-overview-page .product-title-desktop {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.product-overview-page .product-main-content {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.product-overview-page .product-image-section {
+    flex: 1 1 400px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.product-overview-page .product-details-section {
+    flex: 1 1 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.product-overview-page .product-description {
+    font-size: 1rem;
+    color: #555;
+}
+
+.product-overview-page .product-price-single {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #007bff;
+}
+
+.product-overview-page .product-labelled-price {
+    font-size: 1rem;
+    color: #888;
+    text-decoration: line-through;
+    margin-right: 10px;
+}
+
+.product-overview-page .product-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.product-overview-page .stars-container {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.product-overview-page .product-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.product-overview-page .add-to-cart-button,
+.product-overview-page .buy-now-button {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.product-overview-page .add-to-cart-button {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.product-overview-page .add-to-cart-button:hover {
+    background-color: #0056b3;
+}
+
+.product-overview-page .buy-now-button {
+    background-color: #00c6ff;
+    color: #fff;
+}
+
+.product-overview-page .buy-now-button:hover {
+    background-color: #0099e6;
+}
+
+.product-overview-page .loading-state {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 100px;
+}
+
+@media (max-width: 768px) {
+    .product-overview-page .product-main-content {
+        flex-direction: column;
+    }
+    .product-overview-page .product-image-section,
+    .product-overview-page .product-details-section {
+        flex: 1 1 100%;
+    }
+}

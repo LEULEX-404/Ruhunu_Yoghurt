@@ -47,6 +47,9 @@ app.use('/api/damage', damageProductRouter)
 
 const PORT = process.env.PORT || 8070;
 
+// Health check
+app.get('/healthz', (req, res) => res.send('OK'));
+
 app.listen(PORT, () => {
 
   console.log(`Server is running on port ${PORT}`);

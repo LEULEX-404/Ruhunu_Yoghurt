@@ -37,7 +37,7 @@ import RawMaterialRequestTable from './Pages/RawMaterialRequestTable';
 
 // Axios global config    
 
-axios.defaults.baseURL = 'http://localhost:8070'; 
+axios.defaults.baseURL = 'https://ruhunu-yoghurt-1.onrender.com'; 
 axios.defaults.withCredentials = true;
 
 function Appwrapper() {

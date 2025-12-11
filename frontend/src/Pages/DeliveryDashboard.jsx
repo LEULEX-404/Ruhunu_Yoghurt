@@ -85,7 +85,7 @@ export default function DeliveryDashboard()
         if(storedManager){
           const pareseManager = JSON.parse(storedManager);
 
-          const res = await axios.get(`http://localhost:8070/api/deliveries/manager/${pareseManager.id}`);
+          const res = await axios.get(`https://ruhunu-yoghurt-1.onrender.com/api/deliveries/manager/${pareseManager.id}`);
           setManager(res.data);
         };
       }
@@ -96,7 +96,7 @@ export default function DeliveryDashboard()
 
     const pendingOrders = async () =>{
           try{
-            const res = await axios.get(`http://localhost:8070/api/deliveries/pending`)
+            const res = await axios.get(`https://ruhunu-yoghurt-1.onrender.com/api/deliveries/pending`)
             setOrders(res.data)
         }catch(err) {
             toast.error("Failed to fetch orders");
@@ -109,7 +109,7 @@ export default function DeliveryDashboard()
           return pendingOrders();
         }
         const res = await axios.get(
-          `http://localhost:8070/api/deliveries/search/orders?search=${searchText}`
+          `https://ruhunu-yoghurt-1.onrender.com/api/deliveries/search/orders?search=${searchText}`
         );
         setOrders(res.data);
       }
@@ -120,7 +120,7 @@ export default function DeliveryDashboard()
     };
       const driversDeliveries = async () =>{
           try{
-            const res = await axios.get(`http://localhost:8070/api/deliveries/assign`)
+            const res = await axios.get(`https://ruhunu-yoghurt-1.onrender.com/api/deliveries/assign`)
             setDeliveries(res.data.Deliveries || []);
             setDrivers(res.data.Drivers || []);
         }catch(err){
@@ -137,7 +137,7 @@ export default function DeliveryDashboard()
         }
 
         const res = await axios.get(
-          `http://localhost:8070/api/deliveries/search/deliveries?search=${searchText}`
+          `https://ruhunu-yoghurt-1.onrender.com/api/deliveries/search/deliveries?search=${searchText}`
         );
         setDeliveries(res.data.Deliveries || []);
         setDrivers(res.data.Drivers || []);
@@ -150,7 +150,7 @@ export default function DeliveryDashboard()
 
       const deliveriesAssigned = async () =>{
           try{
-            const res = await axios.get('http://localhost:8070/api/deliveries/deliveries')
+            const res = await axios.get('https://ruhunu-yoghurt-1.onrender.com/api/deliveries/deliveries')
             const deliveriesArray = Array.isArray(res.data) ? res.data : [];
             setAssignedDeliveries(deliveriesArray);
         }catch(err){
@@ -161,7 +161,7 @@ export default function DeliveryDashboard()
 
       const deliveriesCompleted = async () =>{
           try{
-            const res = await axios.get('http://localhost:8070/api/deliveries/deliveries/completed')
+            const res = await axios.get('https://ruhunu-yoghurt-1.onrender.com/api/deliveries/deliveries/completed')
             const deliveriesArray = Array.isArray(res.data) ? res.data : [];
             setCompletedDeliveries(deliveriesArray);
         }catch(err){
@@ -176,7 +176,7 @@ export default function DeliveryDashboard()
           return deliveriesAssigned();
         }
         const res = await axios.get(
-          `http://localhost:8070/api/deliveries/search/assigned?search=${searchText}`
+          `https://ruhunu-yoghurt-1.onrender.com/api/deliveries/search/assigned?search=${searchText}`
         );
         setAssignedDeliveries(res.data);
       }
@@ -187,7 +187,7 @@ export default function DeliveryDashboard()
     }
     const fetchStats = async () =>{
       try{
-        const res = await axios.get('http://localhost:8070/api/deliveries/stats')
+        const res = await axios.get('https://ruhunu-yoghurt-1.onrender.com/api/deliveries/stats')
         setStats(res.data);
       }
       catch(err)
@@ -238,7 +238,7 @@ export default function DeliveryDashboard()
     }, [assignedSearch]);
 
     const handleCreateDelivery = (orderNumber) =>{
-        axios.post(`http://localhost:8070/api/deliveries/create`,{orderNumber}).then(() =>{
+        axios.post(`https://ruhunu-yoghurt-1.onrender.com/api/deliveries/create`,{orderNumber}).then(() =>{
             toast.success("Delivery created Successfully.")
             driversDeliveries();
             pendingOrders();
@@ -260,7 +260,7 @@ export default function DeliveryDashboard()
 
     const handleReorder = async (id) => {
   try {
-    await axios.delete(`http://localhost:8070/api/deliveries/delivery/reorder/${id}`);
+    await axios.delete(`https://ruhunu-yoghurt-1.onrender.com/api/deliveries/delivery/reorder/${id}`);
     toast.success("Re-order successful!");
     driversDeliveries();
     pendingOrders();
@@ -276,7 +276,7 @@ export default function DeliveryDashboard()
 
         for (let delivery of selectDeliveries) {
           try {
-            const res = await axios.post(`http://localhost:8070/api/deliveries/auto-assign`, {
+            const res = await axios.post(`https://ruhunu-yoghurt-1.onrender.com/api/deliveries/auto-assign`, {
               deliveryId: delivery._id
             });
             toast.success(res.data.message);
@@ -654,7 +654,7 @@ export default function DeliveryDashboard()
                   disabled={ad.status === "sceduled"}
                   onClick={async () => {
                     try {
-                      const res = await axios.post('http://localhost:8070/api/deliveries/auto-schedule', {
+                      const res = await axios.post('https://ruhunu-yoghurt-1.onrender.com/api/deliveries/auto-schedule', {
                         assignedDeliveryId: ad._id
                       });
                       toast.success(res.data.message);
@@ -694,7 +694,7 @@ export default function DeliveryDashboard()
               <button
                 onClick={async () => {
                   try {
-                    const res = await axios.post('http://localhost:8070/api/deliveries/schedule-next-day', {
+                    const res = await axios.post('https://ruhunu-yoghurt-1.onrender.com/api/deliveries/schedule-next-day', {
                       assignedDeliveryId: nextDayConfirm.adId
                     });
                     toast.success(res.data.message);

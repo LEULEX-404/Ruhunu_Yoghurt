@@ -43,7 +43,7 @@ app.use('/api/cart', cartRouter)
 app.use("/api/ordernotifications", notificationsRoutes);
 app.use('/api/damage', damageProductRouter)
 
-const PORT = process.env.PORT || 8070;
+const PORT = process.env.PORT;
 
 // Health check
 app.get('/healthz', (req, res) => res.send('OK'));

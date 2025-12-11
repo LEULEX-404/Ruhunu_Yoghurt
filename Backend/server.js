@@ -22,7 +22,13 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors({ origin: '*', credentials: true, allowedHeaders: ['Content-Type', 'Authorization'] }));
+app.use(cors({
+  origin: ["https://ruhunu-yoghurt.onrender.com"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 app.use(express.json());
 
 app.use('/api',authRoutes);

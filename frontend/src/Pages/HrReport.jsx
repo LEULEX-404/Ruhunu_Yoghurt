@@ -23,8 +23,8 @@ export default function Reports() {
   // Fetch employees and drivers
   useEffect(() => {
     const fetchData = async () => {
-      const empRes = await axios.get("http://localhost:8070/api/hrreports/employees");
-      const driverRes = await axios.get("http://localhost:8070/api/hrreports/drivers");
+      const empRes = await axios.get("https://ruhunu-yoghurt-1.onrender.com/api/hrreports/employees");
+      const driverRes = await axios.get("https://ruhunu-yoghurt-1.onrender.com/api/hrreports/drivers");
       setEmployees(empRes.data);
       setDrivers(driverRes.data);
     };
@@ -34,7 +34,7 @@ export default function Reports() {
   // Fetch attendance by range
   useEffect(() => {
     const fetchAttendance = async () => {
-      const res = await axios.get(`http://localhost:8070/api/hrreports/attendance?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`);
+      const res = await axios.get(`https://ruhunu-yoghurt-1.onrender.com/api/hrreports/attendance?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`);
       setAttendance(res.data);
     };
     if (reportType === "attendance") fetchAttendance();

@@ -15,7 +15,7 @@ export default function AttendencePage() {
             try {
             const token = localStorage.getItem('token');
             console.log('JWT token:', token);
-            const res = await axios.get('http://localhost:8070/api/attendance/today', {
+            const res = await axios.get('https://ruhunu-yoghurt-1.onrender.com/api/attendance/today', {
                 headers: { Authorization: `Bearer ${token}` },
             })
             .then(res => console.log(res.data))
@@ -35,7 +35,7 @@ export default function AttendencePage() {
     const handleCheckIn = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:8070/api/attendance/checkin', {}, {
+            const res = await axios.post('https://ruhunu-yoghurt-1.onrender.com/api/attendance/checkin', {}, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setStatus("checked-in");
@@ -58,7 +58,7 @@ export default function AttendencePage() {
         }
         try {
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:8070/api/attendance/earlyleave', 
+            await axios.post('https://ruhunu-yoghurt-1.onrender.com/api/attendance/earlyleave', 
                 { reason: earlyLeaveReason }, 
                 { headers: { Authorization: `Bearer ${token}` },
             });

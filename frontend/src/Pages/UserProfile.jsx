@@ -42,7 +42,7 @@ export default function Profile() {
 
     try {
       const res = await axios.put(
-        `http://localhost:8070/api/user/update/${userId}`,
+        `https://ruhunu-yoghurt-1.onrender.com/api/user/update/${userId}`,
         {
           name: editUser.name,
           email: editUser.email,

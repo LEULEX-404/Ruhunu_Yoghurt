@@ -41,14 +41,14 @@ export default function HrDashboard() {
         const storedEmployee = localStorage.getItem("user");
         if(storedEmployee){
             const parsedEmployee = JSON.parse(storedEmployee);
-            const res = await axios.get(`http://localhost:8070/api/employees/${parsedEmployee.id}`)
+            const res = await axios.get(`https://ruhunu-yoghurt-1.onrender.com/api/employees/${parsedEmployee.id}`)
             setEmployee(res.data);
         };
     };
 
     const fetchEmployees = async () => {
         try{
-            const response = await axios.get(`http://localhost:8070/api/employees`);
+            const response = await axios.get(`https://ruhunu-yoghurt-1.onrender.com/api/employees`);
             setEmployees(response.data);
         }catch(error){
             console.error('Error fetching employees:', error);
@@ -59,7 +59,7 @@ export default function HrDashboard() {
         if (!searchText) return fetchEmployees();
         try{
             const res = await axios.get(
-                `http://localhost:8070/api/employees/search?search=${searchText}`
+                `https://ruhunu-yoghurt-1.onrender.com/api/employees/search?search=${searchText}`
             );
             setEmployees(res.data);
         }catch(err){
@@ -70,7 +70,7 @@ export default function HrDashboard() {
 
     const fetchAttendance = async () => {
         try {
-          const res = await axios.get("http://localhost:8070/api/attendance/today/attendence", {
+          const res = await axios.get("https://ruhunu-yoghurt-1.onrender.com/api/attendance/today/attendence", {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
           });
           setTodaysAttendance(res.data || []);
@@ -84,7 +84,7 @@ export default function HrDashboard() {
     const fetchAttendanceByDate = async (date) => {
         try {
             const formattedDate = date.toISOString().split('T')[0];
-            const res = await axios.get(`http://localhost:8070/api/attendance/bydate?date=${formattedDate}`, {
+            const res = await axios.get(`https://ruhunu-yoghurt-1.onrender.com/api/attendance/bydate?date=${formattedDate}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
             });
             setAttendanceByDate(res.data || []);
@@ -176,7 +176,7 @@ export default function HrDashboard() {
         e.preventDefault();
         if(validateForm()){
             try{
-                await axios.post(`http://localhost:8070/api/employees/add`, newEmployee);
+                await axios.post(`https://ruhunu-yoghurt-1.onrender.com/api/employees/add`, newEmployee);
                 toast.success("Employee Added Successfully");
                 setNewEmployee({ name:'', email:'', position:'Unassigned', phone:'', password:'' });
                 setConfirmPassword('');
@@ -225,7 +225,7 @@ export default function HrDashboard() {
         }
         if(validateUpdateForm()){
             try{
-                await axios.put(`http://localhost:8070/api/employees/update/${editEmployee._id}`, 
+                await axios.put(`https://ruhunu-yoghurt-1.onrender.com/api/employees/update/${editEmployee._id}`, 
                     {employeeID: editEmployee.employeeID, name: editEmployee.name, email: editEmployee.email, position: editEmployee.position, phone: editEmployee.phone });
                 toast.success("Employee Updated Successfully");
                 fetchEmployees();
@@ -267,7 +267,7 @@ export default function HrDashboard() {
               label: 'Yes',
               onClick: async () => {
                 try {
-                    await axios.delete(`http://localhost:8070/api/employees/delete/${id}`);
+                    await axios.delete(`https://ruhunu-yoghurt-1.onrender.com/api/employees/delete/${id}`);
                   toast.success("Employee Deleted Successfully");
                   fetchEmployees();
                 } catch (err) {
@@ -284,7 +284,7 @@ export default function HrDashboard() {
         e.preventDefault();
         if(!await validateAssignRole()) return;
         try{
-            await axios.put(`http://localhost:8070/api/employees/update/${selectedEmployee._id}`, 
+            await axios.put(`https://ruhunu-yoghurt-1.onrender.com/api/employees/update/${selectedEmployee._id}`, 
               { position: selectedEmployee.position, 
                 employeeID: selectedEmployee.employeeID, 
                 vehicleCapacity: selectedEmployee.vehicleCapacity || 0 

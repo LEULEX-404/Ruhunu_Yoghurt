@@ -23,24 +23,32 @@ import RawMaterialHistoryRoutes from './routes/Kalindu/rawMaterialHistoryRoutes.
 
 
 
+import notificationsRoutes from "./routes/Lasiru/emailRoute.js";
+import damageProductRouter from './routes/Pathum/damageRoute.js';
+import HrReportRoutes from './routes/Tharuka/reportRoutes.js'
 
 dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:3000', credentials: true, allowedHeaders: ['Content-Type', 'Authorization'] }));
+app.use(cors({
+  origin: ["https://ruhunu-yoghurt.onrender.com"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 app.use(express.json());
 
 app.use('/api',authRoutes);
 app.use('/api/employees', employeeRoutes);
+app.use('/api/hrreports',HrReportRoutes)
 app.use('/api/deliveries',deliveryRoutes);
 app.use('/api/attendance', attendenceRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/driver',driverRoutes);
-app.use('/api/products', productRouter);
 app.use('/api/promocode', promoCodeRouter);
 app.use('/api/cart', cartRoutes);
-app.use('/api/products', productRouter);
 app.use('/api/payment', paymentRouter);
 app.use("/api/orders", orderRoutes);
 app.use('/api/cart', cartRoutes)
@@ -54,9 +62,13 @@ app.use("/api/raw-material", RawMaterialRequestRoutes);
 app.use("/api/report", reportroutes);
 app.use("/api/raw-material-history", RawMaterialHistoryRoutes);
 
+app.use("/api/ordernotifications", notificationsRoutes);
+app.use('/api/damage', damageProductRouter)
 
+const PORT = process.env.PORT;
 
-const PORT = process.env.PORT || 8070;
+// Health check
+app.get('/healthz', (req, res) => res.send('OK'));
 
 app.listen(PORT, () => {
 

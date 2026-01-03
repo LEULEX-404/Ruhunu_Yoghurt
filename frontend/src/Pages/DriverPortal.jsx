@@ -27,7 +27,7 @@ export default function DriverPortal() {
     {
        const parsedDriver = JSON.parse(storedDriver);
       
-      const res = await axios.get(`http://localhost:8070/api/driver/${parsedDriver.id}`);
+      const res = await axios.get(`https://ruhunu-yoghurt-1.onrender.com/api/driver/${parsedDriver.id}`);
       setDriver(res.data);
       
   }
@@ -41,7 +41,7 @@ const fetchDeliveries = async () =>{
   if(storedDriver){
       const parsedDriver = JSON.parse(storedDriver);
 
-      const res = await axios.get(`http://localhost:8070/api/driver/delivery/${parsedDriver.id}`);
+      const res = await axios.get(`https://ruhunu-yoghurt-1.onrender.com/api/driver/delivery/${parsedDriver.id}`);
       setDelivery(res.data);
       console.log(res.data);
   }
@@ -55,7 +55,7 @@ const fetchCompletedDeliveries = async () =>{
   if(storedDriver){
       const parsedDriver = JSON.parse(storedDriver);
 
-      const res = await axios.get(`http://localhost:8070/api/driver/delivery/completed/${parsedDriver.id}`);
+      const res = await axios.get(`https://ruhunu-yoghurt-1.onrender.com/api/driver/delivery/completed/${parsedDriver.id}`);
       setCompletedDelivery(res.data);
       console.log(res.data);
   }
@@ -63,8 +63,9 @@ const fetchCompletedDeliveries = async () =>{
 
 const handleCompleteDelivery = async (deliveryId) => {
   try{
-    await axios.put(`http://localhost:8070/api/driver/complete/${deliveryId}`);
+    await axios.put(`https://ruhunu-yoghurt-1.onrender.com/api/driver/complete/${deliveryId}`);
 
+    toast.success("Delivery marked as completed");
     fetchDeliveries();
     fetchCompletedDeliveries();
     fetchDriver()
@@ -93,7 +94,7 @@ const validateProfile = () => {
       return false;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(editEmail)) {
       toast.error("Enter a valid email address");
       return false;
@@ -120,7 +121,7 @@ const handleUpdateProfile = async () => {
         return;
       }
       const storedDriver = JSON.parse(localStorage.getItem("user"));
-      await axios.put(`http://localhost:8070/api/driver/${storedDriver.id}`, {
+      await axios.put(`https://ruhunu-yoghurt-1.onrender.com/api/driver/${storedDriver.id}`, {
         name: editName,
         email: editEmail,
         phone: editPhone
@@ -233,7 +234,7 @@ const handleUpdateProfile = async () => {
         {activeSection === "deliveries" && (
           <div className="driver-delivery-section">
             <h2>Deliveries</h2>
-            <div className="card">
+            <div className="driver-portal-card">
               {delivery.map(del =>(
                 <div key = {del._id} className="driver-delivery-card">
                 <p><strong>Total Weight: </strong>{del.totalWeight} Kg</p>
@@ -264,7 +265,7 @@ const handleUpdateProfile = async () => {
         {activeSection === "history" && (
           <div className="section">
             <h2>History</h2>
-            <div className="card">
+            <div className="driver-portal-card">
               {completedDelivery.map(del =>(
                 <div key = {del._id} className="driver-delivery-card">
                 <p><strong>Total Weight: </strong>{del.totalWeight} Kg</p>
@@ -275,7 +276,7 @@ const handleUpdateProfile = async () => {
                 <ul>
                   {del.deliveries.map((d, index)=>(
                     <li key = {index}>
-                      {d.orderID} - {d.customerName} - {d.status}
+                      {d.orderID} - {d.customerName} - <strong>{d.status}</strong>
                     </li>
                   ))}
                 </ul>

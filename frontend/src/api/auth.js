@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "http://localhost:8070/api/";
+const URL = "https://ruhunu-yoghurt-1.onrender.com/api/";
 
 export const login = (userData) => axios.post(`${URL}login`, userData, { withCredentials: true });
 

@@ -11,22 +11,21 @@ export const payNow = async (req, res) => {
     const { userId } = req.params;
     const { cardNumber, cardcvv, products, total, coupon } = req.body;
 
-    // validate body (same as before)...
+    
     // fetch user
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Optional: verify coupon server-side: if coupon provided, check validity and optionally compute expected discount
+    
     if (coupon) {
       const promo = await Promocode.findOne({ code: coupon });
       if (!promo || !promo.isActive || promo.expiryDate <= new Date() || promo.usedCount >= promo.usageLimit) {
         return res.status(400).json({ error: "Promocode invalid or expired" });
       }
-      // Optionally: you can compute the discount and compare with 'total' to ensure client did not manipulate price.
-      // For simplicity we'll allow the client total but still increment usedCount below.
+      
     }
 
-    // Save payment (same as existing)
+    // Save payment 
     const payment = new Payment({
       paymentId: `PAY-${Date.now()}`,
       name: user.name,
@@ -81,13 +80,13 @@ export const payNow = async (req, res) => {
   }
 };
 
-// COD - similar changes, accept coupon param and update promocode usedCount + delete cart
+
 export const codOrder = async (req, res) => {
   try {
     const { userId } = req.params;
     const { products, total, coupon } = req.body;
 
-    // validate request ... find user
+    // validate request
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 
@@ -156,7 +155,7 @@ export const getPaymentById = async (req, res) => {
   }
 };
 
-// Optional: Update payment status (if needed)
+// Optional: Update payment status 
 export const updatePaymentStatus = async (req, res) => {
   try {
     const { status } = req.body;

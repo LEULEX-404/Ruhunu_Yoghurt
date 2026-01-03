@@ -108,8 +108,17 @@ function CartPreview({ appliedCoupon }) {
 
   return (
     <div className="cart-preview-page">
-      <h2>Cart Preview</h2>
-      <button onClick={fetchCart} disabled={loading}>{loading ? "Loading..." : "Preview My Cart"}</button>
+     <div className="cart-preview-header">
+      <h2>🛒 Cart Preview</h2>
+          <button 
+            className="preview-btn" 
+            onClick={fetchCart} 
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Preview My Cart"}
+          </button>
+        </div>
+
       {err && <div className="error">{err}</div>}
 
       {showPreviewModal && cart && (

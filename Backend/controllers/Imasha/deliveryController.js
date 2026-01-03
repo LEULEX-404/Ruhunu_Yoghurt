@@ -50,7 +50,8 @@ export const createDelivery = async (req,res) =>{
             address:order.address,
             productWeight: order.productWeight,
             distanceKm,
-            cost
+            cost,
+            priority: order.priority
         });
         order.status = "Ready to Assign";
         await order.save();
@@ -66,7 +67,7 @@ export const createDelivery = async (req,res) =>{
 
 export const getPendingOrders = async (req, res) =>{
     try{
-        const pendingOrders = await Order.find({ status: "approved"}).select ("orderNumber customerName phone items total address productWeight ");
+        const pendingOrders = await Order.find({ status: "approved"}).select ("orderNumber customerName phone items total address productWeight priority");
 
         res.status(200).json(pendingOrders);
     }
@@ -85,7 +86,7 @@ export const getAssignDeliveries = async (req,res) =>{
         .populate({
             path: "driver",
             model: "Driver",
-            match: {},
+            match: {}, 
             select: "name vehicleCapacity currentLocation",
             localField: "driver",
             foreignField: "driverID"
@@ -136,12 +137,13 @@ export const getSearchOrder = async (req, res) =>{
             query.$or = [
                 {customerName: {$regex: search, $options: "i"}},
                 {orderNumber: {$regex: search, $options: "i"}},
-                {address: {$regex: search, $options: "i"}}
+                {address: {$regex: search, $options: "i"}},
+                {priority: {$regex: search, $options: "i"}}
             ]
         };
 
             const pendingOrders = await Order.find(query).select(
-            "orderNumber customerName phone items total address productWeight "
+            "orderNumber customerName phone items total address productWeight priority"
             );
  
         res.json(pendingOrders);
@@ -166,6 +168,7 @@ export const searchDeliveriesAndDrivers = async (req,res) =>{
                 {customerName: query},
                 {orderID: query},
                 {address: query},
+                {priority: query}
             ];
 
         if(isNumeric){
@@ -301,7 +304,7 @@ export const reorderDelivery = async (req, res) => {
       return res.status(404).json({ message: "Related order not found" });
     }
 
-    order.status = "pending";
+    order.status = "approved";
     await order.save();
 
     await Delivery.findByIdAndDelete(id);

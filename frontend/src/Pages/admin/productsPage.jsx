@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaExclamationTriangle, FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import '../../Css/adminProductsPage.css';
 
@@ -16,16 +16,17 @@ export default function AdminProductPage() {
                 const token = localStorage.getItem("token");
                 if (!token) {
                     toast.error("Please login first");
+                    setIsLoading(false);
                     return;
                 }
                 const response = await axios.get("http://localhost:8070/api/products", {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setProducts(response.data);
-                setIsLoading(false);
             } catch (error) {
                 console.error(error.response?.data);
                 toast.error("Error fetching products");
+            } finally {
                 setIsLoading(false);
             }
         };
@@ -50,48 +51,57 @@ export default function AdminProductPage() {
     };
 
     if (isLoading) return <div className="loading">Loading products...</div>;
-    if (products.length === 0) return <div className="no-products">No products to display.</div>;
 
     return (
         <div className="admin-product-container">
             <Link to="/admin/add-product" className="add-product-link">Add Product</Link>
-            <div className="product-table-container">
-                <table className="product-table">
-                    <thead>
-                        <tr>
-                            <th>Product ID</th>
-                            <th>Name</th>
-                            <th>Image</th>
-                            <th>Labelled Price</th>
-                            <th>Price</th>
-                            <th>Availability</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {products.map((item) => (
-                            <tr key={item.productId}>
-                                <td>{item.productId}</td>
-                                <td>{item.name}</td>
-                                <td>
-                                    <img className="product-table-image" src={item.images[0]} alt={item.name} />
-                                </td>
-                                <td>{item.labelledPrice}</td>
-                                <td>{item.price}</td>
-                                <td>{item.isAvailable ? "Available" : "Unavailable"}</td>
-                                <td className="product-table-actions">
-                                    <button className="delete-btn" onClick={() => deleteProduct(item.productId)}>
-                                        <FaTrash />
-                                    </button>
-                                    <button className="edit-btn" onClick={() => navigate("/admin/edit-product", { state: item })}>
-                                        <FaEdit />
-                                    </button>
-                                </td>
+
+            {products.length === 0 ? (
+                <div className="no-products">No products to display.</div>
+            ) : (
+                <div className="product-table-container">
+                    <table className="product-table">
+                        <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Name</th>
+                                <th>Image</th>
+                                <th>Labelled Price</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Availability</th>
+                                <th>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {products.map((item) => (
+                                <tr key={item.productId}>
+                                    <td>{item.productId}</td>
+                                    <td>{item.name}</td>
+                                    <td>
+                                        <img className="product-table-image" src={item.images[0]} alt={item.name} />
+                                    </td>
+                                    <td>{item.labelledPrice}</td>
+                                    <td>{item.price}</td>
+                                    <td>{item.quantity}</td>
+                                    <td>{item.isAvailable ? "Available" : "Unavailable"}</td>
+                                    <td className="product-table-actions">
+                                        <button className="delete-btn" onClick={() => deleteProduct(item.productId)}>
+                                            <FaTrash />
+                                        </button>
+                                        <button className="edit-btn" onClick={() => navigate("/admin/edit-product", { state: item })}>
+                                            <FaEdit />
+                                        </button>
+                                        <button className="damage-log-btn" onClick={() => navigate("/admin/damage-log", {state : item})}>
+                                            <FaExclamationTriangle/>
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 }

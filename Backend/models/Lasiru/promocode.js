@@ -10,7 +10,7 @@ const promocodeSchema = new mongoose.Schema({
     usageLimit: { type: Number, default: 1 },
     usedCount: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true }}, 
-    // Add "timestamps" option
+  
    { timestamps: true });
 
 // Create a model named "Promocode" from the schema   

@@ -1,6 +1,4 @@
-/* =========================
-   General Dashboard Layout
-========================= */
+
 .order-dashboard-container {
   display: flex;
   min-height: 100vh;
@@ -145,7 +143,7 @@
   background: #f9fafb;
 }
 
-/* Dashboard Container */
+
 .manage-order-dashboard-view {
   padding: 20px;
 }
@@ -158,7 +156,7 @@
   color: #1e293b;
 }
 
-/* Row Layout */
+
 .manage-order-stats-row {
   display: flex;
   gap: 20px;
@@ -166,7 +164,7 @@
   justify-content: center;
 }
 
-/* Stat Box Style */
+
 .manage-order-stat-box {
   flex: 1;
   min-width: 220px;
@@ -201,7 +199,7 @@
   opacity: 0.9;
 }
 
-/* Gradient Backgrounds like HR Dashboard */
+
 .box-blue {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
@@ -221,9 +219,7 @@
 
 
 
-/* =========================
-   Promocode Section Layout
-========================= */
+
 .promo-section {
   display: grid;
   grid-template-columns: 1fr;
@@ -278,9 +274,7 @@
   border-radius: 10px;
 }
 
-/* =========================
-   Modern Promocode Cards
-========================= */
+
 .promo-cards-wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -352,11 +346,7 @@
   color: #b91c1c;
 }
 
-/* ===============================
-   PROMOCODE SECTION - MODERN UI
-================================= */
 
-/* Overlay for modals */
 .promo-update-modal-overlay,
 .promo-add-modal-overlay {
   position: fixed;
@@ -373,7 +363,7 @@
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Modal container */
+
 .promo-update-modal,
 .promo-add-modal {
   background: #fff;
@@ -385,7 +375,7 @@
   animation: scaleIn 0.25s ease-in-out;
 }
 
-/* Headings */
+
 .update-promo h2,
 .add-promo h2 {
   font-size: 1.6rem;
@@ -395,7 +385,7 @@
   text-align: center;
 }
 
-/* Form fields */
+
 .update-promo label,
 .add-promo label {
   display: block;
@@ -426,7 +416,7 @@
   box-shadow: 0 0 6px rgba(79, 70, 229, 0.3);
 }
 
-/* Button row */
+
 .btn-row {
   display: flex;
   justify-content: flex-end;
@@ -434,7 +424,7 @@
   margin-top: 1.4rem;
 }
 
-/* Buttons */
+
 .btn-row button {
   padding: 0.6rem 1.4rem;
   border: none;
@@ -464,7 +454,7 @@
   background: #e5e7eb;
 }
 
-/* Success / Error messages */
+
 .message {
   margin-top: 1rem;
   font-size: 0.9rem;
@@ -484,7 +474,7 @@
   background: #fee2e2;
 }
 
-/* Animations */
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -495,7 +485,7 @@
   to { transform: scale(1); opacity: 1; }
 }
 
-/* Responsive */
+
 @media (max-width: 600px) {
   .promo-update-modal,
   .promo-add-modal {
@@ -513,9 +503,7 @@
   }
 }
 
-/* =========================
-   Responsive Layout
-========================= */
+
 @media (min-width: 900px) {
   .promo-section {
     grid-template-columns: 1fr 1.3fr;
@@ -542,9 +530,7 @@
   }
 }
 
-/* =========================
-   Orders Section
-========================= */
+
 .order-section {
   display: grid;
   grid-template-columns: 1fr;
@@ -609,7 +595,7 @@
 .order-status.ready-to-assign { background: #ef44ec; }
 .order-status.completed { background: #0ea5e9; }
 .order-status.cancelled { background: #e00909; }
-/* Removed invalid selector .status["pending"] */
+
 
 .order-details p,
 .order-items p {
@@ -631,9 +617,7 @@
   }
 }
 
-/* =========================
-   Unique Approve / Cancel Buttons
-========================= */
+
 .order-actions-unique .ord-btn.approve {
   background: linear-gradient(135deg, #22c55e, #16a34a);
   color: #fff;
@@ -670,7 +654,7 @@
   box-shadow: 0 6px 16px rgba(185, 28, 28, 0.4);
 }
 
-/* Payment Cards */
+
 .manage-order-card {
   background: #ffffff;
   border-radius: 16px;
@@ -716,7 +700,7 @@
   margin-bottom: 4px;
 }
 
-/* Responsive */
+
 @media (max-width: 600px) {
   .order-cards-wrapper {
     grid-template-columns: 1fr;
@@ -725,7 +709,7 @@
 }
 
 
-/* === Quick Insights (only) === */
+
 .quick-insights {
   margin-top: 20px;
   display: flex;
@@ -734,9 +718,9 @@
   align-items: stretch;
 }
 
-/* card container */
+
 .quick-insights .insight-card {
-  flex: 1 1 300px;           /* grow, shrink, base width */
+  flex: 1 1 300px;           
   min-width: 240px;
   background: #ffffff;
   border-radius: 10px;
@@ -748,14 +732,14 @@
   justify-content: space-between;
 }
 
-/* title */
+
 .quick-insights .insight-card h4 {
   margin: 0 0 8px 0;
   font-size: 15px;
   color: #0f172a;
 }
 
-/* main text lines */
+
 .quick-insights .insight-card p {
   margin: 6px 0;
   font-size: 13px;
@@ -763,14 +747,14 @@
   line-height: 1.3;
 }
 
-/* small meta (date / status) */
+
 .quick-insights .insight-card p.meta {
   font-size: 12px;
-  color: #6b7280; /* gray-500 */
+  color: #6b7280; 
   margin-top: 4px;
 }
 
-/* action button */
+
 .quick-insights .insight-card .btn {
   margin-top: 10px;
   align-self: flex-start;
@@ -783,7 +767,33 @@
   cursor: pointer;
 }
 
-/* responsive tweak */
+.report-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: 20px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.report-table th, .report-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.report-table th {
+  background-color: #f3f3f3;
+  font-weight: bold;
+}
+
+
+
 @media (max-width: 720px) {
   .quick-insights {
     flex-direction: column;

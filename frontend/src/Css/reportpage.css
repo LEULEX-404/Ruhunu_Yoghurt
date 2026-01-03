@@ -1,0 +1,131 @@
+
+.report-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
+  color: #1e293b;
+  font-family: "Poppins", sans-serif;
+  padding: 40px;
+}
+
+/* Headings */
+.report-page h2 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px rgba(125, 211, 252, 0.4);
+}
+
+/* Card-like sections */
+.report-section {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 25px;
+  margin-bottom: 40px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(6px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.report-section:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(59, 130, 246, 0.15);
+}
+
+/* Table styling */
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 0.95rem;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.report-table th,
+.report-table td {
+  padding: 14px 16px;
+  text-align: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.report-table th {
+  background: linear-gradient(90deg, #e0f2fe, #ede9fe);
+  color: #1e3a8a;
+  font-weight: 600;
+}
+
+.report-table tr:nth-child(even) td {
+  background-color: #f8fafc;
+}
+
+.report-table tr:hover td {
+  background-color: #e0f2fe;
+  transition: 0.3s;
+}
+
+/* Delivery Rate Highlight */
+.report-table td:nth-child(6) {
+  font-weight: bold;
+  color: #059669;
+}
+
+/* Status Badges */
+.status {
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.status.delivered {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status.pending {
+  background-color: #fef9c3;
+  color: #92400e;
+}
+
+.status.rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+/* Buttons */
+.report-export-btn {
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  border: none;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.report-export-btn:hover {
+  background: linear-gradient(90deg, #2563eb, #4f46e5);
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .report-page {
+    padding: 20px;
+  }
+
+  .report-table th,
+  .report-table td {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+
+  .report-section {
+    padding: 15px;
+  }
+}

@@ -1,4 +1,6 @@
 import Rawmaterial from "../../models/Kalindu/Rawmaterial.js";
+import RawMaterialHistory from "../../models/Kalindu/RawMaterialHistory.js";
+
 
 // Add new raw material
 export const addRawMaterial = async (req, res) => {
@@ -15,7 +17,6 @@ export const addRawMaterial = async (req, res) => {
 export const getAllRawMaterials = async (req, res) => {
   try {
     const materials = await Rawmaterial.find();
-    console.log("Materials from DB:", materials); 
     res.json(materials);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -59,41 +60,76 @@ export const deleteRawMaterial = async (req, res) => {
   }
 };
 
-
-
-
-// Increase quantity
+// Increase quantity + Add to History
 export const increaseQuantity = async (req, res) => {
   try {
     const { quantity } = req.body;
     const rawMaterial = await Rawmaterial.findById(req.params.id);
     if (!rawMaterial) return res.status(404).json({ message: "Raw material not found" });
 
-    rawMaterial.quantity += Number(quantity);
+    const qty = Number(quantity);
+    rawMaterial.quantity += qty;
     await rawMaterial.save();
 
-    res.status(200).json(rawMaterial);  // <-- return directly
+    // Add history record
+    await RawMaterialHistory.create({
+      MID: rawMaterial.MID,
+      name: rawMaterial.name,
+      action: "Add",
+      quantity: qty
+    });
+
+    res.status(200).json(rawMaterial);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-// Decrease quantity
+// Decrease quantity + Add to History
 export const decreaseQuantity = async (req, res) => {
   try {
     const { quantity } = req.body;
     const rawMaterial = await Rawmaterial.findById(req.params.id);
     if (!rawMaterial) return res.status(404).json({ message: "Raw material not found" });
 
-    if (rawMaterial.quantity < Number(quantity)) {
+    const qty = Number(quantity);
+    if (rawMaterial.quantity < qty) {
       return res.status(400).json({ message: "Not enough stock" });
     }
 
-    rawMaterial.quantity -= Number(quantity);
+    rawMaterial.quantity -= qty;
     await rawMaterial.save();
 
-    res.status(200).json(rawMaterial);  // <-- return directly
+    // Add history record
+    await RawMaterialHistory.create({
+      MID: rawMaterial.MID,
+      name: rawMaterial.name,
+      action: "Remove",
+      quantity: qty
+    });
+
+    res.status(200).json(rawMaterial);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+// Optional stock update with alert
+export const updateMaterial = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quantity } = req.body;
+    const material = await Rawmaterial.findByIdAndUpdate(id, { quantity }, { new: true });
+
+    if (material.quantity < 10) {
+      await Alert.create({
+        message: `Material "${material.name}" is running low (only ${material.quantity} left)!`,
+        type: "low_stock",
+      });
+    }
+
+    res.status(200).json(material);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

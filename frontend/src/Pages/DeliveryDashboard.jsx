@@ -118,16 +118,7 @@ export default function DeliveryDashboard()
         toast.error("Failed to search orders.")
       }
     };
-      const driversDeliveries = async () =>{
-          try{
-            const res = await axios.get(`http://localhost:8070/api/deliveries/assign`)
-            setDeliveries(res.data.Deliveries || []);
-            setDrivers(res.data.Drivers || []);
-        }catch(err){
-            console.error(err);
-            toast.error("Failed to fetch drivers or deliveries.");
-        }
-    };
+
 
 
     const searchDeliveriesAndDrivers = async (searchText) => {

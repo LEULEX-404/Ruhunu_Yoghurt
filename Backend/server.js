@@ -23,7 +23,7 @@ connectDB();
 
 const app = express();
 app.use(cors({
-  origin: ["https://ruhunu-yoghurt.onrender.com"],
+  origin: ["http://localhost:3000"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -49,7 +49,7 @@ app.use('/api/cart', cartRouter)
 app.use("/api/ordernotifications", notificationsRoutes);
 app.use('/api/damage', damageProductRouter)
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8070;
 
 // Health check
 app.get('/healthz', (req, res) => res.send('OK'));

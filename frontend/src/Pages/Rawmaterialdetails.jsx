@@ -3,34 +3,30 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
-import '../Css/rawdetails.css'
+import StockLayout from "../../src/Pages/Stocklayout.jsx";
+import "../Css/rawdetails.css";
 
 export default function RawMaterialTable() {
   const [materials, setMaterials] = useState([]);
+  const [filteredMaterials, setFilteredMaterials] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filter, setFilter] = useState("all");
+  const [unitFilter, setUnitFilter] = useState("all");
+
   const navigate = useNavigate();
 
-  // Fetch all raw materials
   const fetchMaterials = async () => {
     try {
       const res = await axios.get("/api/rawmaterials");
       setMaterials(res.data);
-      setError(null);
-
-      // Check for low quantity and show popup
-      res.data.forEach((material) => {
-        if (material.quantity < 100) {
-          toast.error(
-            `Warning: Quantity of ${material.name} is below 100!`,
-            { duration: 3000 }
-          );
-        }
+      setFilteredMaterials(res.data);
+      res.data.forEach((m) => {
+        if (m.quantity < 100) toast.error(`⚠️ Low stock: ${m.name}`);
       });
-
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch raw materials");
-      toast.error(err.response?.data?.message || "Failed to fetch raw materials");
+      setError("Failed to fetch raw materials");
+      toast.error("Failed to fetch raw materials");
     } finally {
       setIsLoading(false);
     }
@@ -40,85 +36,149 @@ export default function RawMaterialTable() {
     fetchMaterials();
   }, []);
 
-  // Delete raw material
+  // ✅ Filtering logic
+  useEffect(() => {
+    let filtered = materials;
+
+    // Low stock filter
+    if (filter === "low") {
+      filtered = filtered.filter((m) => m.quantity < 100);
+    } else if (filter === "available") {
+      filtered = filtered.filter((m) => m.isAvailable === true);
+    }
+
+    // Unit filter
+    if (unitFilter !== "all") {
+      filtered = filtered.filter((m) => m.unit === unitFilter);
+    }
+
+    setFilteredMaterials(filtered);
+  }, [filter, unitFilter, materials]);
+
   const deleteMaterial = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this material?")) return;
+    if (!window.confirm("Are you sure?")) return;
     try {
       await axios.delete(`/api/rawmaterials/${id}`);
-      toast.success("Raw material deleted successfully");
+      toast.success("Deleted successfully");
       fetchMaterials();
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to delete raw material");
+    } catch {
+      toast.error("Failed to delete");
     }
   };
 
-  // Navigate to update page
-  const updateMaterial = (material) => {
-    navigate("/updateRawmaterial/" + material._id, { state: material });
+  const updateMaterial = (m) => {
+    navigate(`/updateRawmaterial/${m._id}`, { state: m });
   };
 
-  if (isLoading) return <div className="rawmaterial-loading">Loading raw materials...</div>;
-  if (error) return <div className="rawmaterial-no-data">{error}</div>;
-  if (materials.length === 0)
-    return (
-      <div className="rawmaterial-admin-container">
-        <Link className="rawmaterial-add-link" to="/addRawmaterial">
-          Add Raw Material
-        </Link>
-        <div className="rawmaterial-no-data">No raw materials to display.</div>
-      </div>
-    );
+  // ✅ Collect all unit types dynamically
+  const unitOptions = ["all", ...new Set(materials.map((m) => m.unit))];
 
   return (
-    <div className="rawmaterial-admin-container">
-      <Link className="rawmaterial-add-link" to="/addRawmaterial">
-        Add Raw Material
-      </Link>
-      <div className="rawmaterial-table-container">
-        <table className="rawmaterial-table">
-          <thead>
-            <tr>
-              <th>MID</th>
-              <th>Name</th>
-              <th>Unit</th>
-              <th>Current Stock</th>
-              <th>Supplier</th>
-              <th>Updated At</th>
-              <th>Availability</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {materials.map((m) => (
-              <tr key={m._id}>
-                <td>{m.MID}</td>
-                <td>{m.name}</td>
-                <td>{m.unit}</td>
-                <td>
-                  <span className="rawmaterial-quantity">{m.quantity}</span>
-                </td>
-                <td>{m.supplier}</td>
-                <td>{new Date(m.updatedAt).toLocaleDateString()}</td>
-                <td>
-                  <span
-                    className={`rawmaterial-availability ${m.isAvailable ? "yes" : "no"}`}
-                  >
-                    {m.isAvailable ? "Yes" : "No"}
-                  </span>
-                </td>
-                <td className="rawmaterial-table-actions">
-                  <button className="edit-btn" onClick={() => updateMaterial(m)}>
-                    <FaEdit />
-                  </button>
-                  <button className="delete-btn" onClick={() => deleteMaterial(m._id)}>
-                    <FaTrash />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <StockLayout
+      title="📦 Raw Materials"
+      subtitle="Manage and monitor stock levels"
+      active="materials"
+    >
+      {isLoading ? (
+        <div className="rawmaterial-loading">Loading...</div>
+      ) : error ? (
+        <div className="rawmaterial-no-data">{error}</div>
+      ) : materials.length === 0 ? (
+        <div className="rawmaterial-no-data">No raw materials found.</div>
+      ) : (
+        <div className="rawmaterial-admin-container">
+          {/* ➕ Add New */}
+          <div className="rawmaterial-header-controls">
+            <Link className="rawmaterial-add-link" to="/addRawmaterial">
+              ➕ Add Raw Material
+            </Link>
+
+            {/* ✅ Filter Controls */}
+            <div className="rawmaterial-filters">
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="rawmaterial-filter-select"
+              >
+                <option value="all">All</option>
+                <option value="low">Low Stock (Qty &lt; 100)</option>
+                <option value="available">Available Only</option>
+              </select>
+
+              <select
+                value={unitFilter}
+                onChange={(e) => setUnitFilter(e.target.value)}
+                className="rawmaterial-filter-select"
+              >
+                {unitOptions.map((unit, i) => (
+                  <option key={i} value={unit}>
+                    {unit === "all" ? "All Units" : unit}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* ✅ Table */}
+          <div className="rawmaterial-table-container">
+            <table className="rawmaterial-table">
+              <thead>
+                <tr>
+                  <th>MID</th>
+                  <th>Name</th>
+                  <th>Unit</th>
+                  <th>Quantity</th>
+                  <th>Supplier</th>
+                  <th>Updated</th>
+                  <th>Available</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredMaterials.map((m) => (
+                  <tr key={m._id}>
+                    <td>{m.MID}</td>
+                    <td>{m.name}</td>
+                    <td>{m.unit}</td>
+                    <td
+                      className={
+                        m.quantity < 100 ? "rawmaterial-low" : "rawmaterial-normal"
+                      }
+                    >
+                      {m.quantity}
+                    </td>
+                    <td>{m.supplier}</td>
+                    <td>{new Date(m.updatedAt).toLocaleDateString()}</td>
+                    <td>
+                      <span
+                        className={`rawmaterial-availability ${
+                          m.isAvailable ? "yes" : "no"
+                        }`}
+                      >
+                        {m.isAvailable ? "Yes" : "No"}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => updateMaterial(m)}
+                        className="edit-btn"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={() => deleteMaterial(m._id)}
+                        className="delete-btn"
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </StockLayout>
   );
 }

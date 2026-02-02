@@ -1,0 +1,107 @@
+/* RAW MATERIAL DETAILS PAGE STYLING */
+
+.raw-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e3f2fd, #f1f8e9);
+  font-family: "Poppins", sans-serif;
+  padding: 40px;
+}
+
+.raw-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #0d47a1;
+  margin-bottom: 30px;
+  text-shadow: 1px 1px 2px #90caf9;
+}
+
+.raw-table-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.raw-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.raw-table th {
+  background: #1976d2;
+  color: white;
+  text-align: left;
+  padding: 14px;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+.raw-table td {
+  padding: 14px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+  transition: background 0.2s ease;
+}
+
+.raw-table tr:hover {
+  background: #e3f2fd;
+}
+
+.raw-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.raw-actions input {
+  width: 70px;
+  padding: 6px;
+  margin-right: 10px;
+  border: 1px solid #90caf9;
+  border-radius: 6px;
+  outline: none;
+  font-size: 14px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.raw-actions input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 4px #90caf9;
+}
+
+.raw-btn-add {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 7px 13px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+}
+
+.raw-btn-add:hover {
+  background: #43a047;
+  transform: scale(1.05);
+}
+
+.raw-btn-remove {
+  background: #c62828;
+  color: white;
+  border: none;
+  padding: 7px 13px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.raw-btn-remove:hover {
+  background: #e53935;
+  transform: scale(1.05);
+}

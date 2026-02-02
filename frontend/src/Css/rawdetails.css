@@ -142,3 +142,41 @@
 .rawmaterial-availability.no {
   background: #f44336;
 }
+/* Filters */
+.rawmaterial-header-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.rawmaterial-filters {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.rawmaterial-filter-select {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.rawmaterial-filter-select:hover {
+  border-color: #00bcd4;
+  box-shadow: 0 0 6px rgba(0, 188, 212, 0.3);
+}
+
+/* Low stock highlight */
+.rawmaterial-low {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+.rawmaterial-normal {
+  color: #1e293b;
+}
+

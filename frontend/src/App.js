@@ -34,7 +34,8 @@ import Smdashboardpage from './Pages/admin/smdashboard';
 import ProductTable from './Pages/StockDashboard';
 import RequestRawMaterialEmail from './Pages/admin/reqrawmaterial';
 import RawMaterialRequestTable from './Pages/RawMaterialRequestTable';
-
+import StockReport from './Pages/admin/stockreport';  
+import StockLayout from './Pages/Stocklayout';
 // Axios global config    
 
 axios.defaults.baseURL = 'https://ruhunu-yoghurt-1.onrender.com'; 
@@ -65,6 +66,10 @@ function Appwrapper() {
         <Route path="/productStock" element={<ProductTable />} />
         <Route path="/Reqrawmaterial" element={<RequestRawMaterialEmail />} />
         <Route path="/rawMaterialRequests" element={<RawMaterialRequestTable />} /> 
+        <Route path="/stockReport" element={<StockReport />} />
+        <Route path="/stockLayout" element={<StockLayout />} />
+        
+        
 
 
         {/* Admin */}

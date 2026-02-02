@@ -14,6 +14,15 @@ import cartRoutes from './routes/Lasiru/cartRoutes.js'
 import paymentRouter from './routes/Lasiru/paymentRoutes.js';
 import orderRoutes from './routes/Lasiru/orderRoutes.js';
 import cartRouter from './routes/Pathum/cartRoute.js';
+import StockRouter from './routes/Kalindu/StockRoutes.js';
+import RawMaterialRoutes from "./routes/Kalindu/RawmaterialRoutes.js";
+import supplierRoutes from './routes/Kalindu/SuplierRoutes.js';
+import RawMaterialRequestRoutes from './routes/Kalindu/RawMaterialRequestRoutes.js';
+import reportroutes from './routes/Kalindu/reportRoutes.js';  
+import RawMaterialHistoryRoutes from './routes/Kalindu/rawMaterialHistoryRoutes.js';
+
+
+
 import notificationsRoutes from "./routes/Lasiru/emailRoute.js";
 import damageProductRouter from './routes/Pathum/damageRoute.js';
 import HrReportRoutes from './routes/Tharuka/reportRoutes.js'
@@ -46,6 +55,13 @@ app.use('/api/cart', cartRoutes)
 app.use('/api/products', productRouter)
 app.use('/api/payments', paymentRouter)
 app.use('/api/cart', cartRouter)
+app.use('/api/stock', StockRouter);
+app.use("/api/rawmaterials", RawMaterialRoutes);
+app.use('/api/suppliers', supplierRoutes);
+app.use("/api/raw-material", RawMaterialRequestRoutes);
+app.use("/api/report", reportroutes);
+app.use("/api/raw-material-history", RawMaterialHistoryRoutes);
+
 app.use("/api/ordernotifications", notificationsRoutes);
 app.use('/api/damage', damageProductRouter)
 

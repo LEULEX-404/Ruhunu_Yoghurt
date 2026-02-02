@@ -19,7 +19,7 @@ const rawMaterialRequestSchema = new mongoose.Schema({
   
   rejectedAt: { type: Date },
   
-  deliveredAt: { type: Date }
+  deliveredAt: { type: Date },
 }, { timestamps: true });
 
 export default mongoose.model("RawMaterialRequest", rawMaterialRequestSchema);

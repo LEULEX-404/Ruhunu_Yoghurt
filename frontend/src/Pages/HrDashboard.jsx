@@ -396,10 +396,7 @@ export default function HrDashboard() {
                   >
                     <FiHome /> Dashboard
                   </li>
-                  <li 
-                    className={view === 'add' ? 'active' : ''} 
-                    onClick={() => setView('add')}
-                  >
+                  
                    <FiUserPlus /> Add Employee
                   </li>
                   <li 

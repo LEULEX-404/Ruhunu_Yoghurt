@@ -36,7 +36,7 @@ export default function RawMaterialTable() {
     fetchMaterials();
   }, []);
 
-  // ✅ Filtering logic
+  // Filtering logic
   useEffect(() => {
     let filtered = materials;
 
@@ -70,7 +70,7 @@ export default function RawMaterialTable() {
     navigate(`/updateRawmaterial/${m._id}`, { state: m });
   };
 
-  // ✅ Collect all unit types dynamically
+  
   const unitOptions = ["all", ...new Set(materials.map((m) => m.unit))];
 
   return (
@@ -93,7 +93,7 @@ export default function RawMaterialTable() {
               ➕ Add Raw Material
             </Link>
 
-            {/* ✅ Filter Controls */}
+            {/*  Filter Controls */}
             <div className="rawmaterial-filters">
               <select
                 value={filter}
@@ -119,7 +119,7 @@ export default function RawMaterialTable() {
             </div>
           </div>
 
-          {/* ✅ Table */}
+          {/* Table */}
           <div className="rawmaterial-table-container">
             <table className="rawmaterial-table">
               <thead>

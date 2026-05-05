@@ -1,8 +1,15 @@
-import { Link } from "react-router-dom"
-import '../Css/productCard.css'
-import { FaStar } from "react-icons/fa"
+import { Link } from "react-router-dom";
+import "../Css/productCard.css";
+import { FaStar } from "react-icons/fa";
+import { ShoppingBag } from "lucide-react";
+import { getProductImage, handleProductImageError } from "../utils/productImage";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, index = 0 }) {
+    const rating = Number(product.rating || 0);
+    const numRatings = Number(product.numRatings || 0);
+    const description = product.description || "Fresh Ruhunu dairy made for everyday meals and snacks.";
+    const price = Number(product.price > 0 ? product.price : product.labelledPrice || 0);
+    const labelledPrice = Number(product.labelledPrice || price);
 
     const isExpiringSoon = () => {
         if (!product.expDate) {
@@ -17,19 +24,24 @@ export default function ProductCard({ product }) {
         return daysDiff <= 7 && daysDiff >= 0;
     }
 
-    const Wrapper = product.isAvailable ? Link : "div"
-    const wrapperProps = product.isAvailable ? {to: "/overview/" + product.productId} : {}
+    const isAvailable = product.isAvailable !== false;
+    const Wrapper = isAvailable ? Link : "div";
+    const wrapperProps = isAvailable ? { to: "/overview/" + product.productId } : {};
 
     return (
         <Wrapper
-            className={`product-card
+            {...wrapperProps}
+            style={{ "--reveal-delay": `${Math.min(index % 8, 7) * 65}ms` }}
+            className={`product-card slide-reveal
             ${isExpiringSoon() ? "expiring-soon" : ""}
-            ${!product.isAvailable ? "unavailable" : ""}`}>
+            ${!isAvailable ? "unavailable" : ""}`}>
             <div className="product-card-image-container">
+                <div className="product-card-ambient" />
                 <img
-                    src={product.images?.[0] || "https://via.placeholder.com/300"}
+                    src={getProductImage(product)}
                     alt={product.name}
                     className="product-card-image"
+                    onError={handleProductImageError}
                 />
                 {
                     isExpiringSoon() && (
@@ -47,9 +59,9 @@ export default function ProductCard({ product }) {
                     </h2>
                     <p className="product-card-description">
                         {
-                            product.description.length > 60
-                                ? product.description.slice(0, 57) + "..."
-                                : product.description
+                            description.length > 78
+                                ? description.slice(0, 75) + "..."
+                                : description
                         }
                     </p>
                 </div>
@@ -58,39 +70,38 @@ export default function ProductCard({ product }) {
                     <div>
                         {product.price > 0 ? (
                             <>
-                                {product.labelledPrice > product.price && (
+                                {labelledPrice > price && (
                                     <span className="product-card-labelled-price">
-                                        Rs {product.labelledPrice}
+                                        Rs {labelledPrice.toFixed(0)}
                                     </span>
                                 )}
                                 <span className="product-card-price">
-                                    Rs {product.price}
+                                    Rs {price.toFixed(0)}
                                 </span>
                             </>
                         ) : (
                             <span className="product-card-price">
-                                Rs {product.labelledPrice}
+                                Rs {price.toFixed(0)}
                             </span>
                         )}
                     </div>
                     <span
-                        className={`product-card-stock ${product.isAvailable ? "InStock" : "Out-of-stock"}`}>
-                        {product.isAvailable ? "In Stock" : "Out of Stock"}
+                        className={`product-card-stock ${isAvailable ? "InStock" : "Out-of-stock"}`}>
+                        {isAvailable ? "In Stock" : "Out of Stock"}
                     </span>
                 </div>
 
                 <div className="product-card-rating">
-                    <FaStar className="product-card-rating" />
+                    <FaStar className="product-card-rating-icon" />
                     <span>
-                        {product.rating.toFixed(1)} ({product.numRatings} ratings)
+                        {rating.toFixed(1)} ({numRatings} ratings)
                     </span>
                 </div>
 
-                <button
-                    disabled={!product.isAvailable}
-                    className={`product-card-button ${product.isAvailable ? "available" : "unavailable"}`}>
-                    {product.isAvailable ? "Buy Now" : "Unavailable"}
-                </button>
+                <span className={`product-card-button ${isAvailable ? "available" : "unavailable"}`}>
+                    <ShoppingBag size={17} />
+                    {isAvailable ? "View Product" : "Unavailable"}
+                </span>
             </div>
         </Wrapper>
     )

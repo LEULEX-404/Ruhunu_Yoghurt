@@ -1,0 +1,112 @@
+.customer-footer {
+  background:
+    linear-gradient(135deg, #172b1f 0%, #213629 58%, #172b1f 100%);
+  color: #fff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.customer-footer-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(260px, 1.45fr) repeat(3, minmax(160px, 1fr));
+  gap: 28px;
+  padding: 42px 28px 30px;
+}
+
+.footer-brand-panel,
+.footer-link-panel,
+.footer-contact-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  text-decoration: none;
+  font-family: Georgia, "Trebuchet MS", serif;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.footer-brand img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px;
+}
+
+.footer-brand-panel p,
+.footer-contact-panel p {
+  max-width: 390px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.65;
+}
+
+.customer-footer h3 {
+  margin: 0 0 6px;
+  color: #f4a51c;
+  font-size: 1rem;
+  font-family: Georgia, "Trebuchet MS", serif;
+}
+
+.footer-link-panel a,
+.footer-link-panel span,
+.footer-contact-panel span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.footer-link-panel a:hover {
+  color: #f4a51c;
+}
+
+.footer-link-panel svg,
+.footer-contact-panel svg {
+  color: #f4a51c;
+  flex: 0 0 auto;
+}
+
+.footer-bottom {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 28px 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .customer-footer-inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .customer-footer-inner {
+    grid-template-columns: 1fr;
+    padding: 34px 18px 26px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
